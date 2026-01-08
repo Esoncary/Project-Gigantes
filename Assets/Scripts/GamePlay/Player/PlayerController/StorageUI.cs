@@ -3,21 +3,21 @@ using UnityEngine.UI;
 
 public class StorageUI : MonoBehaviour
 {
-    [Header("°ó¶¨ÒıÓÃ")]
-    public PlayerController player; // ÍÏÈëÄãµÄÍæ¼Ò¶ÔÏó
-    public Image targetFillImage;   // ÍÏÈë TargetFill Í¼Æ¬
-    public Image currentFillImage;  // ÍÏÈë CurrentFill Í¼Æ¬
+    [Header("ç»‘å®šå¼•ç”¨")]
+    public PlayerController player; // æ‹–å…¥ä½ çš„ç©å®¶å¯¹è±¡
+    public Image targetFillImage;   // æ‹–å…¥ TargetFill å›¾ç‰‡
+    public Image currentFillImage;  // æ‹–å…¥ CurrentFill å›¾ç‰‡
 
     void Update()
     {
         if (player == null) return;
 
-        // ¼ÆËã±ÈÀı£º(µ±Ç°Öµ / ×î´óÈİÁ¿)
-        // ¼ÙÉèÄãÔÚ Controller Àï¶¨ÒåÁË maxStorage
+        // è®¡ç®—æ¯”ä¾‹ï¼š(å½“å‰å€¼ / æœ€å¤§å®¹é‡)
+        // å‡è®¾ä½ åœ¨ Controller é‡Œå®šä¹‰äº† maxStorage
         float targetRatio = player.targetStorage / player.maxStorage;
         float currentRatio = player.currentStorage / player.maxStorage;
 
-        // ¸üĞÂ UI Ìî³äÖµ (·¶Î§ 0 µ½ 1)
+        // æ›´æ–° UI å¡«å……å€¼ (èŒƒå›´ 0 åˆ° 1)
         targetFillImage.fillAmount = Mathf.Clamp01(targetRatio);
         currentFillImage.fillAmount = Mathf.Clamp01(currentRatio);
     }

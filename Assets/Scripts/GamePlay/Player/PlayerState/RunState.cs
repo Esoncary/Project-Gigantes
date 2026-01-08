@@ -9,14 +9,14 @@ public class RunState : PlayerState
     {
         base.LogicUpdate();
 
-        // 1. ×´Ì¬ÇĞ»»£ºËÉÊÖ -> É²³µ
+        // 1. çŠ¶æ€åˆ‡æ¢ï¼šæ¾æ‰‹ -> åˆ¹è½¦
         if (Mathf.Abs(player.InputX) < 0.01f)
         {
             stateMachine.ChangeState(player.BrakeState);
             return;
         }
 
-        // 2. ×´Ì¬ÇĞ»»£ºÌøÔ¾
+        // 2. çŠ¶æ€åˆ‡æ¢ï¼šè·³è·ƒ
         if (player.JumpInputDown && player.canJump)
         {
             player.InitialJump();
@@ -24,15 +24,15 @@ public class RunState : PlayerState
             return;
         }
 
-        // 3. ×´Ì¬ÇĞ»»£ºµôÂä
+        // 3. çŠ¶æ€åˆ‡æ¢ï¼šæ‰è½
         if (!player.groundedCheckerManager.isGrounded)
         {
             stateMachine.ChangeState(player.MidAirState);
             return;
         }
 
-        // 4. ×´Ì¬ÇĞ»»£ºÊÍ·Å (ÓÉÍâ²¿ÊäÈë´¥·¢£¬µ«ÇĞÈë ReleaseState)
-        // ×¢Òâ£ºÕâÀïÖ»ĞèÅĞ¶ÏÊÇ·ñÒª½øÈëÊÍ·Å×´Ì¬£¬¾ßÌåµÄÊıÖµÓÉ KineticDevice ´¦Àí
+        // 4. çŠ¶æ€åˆ‡æ¢ï¼šé‡Šæ”¾ (ç”±å¤–éƒ¨è¾“å…¥è§¦å‘ï¼Œä½†åˆ‡å…¥ ReleaseState)
+        // æ³¨æ„ï¼šè¿™é‡Œåªéœ€åˆ¤æ–­æ˜¯å¦è¦è¿›å…¥é‡Šæ”¾çŠ¶æ€ï¼Œå…·ä½“çš„æ•°å€¼ç”± KineticDevice å¤„ç†
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             stateMachine.ChangeState(player.ReleaseState);
@@ -46,13 +46,13 @@ public class RunState : PlayerState
 
         float inputX = player.InputX;
 
-        // ×ªÏò´¦Àí
+        // è½¬å‘å¤„ç†
         if (Mathf.Abs(player.rb.velocity.x) > 0.1f && Mathf.Sign(player.rb.velocity.x) != inputX)
         {
             player.ApplyBrakeForce(player.brakeDeceleraion);
         }
 
-        // ¼ÓËÙÓëÏŞËÙÂß¼­
+        // åŠ é€Ÿä¸é™é€Ÿé€»è¾‘
         if (Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeed)
         {
             player.rb.AddForce(new Vector2(inputX * player.moveSpeedAcc, 0));

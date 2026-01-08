@@ -8,14 +8,14 @@ public class MidAirState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        // ½øÈë¿ÕÖĞÊ±£¬²»ĞèÒªÖØÖÃÖØÁ¦£¬ÒòÎªÎÒÃÇĞèÒªÖØÁ¦×ÔÈ»×÷ÓÃ
+        // è¿›å…¥ç©ºä¸­æ—¶ï¼Œä¸éœ€è¦é‡ç½®é‡åŠ›ï¼Œå› ä¸ºæˆ‘ä»¬éœ€è¦é‡åŠ›è‡ªç„¶ä½œç”¨
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        // --- 1. ¾«ÖÂ»¯£º¸ù¾İ´¹Ö±ËÙ¶ÈÇĞ»»ÉÏÉı/ÏÂÂä¶¯»­ ---
+        // --- 1. ç²¾è‡´åŒ–ï¼šæ ¹æ®å‚ç›´é€Ÿåº¦åˆ‡æ¢ä¸Šå‡/ä¸‹è½åŠ¨ç”» ---
         if (player.rb.velocity.y > 0.1f)
         {
             player.PlayAnimation("Jump_Up");
@@ -25,10 +25,10 @@ public class MidAirState : PlayerState
             player.PlayAnimation("Fall_Down");
         }
 
-        // --- 2. ×´Ì¬ÇĞ»»£ºÂäµØ ---
+        // --- 2. çŠ¶æ€åˆ‡æ¢ï¼šè½åœ° ---
         if (player.groundedCheckerManager.isGrounded && player.rb.velocity.y <= 0.01f)
         {
-            // Èç¹ûÂäµØÊ±»¹ÓĞ½Ï´óµÄË®Æ½ÊäÈë£¬Ö±½Ó½øÈë Run£¬·ñÔò½øÈë Brake »ò Idle
+            // å¦‚æœè½åœ°æ—¶è¿˜æœ‰è¾ƒå¤§çš„æ°´å¹³è¾“å…¥ï¼Œç›´æ¥è¿›å…¥ Runï¼Œå¦åˆ™è¿›å…¥ Brake æˆ– Idle
             if (Mathf.Abs(player.InputX) > 0.01f)
                 stateMachine.ChangeState(player.RunState);
             else
@@ -37,15 +37,15 @@ public class MidAirState : PlayerState
             return;
         }
 
-        // --- 3. ×´Ì¬ÇĞ»»£ºÅÊÅÀ ---
-        // ¼à²â×óÓÒÊÖ¼ì²âÆ÷£¬Èç¹ûÌùÇ½ÇÒ°´ÏÂÅÊÅÀ¼ü
+        // --- 3. çŠ¶æ€åˆ‡æ¢ï¼šæ”€çˆ¬ ---
+        // ç›‘æµ‹å·¦å³æ‰‹æ£€æµ‹å™¨ï¼Œå¦‚æœè´´å¢™ä¸”æŒ‰ä¸‹æ”€çˆ¬é”®
         if (player.canClimb && Input.GetKeyDown(KeyCode.J))
         {
             stateMachine.ChangeState(player.ClimbState);
             return;
         }
 
-        // --- 4. ×´Ì¬ÇĞ»»£ºÏòÁ¿ÊÍ·Å ---
+        // --- 4. çŠ¶æ€åˆ‡æ¢ï¼šå‘é‡é‡Šæ”¾ ---
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             stateMachine.ChangeState(player.ReleaseState);
@@ -57,13 +57,13 @@ public class MidAirState : PlayerState
     {
         base.PhysicsUpdate();
 
-        // --- 5. Ë®Æ½¿ÕÖĞÒÆ¶¯¿ØÖÆ ---
+        // --- 5. æ°´å¹³ç©ºä¸­ç§»åŠ¨æ§åˆ¶ ---
         HandleAirMovement();
 
-        // --- 6. ³ÖĞøÌøÔ¾¼ÓÁ¦ (³¤°´ÌøµÃ¸ß) ---
+        // --- 6. æŒç»­è·³è·ƒåŠ åŠ› (é•¿æŒ‰è·³å¾—é«˜) ---
         HandleVariableJump();
 
-        // --- 7. µ½´ï¶¥·åÊ±µÄÖØÁ¦Ëõ¼õ (Apex Float) ---
+        // --- 7. åˆ°è¾¾é¡¶å³°æ—¶çš„é‡åŠ›ç¼©å‡ (Apex Float) ---
         HandleApexFloat();
     }
 
@@ -71,16 +71,16 @@ public class MidAirState : PlayerState
     {
         float inputX = player.InputX;
 
-        // Ö»ÓĞÔÚÎ´´ïÉÏÏŞ£¬»òÕßÕıÔÚ·´Ïò×ªÏòÊ±£¬²ÅÔÊĞí¼ÓÁ¦
+        // åªæœ‰åœ¨æœªè¾¾ä¸Šé™ï¼Œæˆ–è€…æ­£åœ¨åå‘è½¬å‘æ—¶ï¼Œæ‰å…è®¸åŠ åŠ›
         if (Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeedInMidAir || Mathf.Sign(inputX) != Mathf.Sign(player.rb.velocity.x))
         {
             player.rb.AddForce(new Vector2(inputX * player.moveSpeedAccInMidAir, 0));
         }
 
-        // ¿ÕÖĞÇ¿ÖÆ¼õËÙ£ºÈç¹ûµ¯ÉäºóµÄËÙ¶ÈÒÀÈ»³¬¹ıÉÏÏŞ£¬ÇÒÒÑ¾­¹ıÁË±£»¤ÆÚ
+        // ç©ºä¸­å¼ºåˆ¶å‡é€Ÿï¼šå¦‚æœå¼¹å°„åçš„é€Ÿåº¦ä¾ç„¶è¶…è¿‡ä¸Šé™ï¼Œä¸”å·²ç»è¿‡äº†ä¿æŠ¤æœŸ
         if (Mathf.Abs(player.rb.velocity.x) > player.maxMoveSpeedInMidAir && player.inputLockTimer <= 0)
         {
-            // Ê©¼Ó¿ÕÆø×èÁ¦
+            // æ–½åŠ ç©ºæ°”é˜»åŠ›
             float decelerateForce = -Mathf.Sign(player.rb.velocity.x) * player.enforceMoveAccSpeedInMidAir;
             player.rb.AddForce(new Vector2(decelerateForce, 0));
         }
@@ -88,7 +88,7 @@ public class MidAirState : PlayerState
 
     private void HandleVariableJump()
     {
-        // ÕâÀïµÄÂß¼­¶ÔÓ¦ÄãÖ®Ç°µÄ varJumpTimer
+        // è¿™é‡Œçš„é€»è¾‘å¯¹åº”ä½ ä¹‹å‰çš„ varJumpTimer
         if (Input.GetKey(KeyCode.Space) && player.varJumpTimer > 0)
         {
             if (player.rb.velocity.y < player.maxJumpSpeed)
@@ -100,21 +100,21 @@ public class MidAirState : PlayerState
 
     private void HandleApexFloat()
     {
-        // µ±´¹Ö±ËÙ¶È½Ó½ü 0£¨µ½´ïÅ×ÎïÏß¶¥¶Ë£©Ê±£¬¼õĞ¡ÖØÁ¦²úÉúÖÍ¿Õ¸Ğ
+        // å½“å‚ç›´é€Ÿåº¦æ¥è¿‘ 0ï¼ˆåˆ°è¾¾æŠ›ç‰©çº¿é¡¶ç«¯ï¼‰æ—¶ï¼Œå‡å°é‡åŠ›äº§ç”Ÿæ»ç©ºæ„Ÿ
         if (Mathf.Abs(player.rb.velocity.y) < player.gravityContractionThreshold)
         {
             player.rb.gravityScale = player.gravityContractionScale;
         }
         else
         {
-            player.rb.gravityScale = 1.0f; // »Ö¸´Õı³£ÖØÁ¦
+            player.rb.gravityScale = 1.0f; // æ¢å¤æ­£å¸¸é‡åŠ›
         }
     }
 
     public override void Exit()
     {
         base.Exit();
-        // Àë¿ª¿ÕÖĞ×´Ì¬Ê±£¬Îñ±Ø»Ö¸´ÖØÁ¦³£Êı£¬·ÀÖ¹Ó°ÏìÆäËû×´Ì¬
+        // ç¦»å¼€ç©ºä¸­çŠ¶æ€æ—¶ï¼ŒåŠ¡å¿…æ¢å¤é‡åŠ›å¸¸æ•°ï¼Œé˜²æ­¢å½±å“å…¶ä»–çŠ¶æ€
         player.rb.gravityScale = 1.0f;
     }
 }

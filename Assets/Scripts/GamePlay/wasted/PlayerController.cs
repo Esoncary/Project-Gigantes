@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class PlayerControllerWasted : MonoBehaviour
 {
-    #region ×´Ì¬£¬³£Á¿¼°×é¼ş
+    #region çŠ¶æ€ï¼Œå¸¸é‡åŠç»„ä»¶
     #region state
-    public enum PlayerState // ½«Ã¶¾ÙµÄ·ÃÎÊĞŞÊÎ·û¸ÄÎª public£¬ÒÔÆ¥Åä×Ö¶ÎµÄ¿É·ÃÎÊĞÔ
+    public enum PlayerState // å°†æšä¸¾çš„è®¿é—®ä¿®é¥°ç¬¦æ”¹ä¸º publicï¼Œä»¥åŒ¹é…å­—æ®µçš„å¯è®¿é—®æ€§
     {
         idle,
         run,
-        midair,//ÔÚ°ë¿ÕÖĞ/½ÅÃ»ÓĞÂäµØµÄ×´Ì¬
-        release,//Íæ¼ÒreleasingÊ±µÄ×´Ì¬
-        climb,//ÅÊÅÀ×´Ì¬
+        midair,//åœ¨åŠç©ºä¸­/è„šæ²¡æœ‰è½åœ°çš„çŠ¶æ€
+        release,//ç©å®¶releasingæ—¶çš„çŠ¶æ€
+        climb,//æ”€çˆ¬çŠ¶æ€
         die,
         overspeed
     }
@@ -29,54 +29,54 @@ public class PlayerControllerWasted : MonoBehaviour
     #endregion
 
     #region const
-    //Æ½ÃæÒÆ¶¯
-    public float moveSpeedAcc;//Íæ¼ÒµØÃæÊäÈëÒÆ¶¯Ê±»á»ñµÃµÄ¼ÓËÙ¶È
-    public float maxMoveSpeed;//ÅÜ¶¯µÄ×î´óÒÆËÙºÍ×îĞ¡ÒÆËÙ£¨×îĞ¡ÒÆËÙ·ÀÖ¹Íæ¼ÒÆô¶¯¹ıÂı£©
+    //å¹³é¢ç§»åŠ¨
+    public float moveSpeedAcc;//ç©å®¶åœ°é¢è¾“å…¥ç§»åŠ¨æ—¶ä¼šè·å¾—çš„åŠ é€Ÿåº¦
+    public float maxMoveSpeed;//è·‘åŠ¨çš„æœ€å¤§ç§»é€Ÿå’Œæœ€å°ç§»é€Ÿï¼ˆæœ€å°ç§»é€Ÿé˜²æ­¢ç©å®¶å¯åŠ¨è¿‡æ…¢ï¼‰
     public float minMoveSpeed;
-    public float brakeDeceleraion;//Íæ¼ÒÎŞÊäÈëÊ±µÄÉ²³µËÙ¶È
-    public float enforceDeceleraion;//Íæ¼ÒÍ¨¹ı±»×²»÷»òÕßreleaseÊ¹ÒÆËÙ³¬¹ı×î¸ßËÙ¶ÈÊ±µÄÇ¿ÖÆ¼õËÙ
-    //¿ÕÖĞÒÆ¶¯
-    public float moveSpeedAccInMidAir;//Íæ¼Ò¿ÕÖĞÊäÈëÊ±»á»ñµÃµÄ¼ÓËÙ¶È
+    public float brakeDeceleraion;//ç©å®¶æ— è¾“å…¥æ—¶çš„åˆ¹è½¦é€Ÿåº¦
+    public float enforceDeceleraion;//ç©å®¶é€šè¿‡è¢«æ’å‡»æˆ–è€…releaseä½¿ç§»é€Ÿè¶…è¿‡æœ€é«˜é€Ÿåº¦æ—¶çš„å¼ºåˆ¶å‡é€Ÿ
+    //ç©ºä¸­ç§»åŠ¨
+    public float moveSpeedAccInMidAir;//ç©å®¶ç©ºä¸­è¾“å…¥æ—¶ä¼šè·å¾—çš„åŠ é€Ÿåº¦
     public float maxMoveSpeedInMidAir;
     public float minMoveSpeedInMidAir;
     public float enforceMoveAccSpeedInMidAir;
-    //ÌøÔ¾
-    public float jumpBufferTime;//ÌøÔ¾»º³åÊ±¼ä
-    public float jumpSpeedInitial;//ÌøÔ¾µÄ³õÊ¼ËÙ¶È£¬ÓÃÓÚ°ÚÍÑÖØÁ¦
-    public float jumpSpeedAcc;//ÌøÔ¾¼ÓËÙ¶È
-    public float minJumpSpeed;//ÌøÔ¾µÄ×îĞ¡ËÙ¶È
-    public float maxJumpSpeed;//ÌøÔ¾µÄ×î´óËÙ¶È
-    public float varJumpTime;//°´×¡ÌøÔ¾¼üºóÌøÔ¾³ÖĞø¼ÓËÙµÄ×î´óÊ±¼ä
-    public float varJumpTimer;//ÌøÔ¾¼ÓËÙ¼ÆÊ±Æ÷
-    public float gravityContractionThreshold;//ÌøÔ¾ÖĞĞ¡ÓÚÕâ¸öËÙ¶ÈÊ±ÖØÁ¦ËõĞ¡£¬ÒÔ´ïµ½ÖÍ¿ÕĞ§¹û
-    public float gravityContractionScale;//ÖØÁ¦ËõĞ¡µÄ±ÈÀı
-    public float gravityContractionTime;//ÖØÁ¦ËõĞ¡µÄ×î´ó´°¿ÚÊ±¼ä
-    public float gravityContractionTimer;//ÖØÁ¦ËõĞ¡¼ÆÊ±Æ÷
-    //ÅÊÅÀ
-    public float climbTime;//×î´óÅÊÅÀÊ±¼ä
-    public float climbBufferTime;//ÅÊÅÀ»º³åÊ±¼ä
+    //è·³è·ƒ
+    public float jumpBufferTime;//è·³è·ƒç¼“å†²æ—¶é—´
+    public float jumpSpeedInitial;//è·³è·ƒçš„åˆå§‹é€Ÿåº¦ï¼Œç”¨äºæ‘†è„±é‡åŠ›
+    public float jumpSpeedAcc;//è·³è·ƒåŠ é€Ÿåº¦
+    public float minJumpSpeed;//è·³è·ƒçš„æœ€å°é€Ÿåº¦
+    public float maxJumpSpeed;//è·³è·ƒçš„æœ€å¤§é€Ÿåº¦
+    public float varJumpTime;//æŒ‰ä½è·³è·ƒé”®åè·³è·ƒæŒç»­åŠ é€Ÿçš„æœ€å¤§æ—¶é—´
+    public float varJumpTimer;//è·³è·ƒåŠ é€Ÿè®¡æ—¶å™¨
+    public float gravityContractionThreshold;//è·³è·ƒä¸­å°äºè¿™ä¸ªé€Ÿåº¦æ—¶é‡åŠ›ç¼©å°ï¼Œä»¥è¾¾åˆ°æ»ç©ºæ•ˆæœ
+    public float gravityContractionScale;//é‡åŠ›ç¼©å°çš„æ¯”ä¾‹
+    public float gravityContractionTime;//é‡åŠ›ç¼©å°çš„æœ€å¤§çª—å£æ—¶é—´
+    public float gravityContractionTimer;//é‡åŠ›ç¼©å°è®¡æ—¶å™¨
+    //æ”€çˆ¬
+    public float climbTime;//æœ€å¤§æ”€çˆ¬æ—¶é—´
+    public float climbBufferTime;//æ”€çˆ¬ç¼“å†²æ—¶é—´
     public float wallJumpSpeed;
     public Vector2 wallJumpDirection;
-    public float inputLockTime;//ÔÚwallJUmpµÄÒ»Ğ¡¶ÎÊ±¼äºó£¬×èÖ¹Íæ¼ÒÊäÈë
-    //ÏòÁ¿×°ÖÃ
-    public float maxStorage;//×°ÖÃµÄ×î´óÈİÁ¿£¬×îĞ¡ÈİÁ¿ºÍµ±Ç°ÈİÁ¿
+    public float inputLockTime;//åœ¨wallJUmpçš„ä¸€å°æ®µæ—¶é—´åï¼Œé˜»æ­¢ç©å®¶è¾“å…¥
+    //å‘é‡è£…ç½®
+    public float maxStorage;//è£…ç½®çš„æœ€å¤§å®¹é‡ï¼Œæœ€å°å®¹é‡å’Œå½“å‰å®¹é‡
     public float minStorage;
-    public float targetStorage;//×°ÖÃµÄÄ¿±êÈİÁ¿
-    public float targetStorageUpdateTime;//Ä¿±êÖµµÄ¸üĞÂÊ±¼ä
-    public float targetStorageUpdateTimer;//¸üĞÂÊ±¼ä¼ÆÊ±Æ÷
-    public float explosionTime;//storage³¬³ö×î´óÖµºó¶àÉÙs×°ÖÃ±¬Õ¨
-    public float minIncreaseThreshold;//×°ÖÃµÄstorageÔö³¤µÄãĞÖµÒÔ¼°¶ÔÓ¦µÄÔö³¤ËÙ¶È
+    public float targetStorage;//è£…ç½®çš„ç›®æ ‡å®¹é‡
+    public float targetStorageUpdateTime;//ç›®æ ‡å€¼çš„æ›´æ–°æ—¶é—´
+    public float targetStorageUpdateTimer;//æ›´æ–°æ—¶é—´è®¡æ—¶å™¨
+    public float explosionTime;//storageè¶…å‡ºæœ€å¤§å€¼åå¤šå°‘sè£…ç½®çˆ†ç‚¸
+    public float minIncreaseThreshold;//è£…ç½®çš„storageå¢é•¿çš„é˜ˆå€¼ä»¥åŠå¯¹åº”çš„å¢é•¿é€Ÿåº¦
     public float midIncreaseThreshold;
     public float maxIncreaseThreshold;
     public float minIncreaseSpeed;
     public float midIncreaseSpeed;
     public float maxIncreaseSpeed;
-    public float decreaseSpeed;//×°ÖÃ¼õÉÙÏòÁ¿µÄËÙ¶È
-    public float decreaseTime;//»¹ÓĞ¶àÉÙs¾ÍÒª¿ªÊ¼¼õÉÙ
-    public float decreaseTimer;//¼ÆÊ±Æ÷
-    public float minReleaseThrehold;//×îĞ¡¿ÉreleaseµÄstorageÖµ
-    public float releaseCooldown;//release¿ª¹ØµÄÀäÈ´Ê±¼ä
-    public float timeScaleReleasing;//releaseÊ±µÄÊ±¼äËõ·Å±ÈÀı
+    public float decreaseSpeed;//è£…ç½®å‡å°‘å‘é‡çš„é€Ÿåº¦
+    public float decreaseTime;//è¿˜æœ‰å¤šå°‘så°±è¦å¼€å§‹å‡å°‘
+    public float decreaseTimer;//è®¡æ—¶å™¨
+    public float minReleaseThrehold;//æœ€å°å¯releaseçš„storageå€¼
+    public float releaseCooldown;//releaseå¼€å…³çš„å†·å´æ—¶é—´
+    public float timeScaleReleasing;//releaseæ—¶çš„æ—¶é—´ç¼©æ”¾æ¯”ä¾‹
 
     #endregion
 
@@ -87,20 +87,20 @@ public class PlayerControllerWasted : MonoBehaviour
 
     #endregion
 
-    #region ±äÁ¿
-    //ÒÆ¶¯
+    #region å˜é‡
+    //ç§»åŠ¨
     public bool isGrounded;
     public Vector2 moveDirection;
 
-    //ÌøÔ¾
-    public float jumpBufferTimer;//ÌøÔ¾»º³å¼ÆÊ±Æ÷
-    public float jumpPressedTime;//ÌøÔ¾°´ÏÂÊ±¼ä
-    public bool isJumpBuffered;//ÌøÔ¾ÊÇ·ñÔÚ»º³åÖĞ
+    //è·³è·ƒ
+    public float jumpBufferTimer;//è·³è·ƒç¼“å†²è®¡æ—¶å™¨
+    public float jumpPressedTime;//è·³è·ƒæŒ‰ä¸‹æ—¶é—´
+    public bool isJumpBuffered;//è·³è·ƒæ˜¯å¦åœ¨ç¼“å†²ä¸­
     public bool canJump;
     public Vector2 jumpDirection;
 
-    //ÅÊÅÀ
-    public float climbTimer;//ÅÊÅÀÊ±¼ä¼ÆÊ±Æ÷
+    //æ”€çˆ¬
+    public float climbTimer;//æ”€çˆ¬æ—¶é—´è®¡æ—¶å™¨
     public float climbBufferTimer;
     public bool isClimbBuffered;
     public bool canClimb;
@@ -108,32 +108,32 @@ public class PlayerControllerWasted : MonoBehaviour
     public bool isOnRightWall;
     public float inputLockTimer;
 
-    //ÏòÁ¿×°ÖÃ
-    public float currentVelocity;//µ±Ç°½ÇÉ«ÏòÁ¿
-    public float currentStorage;//µ±Ç°×°ÖÃ´¢Á¿
-    public Vector2 releaseDirection;//release·½Ïò
+    //å‘é‡è£…ç½®
+    public float currentVelocity;//å½“å‰è§’è‰²å‘é‡
+    public float currentStorage;//å½“å‰è£…ç½®å‚¨é‡
+    public Vector2 releaseDirection;//releaseæ–¹å‘
     public bool isOverLoaded;
     public bool canRelease;
-    public bool willDecrease;//ÊÇ·ñ½«Òª¼õÉÙ´¢Á¿
-    public bool canDecrease;//¿ªÊ¼¼õÉÙ´¢Á¿
+    public bool willDecrease;//æ˜¯å¦å°†è¦å‡å°‘å‚¨é‡
+    public bool canDecrease;//å¼€å§‹å‡å°‘å‚¨é‡
     [Header("Release Visuals")]
-    public GameObject arrowPrefab; // Ò»¸ö¼òµ¥µÄ¼ıÍ·Í¼Æ¬£¬×÷Îª½ÇÉ«µÄ×ÓÎïÌå
+    public GameObject arrowPrefab; // ä¸€ä¸ªç®€å•çš„ç®­å¤´å›¾ç‰‡ï¼Œä½œä¸ºè§’è‰²çš„å­ç‰©ä½“
     public GameObject arrowInstance;
     private Vector2 preReleaseVelocity;
 
 
     #endregion
 
-    //³õÊ¼»¯
+    //åˆå§‹åŒ–
     private void Awake()
     {
-        //Éè¶¨½ÇÉ«×´Ì¬
+        //è®¾å®šè§’è‰²çŠ¶æ€
         currentPlayerState = PlayerState.idle;
 
-        //³õÊ¼»¯½ÇÉ«Î»ÖÃ£¬µÈÓĞÁËprefabÔÙËµ
+        //åˆå§‹åŒ–è§’è‰²ä½ç½®ï¼Œç­‰æœ‰äº†prefabå†è¯´
         
 
-        //»ñÈ¡×é¼ş
+        //è·å–ç»„ä»¶
         rb = GetComponent< Rigidbody2D > ();
         col = GetComponent<Collider2D>();
         canClimbLeftCheckerManager = GetComponentInChildren<CanClimbLeftCheckerManager>();
@@ -145,16 +145,16 @@ public class PlayerControllerWasted : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //³õÊ¼»¯ÖØÁ¦×°ÖÃ
+        //åˆå§‹åŒ–é‡åŠ›è£…ç½®
         currentStorage = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        #region ±äÁ¿¼ì²âºÍ×´Ì¬×ª»»
+        #region å˜é‡æ£€æµ‹å’ŒçŠ¶æ€è½¬æ¢
 
-        //×´Ì¬±äÁ¿¼à²âºÍ×´Ì¬×ª»»
+        //çŠ¶æ€å˜é‡ç›‘æµ‹å’ŒçŠ¶æ€è½¬æ¢
         isGrounded = groundedCheckerManager.isGrounded;
         if(canClimbLeftCheckerManager.canClimb == true)
         {
@@ -178,18 +178,18 @@ public class PlayerControllerWasted : MonoBehaviour
             SetCurrentPlayerState(PlayerState.midair);
         }
 
-        //ÊäÈë¼à²âºÍ×´Ì¬×ª»»£¨ÎÒµÄÂß¼­ÔÚÕâÀï×ÔÏàÃ¬¶ÜÁË£¬ÎÒµÄrunµÄÊäÈëĞ´ÔÚrunº¯ÊıÀï£©
+        //è¾“å…¥ç›‘æµ‹å’ŒçŠ¶æ€è½¬æ¢ï¼ˆæˆ‘çš„é€»è¾‘åœ¨è¿™é‡Œè‡ªç›¸çŸ›ç›¾äº†ï¼Œæˆ‘çš„runçš„è¾“å…¥å†™åœ¨runå‡½æ•°é‡Œï¼‰
         if (currentPlayerState == PlayerState.midair && Input.GetKeyDown(KeyCode.J))
         {
             isClimbBuffered = true;
-            climbBufferTimer = climbBufferTime;//Æô¶¯/ÖØÖÃÅÊÅÀ»º³å¼ÆÊ±Æ÷
+            climbBufferTimer = climbBufferTime;//å¯åŠ¨/é‡ç½®æ”€çˆ¬ç¼“å†²è®¡æ—¶å™¨
             
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
                 isJumpBuffered = true;
-                jumpBufferTimer = jumpBufferTime;//Æô¶¯/ÖØÖÃÌøÔ¾»º³å¼ÆÊ±Æ÷
-                jumpPressedTime = Time.time;//±ê¼Ç°´ÏÂÊ±¼ä
+                jumpBufferTimer = jumpBufferTime;//å¯åŠ¨/é‡ç½®è·³è·ƒç¼“å†²è®¡æ—¶å™¨
+                jumpPressedTime = Time.time;//æ ‡è®°æŒ‰ä¸‹æ—¶é—´
 
         }
         //SwitchCurrentPlayerStateInUpdate();
@@ -201,14 +201,14 @@ public class PlayerControllerWasted : MonoBehaviour
         {
             SetCurrentPlayerState(PlayerState.idle);
         }
-        //²¹³äclimb,die,releaseµÈµÈ
+        //è¡¥å……climb,die,releaseç­‰ç­‰
         #endregion
 
-        #region ÌøÔ¾ºÍÅÊÅÀ¿ØÖÆ
-        //ÌøÔ¾¿ØÖÆ
+        #region è·³è·ƒå’Œæ”€çˆ¬æ§åˆ¶
+        //è·³è·ƒæ§åˆ¶
         if (varJumpTimer > 0)
         {
-            varJumpTimer -= Time.deltaTime; // Ã¿Ò»Ö¡¼õÈ¥ 0.016Ãë(¼ÙÉè60fps)
+            varJumpTimer -= Time.deltaTime; // æ¯ä¸€å¸§å‡å» 0.016ç§’(å‡è®¾60fps)
         }
         if (jumpBufferTimer > 0)
         {
@@ -222,7 +222,7 @@ public class PlayerControllerWasted : MonoBehaviour
                 isJumpBuffered = false;
             }
         }
-        //ÅÊÅÀ¿ØÖÆ
+        //æ”€çˆ¬æ§åˆ¶
         if (inputLockTimer > 0)
         {
             inputLockTimer -= Time.deltaTime;
@@ -249,25 +249,25 @@ public class PlayerControllerWasted : MonoBehaviour
             }
         }
 
-        //ÔÚµØÃæ¼ì²â
+        //åœ¨åœ°é¢æ£€æµ‹
         if (isGrounded && rb.velocity.y <= 0.01f)
         {
             canJump = true;
         }
         #endregion
 
-        #region ÖØÁ¦×°ÖÃ¿ØÖÆ
-        if (rb.velocity.magnitude >= targetStorage)//Èç¹ûÄ¿±ê´¢Á¿Ğ¡ÓÚµ±Ç°ÏòÁ¿Ä££¬Á¢Âí½«µ±Ç°ÏòÁ¿Ä£Éè¶¨ÎªÄ¿±ê´¢Á¿£¬²¢ÇÒ¹Ø±ÕÆô¶¯¼ÆÊ±Æ÷
+        #region é‡åŠ›è£…ç½®æ§åˆ¶
+        if (rb.velocity.magnitude >= targetStorage)//å¦‚æœç›®æ ‡å‚¨é‡å°äºå½“å‰å‘é‡æ¨¡ï¼Œç«‹é©¬å°†å½“å‰å‘é‡æ¨¡è®¾å®šä¸ºç›®æ ‡å‚¨é‡ï¼Œå¹¶ä¸”å…³é—­å¯åŠ¨è®¡æ—¶å™¨
         {
-            targetStorage = rb.velocity.magnitude;//Éè¶¨
+            targetStorage = rb.velocity.magnitude;//è®¾å®š
 
-            decreaseTimer = -1F;//¹Ø±Õ
+            decreaseTimer = -1F;//å…³é—­
             willDecrease = false;
         }
 
-        if (rb.velocity.magnitude < targetStorage)//Èç¹ûÄ¿±ê´¢Á¿´óÓÚµ±Ç°ÏòÁ¿Ä££¬Æô¶¯¼õÉÙ¼ÆÊ±Æ÷
+        if (rb.velocity.magnitude < targetStorage)//å¦‚æœç›®æ ‡å‚¨é‡å¤§äºå½“å‰å‘é‡æ¨¡ï¼Œå¯åŠ¨å‡å°‘è®¡æ—¶å™¨
         {
-            targetStorage = rb.velocity.magnitude;//Éè¶¨  
+            targetStorage = rb.velocity.magnitude;//è®¾å®š  
 
             willDecrease = true;
             decreaseTimer = decreaseTime;
@@ -275,7 +275,7 @@ public class PlayerControllerWasted : MonoBehaviour
         }
         
 
-        if (willDecrease)//½«Òª¼õÉÙ¿ªÊ¼¼ÆÊ±
+        if (willDecrease)//å°†è¦å‡å°‘å¼€å§‹è®¡æ—¶
         {
                 decreaseTimer -= Time.deltaTime;
             if (decreaseTimer <= 0)
@@ -310,7 +310,7 @@ public class PlayerControllerWasted : MonoBehaviour
         }
 
 
-        // ¼ì²âÊÍ·Å¼ü (¼ÙÉèÊÇ K ¼ü»òÊó±êÓÒ¼ü)
+        // æ£€æµ‹é‡Šæ”¾é”® (å‡è®¾æ˜¯ K é”®æˆ–é¼ æ ‡å³é”®)
         if (Input.GetKeyDown(KeyCode.LeftControl) && currentStorage >= minReleaseThrehold && canRelease)
         {
             StartRelease();
@@ -318,7 +318,7 @@ public class PlayerControllerWasted : MonoBehaviour
 
         if (currentPlayerState == PlayerState.release)
         {
-            UpdateAimingDirection(); // ÊµÊ±¸üĞÂ¼ıÍ·Ö¸Ïò
+            UpdateAimingDirection(); // å®æ—¶æ›´æ–°ç®­å¤´æŒ‡å‘
 
             if (Input.GetKeyUp(KeyCode.LeftControl))
             {
@@ -334,13 +334,13 @@ public class PlayerControllerWasted : MonoBehaviour
 
     private void FixedUpdate()
     {
-        #region ×´Ì¬switch
-        //¸ù¾İ×´Ì¬Ö´ĞĞ²»Í¬µÄº¯Êı
+        #region çŠ¶æ€switch
+        //æ ¹æ®çŠ¶æ€æ‰§è¡Œä¸åŒçš„å‡½æ•°
         switch (currentPlayerState)
         {
             case PlayerState.idle:
 
-                //ÆğÌø
+                //èµ·è·³
                 if (isJumpBuffered && canJump)
                 {
                     isGrounded = false;
@@ -348,7 +348,7 @@ public class PlayerControllerWasted : MonoBehaviour
                     jumpBufferTimer = -1F;
                     isJumpBuffered = false;
 
-                    varJumpTimer = varJumpTime;//Æô¶¯±äÁ¿ÌøÔ¾¼ÆÊ±Æ÷
+                    varJumpTimer = varJumpTime;//å¯åŠ¨å˜é‡è·³è·ƒè®¡æ—¶å™¨
                     InitialJump();
 
                     SetCurrentPlayerState(PlayerState.midair);
@@ -363,7 +363,7 @@ public class PlayerControllerWasted : MonoBehaviour
                     Brake();
                 }
 
-                //ÆğÌø
+                //èµ·è·³
                 if (isJumpBuffered && canJump)
                 {
                     isGrounded = false;
@@ -371,7 +371,7 @@ public class PlayerControllerWasted : MonoBehaviour
                     jumpBufferTimer = -1F;
                     isJumpBuffered = false;
 
-                    varJumpTimer = varJumpTime;//Æô¶¯±äÁ¿ÌøÔ¾¼ÆÊ±Æ÷
+                    varJumpTimer = varJumpTime;//å¯åŠ¨å˜é‡è·³è·ƒè®¡æ—¶å™¨
                     InitialJump();
 
                     SetCurrentPlayerState(PlayerState.midair);
@@ -387,7 +387,7 @@ public class PlayerControllerWasted : MonoBehaviour
                 
 
                 
-                //ÌøÔ¾ºóĞø¼ÓËÙºÍÖØÁ¦Ëõ¼õ
+                //è·³è·ƒåç»­åŠ é€Ÿå’Œé‡åŠ›ç¼©å‡
                 if (Input.GetKey(KeyCode.Space) && varJumpTimer > 0)
                 {
                     Jump();
@@ -401,7 +401,7 @@ public class PlayerControllerWasted : MonoBehaviour
                     DisableGravityContraction();
                 }
 
-                //ÅÊÅÀÊäÈë
+                //æ”€çˆ¬è¾“å…¥
                if (isClimbBuffered && canClimb)
                {
                     climbTimer = climbTime;
@@ -416,7 +416,7 @@ public class PlayerControllerWasted : MonoBehaviour
                     break;
             case PlayerState.climb:
                 rb.velocity = Vector2.zero;
-                rb.angularVelocity = 0; // Í¬Ê±Ò²Çå¿Õ½ÇËÙ¶È
+                rb.angularVelocity = 0; // åŒæ—¶ä¹Ÿæ¸…ç©ºè§’é€Ÿåº¦
                 rb.gravityScale = 0;
                 if (isJumpBuffered)
                 {
@@ -425,7 +425,7 @@ public class PlayerControllerWasted : MonoBehaviour
                     jumpBufferTimer = -1F;
                     isJumpBuffered = false;
 
-                    varJumpTimer = varJumpTime;//Æô¶¯±äÁ¿ÌøÔ¾¼ÆÊ±Æ÷
+                    varJumpTimer = varJumpTime;//å¯åŠ¨å˜é‡è·³è·ƒè®¡æ—¶å™¨
                     WallJump();
                     SetCurrentPlayerState(PlayerState.midair);
                     inputLockTimer = inputLockTime;
@@ -444,25 +444,25 @@ public class PlayerControllerWasted : MonoBehaviour
         #endregion
     }
 
-    //¶¯»­¿ØÖÆº¯Êı
-    // ¶¯»­Íø¹Øº¯Êı
+    //åŠ¨ç”»æ§åˆ¶å‡½æ•°
+    // åŠ¨ç”»ç½‘å…³å‡½æ•°
     public void PlayAnimation(string name)
     {
-        // Èç¹ûÄã»¹Ã»×ö¶¯»­£¬»òÕßÃ»¹Ò Animator ×é¼ş£¬ÕâÀï¾ÍÖ±½ÓÌø¹ı
+        // å¦‚æœä½ è¿˜æ²¡åšåŠ¨ç”»ï¼Œæˆ–è€…æ²¡æŒ‚ Animator ç»„ä»¶ï¼Œè¿™é‡Œå°±ç›´æ¥è·³è¿‡
         if (Anim == null || string.IsNullOrEmpty(name)) return;
 
         Anim.Play(name);
     }
 
-    #region ×´Ì¬ÇĞ»»º¯Êı
-    private void SwitchCurrentPlayerStateInUpdate()//Ö»°üÀ¨idleºÍmidairµÄ×ª»»£¬run,die£¬climbºÍreleaseÔÚËüÃÇ¸÷×ÔµÄ´¥·¢º¯ÊıÀï
+    #region çŠ¶æ€åˆ‡æ¢å‡½æ•°
+    private void SwitchCurrentPlayerStateInUpdate()//åªåŒ…æ‹¬idleå’Œmidairçš„è½¬æ¢ï¼Œrun,dieï¼Œclimbå’Œreleaseåœ¨å®ƒä»¬å„è‡ªçš„è§¦å‘å‡½æ•°é‡Œ
     {
         
         if (isGrounded && rb.velocity.magnitude == 0)
         {
             SetCurrentPlayerState(PlayerState.idle);
         }
-        else if (!isGrounded && currentPlayerState !=PlayerState.climb && currentPlayerState != PlayerState.die && currentPlayerState != PlayerState.release)//ÕâÀïÓĞÊ²Ã´¼ò±ãĞ´·¨
+        else if (!isGrounded && currentPlayerState !=PlayerState.climb && currentPlayerState != PlayerState.die && currentPlayerState != PlayerState.release)//è¿™é‡Œæœ‰ä»€ä¹ˆç®€ä¾¿å†™æ³•
         {
             SetCurrentPlayerState(PlayerState.midair);
         }
@@ -474,17 +474,17 @@ public class PlayerControllerWasted : MonoBehaviour
     #endregion
 
 
-    #region »ù´¡ÒÆ¶¯º¯Êı
+    #region åŸºç¡€ç§»åŠ¨å‡½æ•°
 
-        #region run»òÕßidle×´Ì¬ÏÂº¯Êı
-    //ÓĞÊäÈëÊ±µÄÅÜ¶¯º¯Êı
+        #region runæˆ–è€…idleçŠ¶æ€ä¸‹å‡½æ•°
+    //æœ‰è¾“å…¥æ—¶çš„è·‘åŠ¨å‡½æ•°
     void Run()
     {
-        //Éè¶¨moveDirection
+        //è®¾å®šmoveDirection
         moveDirection.x = Input.GetAxisRaw("Horizontal");
 
-        //ÅÜ¶¯
-        if (Mathf.Sign(rb.velocity.x) != Input.GetAxisRaw("Horizontal"))//ÏÈ¼ì²âÊÇ·ñÔÚ×ªÏò£¬ÒÔ±ãÓÚÊ©¼ÓÒ»¸ö¸ü´óµÄ×ªÏòËÙ¶È
+        //è·‘åŠ¨
+        if (Mathf.Sign(rb.velocity.x) != Input.GetAxisRaw("Horizontal"))//å…ˆæ£€æµ‹æ˜¯å¦åœ¨è½¬å‘ï¼Œä»¥ä¾¿äºæ–½åŠ ä¸€ä¸ªæ›´å¤§çš„è½¬å‘é€Ÿåº¦
         {
             Brake();
         }
@@ -502,12 +502,12 @@ public class PlayerControllerWasted : MonoBehaviour
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxMoveSpeed, rb.velocity.y);
         }
     }
-    //ÅÜ¶¯ÖĞÇÒÎ´ÊäÈë»òÕß×ªÏòÊ±µ÷ÓÃµÄÉ²³µº¯Êı
+    //è·‘åŠ¨ä¸­ä¸”æœªè¾“å…¥æˆ–è€…è½¬å‘æ—¶è°ƒç”¨çš„åˆ¹è½¦å‡½æ•°
     void Brake()
     {
         rb.AddForce(new Vector2(-Mathf.Sign(rb.velocity.x) * brakeDeceleraion, 0));
     }
-    //³¬¹ı×î´ómoveSpeedµÄÇ¿ÖÆ¼õËÙº¯Êı
+    //è¶…è¿‡æœ€å¤§moveSpeedçš„å¼ºåˆ¶å‡é€Ÿå‡½æ•°
     void EnforceDeceleration()
     {
         if (rb.velocity.magnitude > maxMoveSpeed)
@@ -520,19 +520,19 @@ public class PlayerControllerWasted : MonoBehaviour
 
     #endregion
 
-        #region midair×´Ì¬ÏÂ(»òrunÖĞµÄÌøÔ¾)º¯Êı
+        #region midairçŠ¶æ€ä¸‹(æˆ–runä¸­çš„è·³è·ƒ)å‡½æ•°
     void MoveInMidAir()
     {
         if (inputLockTimer > 0) return;
-        //Éè¶¨moveDirection
+        //è®¾å®šmoveDirection
         moveDirection.x = Input.GetAxisRaw("Horizontal");
 
-        //¿ÕÖĞÒÆ¶¯
-        if (Mathf.Sign(rb.velocity.x) != Input.GetAxisRaw("Horizontal"))//ÏÈ¼ì²âÊÇ·ñÔÚ×ªÏò£¬ÒÔ±ãÓÚÊ©¼ÓÒ»¸ö¸ü´óµÄ×ªÏòËÙ¶È
+        //ç©ºä¸­ç§»åŠ¨
+        if (Mathf.Sign(rb.velocity.x) != Input.GetAxisRaw("Horizontal"))//å…ˆæ£€æµ‹æ˜¯å¦åœ¨è½¬å‘ï¼Œä»¥ä¾¿äºæ–½åŠ ä¸€ä¸ªæ›´å¤§çš„è½¬å‘é€Ÿåº¦
         {
             Brake();
         }
-        if (rb.velocity.x < maxMoveSpeedInMidAir)//³¯Í¬·½ÏòÒÆ¶¯
+        if (rb.velocity.x < maxMoveSpeedInMidAir)//æœåŒæ–¹å‘ç§»åŠ¨
         {
             if (rb.velocity.x < minMoveSpeed)
             {
@@ -544,7 +544,7 @@ public class PlayerControllerWasted : MonoBehaviour
         else if (Mathf.Abs(rb.velocity.x) >= maxMoveSpeedInMidAir)
         {
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxMoveSpeedInMidAir, rb.velocity.y);
-            //×ªÏòÂß¼­Ã»Ğ´
+            //è½¬å‘é€»è¾‘æ²¡å†™
         }
     }
     void InitialJump()
@@ -555,7 +555,7 @@ public class PlayerControllerWasted : MonoBehaviour
     
     void Jump()
     {
-        //»ù±¾ÌøÔ¾Âß¼­
+        //åŸºæœ¬è·³è·ƒé€»è¾‘
         if ( varJumpTimer > 0)
         {
             if (rb.velocity.y < maxJumpSpeed)
@@ -581,7 +581,7 @@ public class PlayerControllerWasted : MonoBehaviour
 
     #endregion
 
-        #region climb×´Ì¬ÏÂµÄº¯Êı
+        #region climbçŠ¶æ€ä¸‹çš„å‡½æ•°
     void Climb()
     {
         rb.velocity = Vector2.zero;
@@ -589,40 +589,40 @@ public class PlayerControllerWasted : MonoBehaviour
     }
     void SnapToWall()
     {
-        rb.velocity = Vector2.zero; // ÏÈÍ£ÏÂ
+        rb.velocity = Vector2.zero; // å…ˆåœä¸‹
 
         float direction = isOnRightWall ? 1f : -1f;
         Vector2 wallDir = new Vector2(direction, 0);
 
-        // --- ºËĞÄĞŞÕıµã£ºÆğµãÆ«ÒÆ ---
-        // ÈÃÉäÏßÆğµã´ÓÖĞĞÄÉÔÎ¢Íù»ØÍËÒ»µãµã£¨0.1f£©£¬È·±£ËüÄÜÉäÖĞÇ½µÄ±íÃæ
+        // --- æ ¸å¿ƒä¿®æ­£ç‚¹ï¼šèµ·ç‚¹åç§» ---
+        // è®©å°„çº¿èµ·ç‚¹ä»ä¸­å¿ƒç¨å¾®å¾€å›é€€ä¸€ç‚¹ç‚¹ï¼ˆ0.1fï¼‰ï¼Œç¡®ä¿å®ƒèƒ½å°„ä¸­å¢™çš„è¡¨é¢
         Vector2 rayOrigin = rb.position - (wallDir * 0.1f);
         float rayLength = col.bounds.extents.x + 0.5f;
 
-        // Ê¹ÓÃ Raycast »ñÈ¡¾«È·µÄ½Ó´¥µã
+        // ä½¿ç”¨ Raycast è·å–ç²¾ç¡®çš„æ¥è§¦ç‚¹
         RaycastHit2D hit = Physics2D.Raycast(rayOrigin, wallDir, rayLength, groundedCheckerManager.Ground);
 
-        // µ÷ÊÔÏß£ºÔÚ Scene ÊÓÍ¼ÀïÄãÄÜ¿´µ½ÂÌÏß¾ÍÊÇÉäÏß
+        // è°ƒè¯•çº¿ï¼šåœ¨ Scene è§†å›¾é‡Œä½ èƒ½çœ‹åˆ°ç»¿çº¿å°±æ˜¯å°„çº¿
         Debug.DrawRay(rayOrigin, wallDir * rayLength, Color.green, 2f);
 
         if (hit.collider != null)
         {
             float colliderHalfWidth = col.bounds.extents.x;
-            float physicsSkin = 0.01f; // Ô¤Áô¼«Ğ¡¿ÕÏ¶·ÀÖ¹ÎïÀí¼·Ñ¹
+            float physicsSkin = 0.01f; // é¢„ç•™æå°ç©ºéš™é˜²æ­¢ç‰©ç†æŒ¤å‹
 
-            // ¼ÆËãÄ¿±ê X
+            // è®¡ç®—ç›®æ ‡ X
             float targetX = hit.point.x - (colliderHalfWidth * direction) + (physicsSkin * direction);
 
-            // Ç¿ÖÆÎ»ÖÃÍ¬²½ (×¢Òâ£ºÊ¹ÓÃ Vector2)
+            // å¼ºåˆ¶ä½ç½®åŒæ­¥ (æ³¨æ„ï¼šä½¿ç”¨ Vector2)
             rb.position = new Vector2(targetX, rb.position.y);
             rb.velocity = Vector2.zero;
 
-            Debug.Log($"[Snap³É¹¦] ÃüÖĞµã:{hit.point.x} Ä¿±êX:{targetX}");
+            Debug.Log($"[SnapæˆåŠŸ] å‘½ä¸­ç‚¹:{hit.point.x} ç›®æ ‡X:{targetX}");
         }
         else
         {
-            // Èç¹ûÊ§°Ü£¬Í¨³£ÊÇ LayerMask Ã»Ñ¡¶Ô»òÕßÉäÏßÌ«¶Ì
-            Debug.LogWarning($"[SnapÊ§°Ü] ·½Ïò:{direction} Æğµã:{rayOrigin} Çë¼ì²éÎïÌåµÄ Layer ÊÇ·ñÎª Ground");
+            // å¦‚æœå¤±è´¥ï¼Œé€šå¸¸æ˜¯ LayerMask æ²¡é€‰å¯¹æˆ–è€…å°„çº¿å¤ªçŸ­
+            Debug.LogWarning($"[Snapå¤±è´¥] æ–¹å‘:{direction} èµ·ç‚¹:{rayOrigin} è¯·æ£€æŸ¥ç‰©ä½“çš„ Layer æ˜¯å¦ä¸º Ground");
         }
     }
     void ExitClimb()
@@ -645,22 +645,22 @@ public class PlayerControllerWasted : MonoBehaviour
     #endregion
 
 
-    #region ÖØÁ¦´¢´æÓëÊÍ·Åº¯Êı
+    #region é‡åŠ›å‚¨å­˜ä¸é‡Šæ”¾å‡½æ•°
     void StartRelease()
     {
         SetCurrentPlayerState(PlayerState.release);
 
-        // 1. ¿ªÆô×Óµ¯Ê±¼ä
+        // 1. å¼€å¯å­å¼¹æ—¶é—´
         Time.timeScale = timeScaleReleasing;
-        // ¹Ø¼ü£º±ØĞëÍ¬²½µ÷ÕûÎïÀíÖ¡ÂÊ£¬·ñÔòÂı¶¯×÷ÏÂ»á¶¶¶¯
+        // å…³é”®ï¼šå¿…é¡»åŒæ­¥è°ƒæ•´ç‰©ç†å¸§ç‡ï¼Œå¦åˆ™æ…¢åŠ¨ä½œä¸‹ä¼šæŠ–åŠ¨
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
 
-        // 2. ÎïÀíÄı¹Ì£¨ÀàËÆÅÊÅÀ£¬·ÀÖ¹ÔÚÑ¡·½ÏòÊ±µôÏÂÈ¥£©
+        // 2. ç‰©ç†å‡å›ºï¼ˆç±»ä¼¼æ”€çˆ¬ï¼Œé˜²æ­¢åœ¨é€‰æ–¹å‘æ—¶æ‰ä¸‹å»ï¼‰
         preReleaseVelocity = rb.velocity;
         rb.velocity = Vector2.zero;
         rb.gravityScale = 0;
 
-        // 3. ÏÔÊ¾ UI ¼ıÍ·
+        // 3. æ˜¾ç¤º UI ç®­å¤´
         if (arrowInstance != null) arrowInstance.SetActive(true);
     }
 
@@ -669,41 +669,41 @@ public class PlayerControllerWasted : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        // Ö»ÒªÓĞÊäÈë£¬¾Í¸üĞÂ·½Ïò
+        // åªè¦æœ‰è¾“å…¥ï¼Œå°±æ›´æ–°æ–¹å‘
         if (Mathf.Abs(h) > 0.1f || Mathf.Abs(v) > 0.1f)
         {
             releaseDirection = new Vector2(h, v).normalized;
         }
 
-        // ÈÃ UI ¼ıÍ·Ö¸ÏòÕâ¸ö·½Ïò
+        // è®© UI ç®­å¤´æŒ‡å‘è¿™ä¸ªæ–¹å‘
         if (arrowInstance != null)
         {
             float angle = Mathf.Atan2(releaseDirection.y, releaseDirection.x) * Mathf.Rad2Deg;
-            float offset = -90f; // Èç¹ûÖ¸ÏòÓÒÔòÎª0£¬Ö¸ÏòÉÏÔòÎª-90
+            float offset = -90f; // å¦‚æœæŒ‡å‘å³åˆ™ä¸º0ï¼ŒæŒ‡å‘ä¸Šåˆ™ä¸º-90
             arrowInstance.transform.rotation = Quaternion.Euler(0, 0, angle + offset);
         }
     }
 
     void ExecuteRelease()
     {
-        // 1. »Ö¸´Ê±¼ä
+        // 1. æ¢å¤æ—¶é—´
         Time.timeScale = 1.0f;
         Time.fixedDeltaTime = 0.02f;
 
-        // 2. ÎïÀí±¬·¢
+        // 2. ç‰©ç†çˆ†å‘
         rb.gravityScale = 1.0f;
-        // ºËĞÄ¹«Ê½£ºĞÂËÙ¶È = ·½Ïò * ´¢Á¿
+        // æ ¸å¿ƒå…¬å¼ï¼šæ–°é€Ÿåº¦ = æ–¹å‘ * å‚¨é‡
         rb.velocity = releaseDirection * currentStorage;
 
-        // 3. ×ÊÔ´ÏûºÄ
+        // 3. èµ„æºæ¶ˆè€—
         currentStorage = 0;
-        targetStorage = 0; // Í¬Ê±Ò²Çå¿ÕÄ¿±êÖµ£¬·ÀÖ¹Ë²¼ä»ØÕÇ
+        targetStorage = 0; // åŒæ—¶ä¹Ÿæ¸…ç©ºç›®æ ‡å€¼ï¼Œé˜²æ­¢ç¬é—´å›æ¶¨
 
-        // 4. ×´Ì¬ÇĞ»»
+        // 4. çŠ¶æ€åˆ‡æ¢
         SetCurrentPlayerState(PlayerState.midair);
         if (arrowInstance != null) arrowInstance.SetActive(false);
 
-        // 5. ÉèÖÃÀäÈ´
+        // 5. è®¾ç½®å†·å´
         // canRelease = false;
         // StartCoroutine(ReleaseCooldownRoutine());
     }

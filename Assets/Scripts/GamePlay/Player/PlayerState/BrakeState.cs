@@ -8,22 +8,22 @@ public class BrakeState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        // ½øÈëÉ²³µ×´Ì¬Ê±£¬¿ÉÒÔ²¥·ÅÒ»´Î¡°½Å²¿Ä¦²ÁµØÃæµÄÑÌÎí¡±Á£×ÓÌØĞ§
-        // Debug.Log("¿ªÊ¼É²³µ...");
+        // è¿›å…¥åˆ¹è½¦çŠ¶æ€æ—¶ï¼Œå¯ä»¥æ’­æ”¾ä¸€æ¬¡â€œè„šéƒ¨æ‘©æ“¦åœ°é¢çš„çƒŸé›¾â€ç²’å­ç‰¹æ•ˆ
+        // Debug.Log("å¼€å§‹åˆ¹è½¦...");
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        // --- 1. ÁéÃô¶ÈÓÅÏÈ£ºÈç¹ûÉ²³µÖĞÍ¾Íæ¼ÒÓÖ°´ÁËÒÆ¶¯£¬Á¢¿ÌÇĞ»Ø Run ---
+        // --- 1. çµæ•åº¦ä¼˜å…ˆï¼šå¦‚æœåˆ¹è½¦ä¸­é€”ç©å®¶åˆæŒ‰äº†ç§»åŠ¨ï¼Œç«‹åˆ»åˆ‡å› Run ---
         if (Mathf.Abs(player.InputX) > 0.01f)
         {
             stateMachine.ChangeState(player.RunState);
             return;
         }
 
-        // --- 2. ÁéÃô¶ÈÓÅÏÈ£ºÈç¹ûÉ²³µÖĞÍ¾°´ÏÂÌøÔ¾£¬Á¢¿ÌÆğÌø ---
+        // --- 2. çµæ•åº¦ä¼˜å…ˆï¼šå¦‚æœåˆ¹è½¦ä¸­é€”æŒ‰ä¸‹è·³è·ƒï¼Œç«‹åˆ»èµ·è·³ ---
         if (player.JumpInputDown && player.canJump)
         {
             player.InitialJump();
@@ -31,15 +31,15 @@ public class BrakeState : PlayerState
             return;
         }
 
-        // --- 3. ×´Ì¬ÇĞ»»£ºÈç¹û½ÅÏÂÒ»¿Õ£¬ÇĞµ½¿ÕÖĞ ---
+        // --- 3. çŠ¶æ€åˆ‡æ¢ï¼šå¦‚æœè„šä¸‹ä¸€ç©ºï¼Œåˆ‡åˆ°ç©ºä¸­ ---
         if (!player.groundedCheckerManager.isGrounded)
         {
             stateMachine.ChangeState(player.MidAirState);
             return;
         }
 
-        // --- 4. ×´Ì¬ÇĞ»»£ºËÙ¶È×ã¹»ÂıÁË£¬ÕıÊ½½øÈë Idle ---
-        // Ê¹ÓÃ Mathf.Abs È·±£Ïò×óÏòÓÒ»¬¶¯¶¼ÄÜÕıÈ·¼ì²â
+        // --- 4. çŠ¶æ€åˆ‡æ¢ï¼šé€Ÿåº¦è¶³å¤Ÿæ…¢äº†ï¼Œæ­£å¼è¿›å…¥ Idle ---
+        // ä½¿ç”¨ Mathf.Abs ç¡®ä¿å‘å·¦å‘å³æ»‘åŠ¨éƒ½èƒ½æ­£ç¡®æ£€æµ‹
         if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeed)
         {
             stateMachine.ChangeState(player.IdleState);
@@ -51,17 +51,17 @@ public class BrakeState : PlayerState
     {
         base.PhysicsUpdate();
 
-        // --- 5. ºËĞÄÎïÀíÂß¼­£ºÊ©¼ÓÉ²³µÁ¦ ---
-        // ÕâÀïµÄÉ²³µÁ¦¿ÉÒÔ±ÈÆÕÍ¨µÄ idle Ä¦²ÁÁ¦¸ü´óÒ»µã£¬ÌåÏÖ¡°É²³µ¡±µÄ¶¯×÷¸Ğ
+        // --- 5. æ ¸å¿ƒç‰©ç†é€»è¾‘ï¼šæ–½åŠ åˆ¹è½¦åŠ› ---
+        // è¿™é‡Œçš„åˆ¹è½¦åŠ›å¯ä»¥æ¯”æ™®é€šçš„ idle æ‘©æ“¦åŠ›æ›´å¤§ä¸€ç‚¹ï¼Œä½“ç°â€œåˆ¹è½¦â€çš„åŠ¨ä½œæ„Ÿ
         if (Mathf.Abs(player.rb.velocity.x) > 0.01f)
         {
-            // Ïòµ±Ç°ÔË¶¯µÄ·´·½ÏòÊ©¼ÓÁ¦
+            // å‘å½“å‰è¿åŠ¨çš„åæ–¹å‘æ–½åŠ åŠ›
             float forceX = -Mathf.Sign(player.rb.velocity.x) * player.brakeDeceleraion;
             player.rb.AddForce(new Vector2(forceX, 0));
         }
         else
         {
-            // ËÙ¶È¼«ÆäÎ¢Ğ¡Ê±£¬Ç¿ĞĞ¹éÁã·ÀÖ¹»¬¶¯
+            // é€Ÿåº¦æå…¶å¾®å°æ—¶ï¼Œå¼ºè¡Œå½’é›¶é˜²æ­¢æ»‘åŠ¨
             player.rb.velocity = new Vector2(0, player.rb.velocity.y);
         }
     }
@@ -69,6 +69,6 @@ public class BrakeState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        // Àë¿ªÉ²³µ×´Ì¬£¬Í£Ö¹É²³µÒôĞ§»òÁ£×Ó
+        // ç¦»å¼€åˆ¹è½¦çŠ¶æ€ï¼Œåœæ­¢åˆ¹è½¦éŸ³æ•ˆæˆ–ç²’å­
     }
 }
