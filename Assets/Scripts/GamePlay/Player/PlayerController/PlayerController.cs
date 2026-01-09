@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // --- ×´Ì¬»úÒıÓÃ ---
+    // --- çŠ¶æ€æœºå¼•ç”¨ ---
     public PlayerStateMachine StateMachine { get; private set; }
     public IdleState IdleState { get; private set; }
     public RunState RunState { get; private set; }
@@ -11,48 +11,48 @@ public class PlayerController : MonoBehaviour
     public ClimbState ClimbState { get; private set; }
     public ReleaseState ReleaseState { get; private set; }
 
-    // --- ×é¼şÒıÓÃ (¸ù¾İ±¨´í£¬Í³Ò»Ê¹ÓÃ×´Ì¬½Å±¾ÀïÆÚ´ıµÄÃû×Ö) ---
-    public Rigidbody2D rb { get; private set; } // ÄãÒªÇóµÄĞ´Ğ¡Ğ´
-    // Èç¹û±¨´íËµÕÒ²»µ½ RB£¬Çë°ÑÉÏÃæµÄ rb ¸Ä³É RB£¬»òÕß°Ñ×´Ì¬½Å±¾ÀïµÄ RB ¸Ä³É rb
-    // ¼øÓÚÄãÏ²»¶Ğ¡Ğ´£¬ÎÒ½¨ÒéÍ³Ò»°Ñ×´Ì¬½Å±¾ÀïµÄ RB ¸Ä³É rb£¬µ«ÎªÁËÏÖÔÚÄÜÅÜÍ¨£¬ÎÒÏÈ¼Ó¸ö¼æÈİ£º
+    // --- ç»„ä»¶å¼•ç”¨ (æ ¹æ®æŠ¥é”™ï¼Œç»Ÿä¸€ä½¿ç”¨çŠ¶æ€è„šæœ¬é‡ŒæœŸå¾…çš„åå­—) ---
+    public Rigidbody2D rb { get; private set; } // ä½ è¦æ±‚çš„å†™å°å†™
+    // å¦‚æœæŠ¥é”™è¯´æ‰¾ä¸åˆ° RBï¼Œè¯·æŠŠä¸Šé¢çš„ rb æ”¹æˆ RBï¼Œæˆ–è€…æŠŠçŠ¶æ€è„šæœ¬é‡Œçš„ RB æ”¹æˆ rb
+    // é‰´äºä½ å–œæ¬¢å°å†™ï¼Œæˆ‘å»ºè®®ç»Ÿä¸€æŠŠçŠ¶æ€è„šæœ¬é‡Œçš„ RB æ”¹æˆ rbï¼Œä½†ä¸ºäº†ç°åœ¨èƒ½è·‘é€šï¼Œæˆ‘å…ˆåŠ ä¸ªå…¼å®¹ï¼š
     public Rigidbody2D RB => rb;
 
     public Animator Anim { get; private set; }
     public Collider2D col { get; private set; }
 
-    [Header("¼ì²âÆ÷ÒıÓÃ")]
-    // ¶ÔÓ¦±¨´íÀïµÄ groundedCheckerManager
+    [Header("æ£€æµ‹å™¨å¼•ç”¨")]
     public GroundedCheckerManager groundedCheckerManager;
-    public CanClimbLeftCheckerManager canClimbLeftCheckerManager;
+    public CanClimbLeftCheckerManager canClimbLeftCheckerManager;//æ”€çˆ¬è£…ç½®æš‚ä¸”ä¸ç”¨
     public CanClimbRightCheckerManager canClimbRightCheckerManager;
 
-    [Header("ÒÆ¶¯²ÎÊı")]
+    [Header("ç§»åŠ¨å‚æ•°")]
     public float moveSpeedAcc = 50f;
     public float maxMoveSpeed = 8f;
     public float minMoveSpeed = 0.1f;
     public float brakeDeceleraion = 30f;
     public float enforceDeceleraion = 20f;
 
-    [Header("¿ÕÖĞ²ÎÊı")]
+    [Header("ç©ºä¸­å‚æ•°")]
     public float moveSpeedAccInMidAir = 25f;
     public float maxMoveSpeedInMidAir = 8f;
     public float enforceMoveAccSpeedInMidAir = 15f;
 
-    [Header("ÌøÔ¾²ÎÊı")]
+    [Header("è·³è·ƒå‚æ•°")]
     public float jumpSpeedInitial = 12f;
     public float jumpSpeedAcc = 80f;
     public float maxJumpSpeed = 15f;
     public float varJumpTime = 0.2f;
     public float gravityContractionThreshold = 1f;
     public float gravityContractionScale = 0.5f;
+    public float jumpBufferTime;
 
-    [Header("ÅÊÅÀ²ÎÊı")]
+    [Header("æ”€çˆ¬å‚æ•°")]
     public float climbTime = 2.0f;
     public float wallJumpSpeed = 15f;
     public Vector2 wallJumpDirection = new Vector2(1, 1);
     public float inputLockTime = 0.2f;
 
-    [Header("ÖØÁ¦×°ÖÃÏà¹Ø")]
+    [Header("é‡åŠ›è£…ç½®ç›¸å…³")]
     public float maxStorage = 100f;
     public float minReleaseThrehold = 5f;
     public float timeScaleReleasing = 0.1f;
@@ -72,17 +72,19 @@ public class PlayerController : MonoBehaviour
     public float decreaseTimer;
     public bool isOverLoaded;
 
-    [Header("ÊµÊ±±äÁ¿")]
+    [Header("å®æ—¶å˜é‡")]
     public float InputX;
     public bool JumpInputDown;
+    public bool ReleaseInputDown;
     public float varJumpTimer;
+    public float jumpBufferTimer;//è·³è·ƒç¼“å†²æ—¶é—´
     public float climbTimer;
     public float inputLockTimer;
-    public bool canJump; // ²¹ÉÏÁËÕâ¸ö±äÁ¿
+    public bool canJump; // è¡¥ä¸Šäº†è¿™ä¸ªå˜é‡
     public Vector2 releaseDirection;
     public GameObject arrowInstance;
 
-    // ¿ì½İÊôĞÔ°ó¶¨
+    // å¿«æ·å±æ€§ç»‘å®š
     public bool isGrounded => groundedCheckerManager != null && groundedCheckerManager.isGrounded;
     public bool isOnLeftWall => canClimbLeftCheckerManager != null && canClimbLeftCheckerManager.canClimb;
     public bool isOnRightWall => canClimbRightCheckerManager != null && canClimbRightCheckerManager.canClimb;
@@ -96,7 +98,7 @@ public class PlayerController : MonoBehaviour
 
         StateMachine = new PlayerStateMachine();
 
-        // ³õÊ¼»¯ËùÓĞ×´Ì¬
+        // åˆå§‹åŒ–æ‰€æœ‰çŠ¶æ€
         IdleState = new IdleState(this, StateMachine, "Idle");
         RunState = new RunState(this, StateMachine, "Run");
         BrakeState = new BrakeState(this, StateMachine, "Brake");
@@ -112,12 +114,29 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        //å¤„ç†è¾“å…¥:æ¨ªå‘è¾“å…¥,è·³è·ƒè¾“å…¥,é‡Šæ”¾è¾“å…¥ï¼ˆé‡Šæ”¾çš„åŠŸèƒ½è¿˜æ²¡å®ç°ï¼‰
         InputX = Input.GetAxisRaw("Horizontal");
         JumpInputDown = Input.GetKeyDown(KeyCode.Space);
+        ReleaseInputDown = Input.GetKeyDown(KeyCode.LeftControl);
 
+        //å¯åŠ¨è¾“å…¥ç¼“å†²(ç›®å‰åªæœ‰è·³è·ƒ)
+        if (JumpInputDown == true)
+        {
+            jumpBufferTimer = jumpBufferTime;
+        }
+
+        //å¤„ç†è®¡æ—¶å™¨
         if (inputLockTimer > 0) inputLockTimer -= Time.deltaTime;
         if (varJumpTimer > 0) varJumpTimer -= Time.deltaTime;
+        if (jumpBufferTimer > 0)
+        {
+            jumpBufferTimer -= Time.deltaTime;
+        }
 
+        //å¤„ç†å…¶å®ƒçŠ¶æ€ï¼ˆä¸­ç«‹äºå„ç§çŠ¶æ€ï¼‰å˜é‡
+        if (isGrounded && canJump == false) canJump = true;//è½åœ°åå¯ä»¥å†æ¬¡è·³è·ƒ
+
+        //è°ƒç”¨çŠ¶æ€æœºå†…éƒ¨æ›´æ–°
         StateMachine.CurrentState.HandleInput();
         StateMachine.CurrentState.LogicUpdate();
     }
@@ -127,7 +146,7 @@ public class PlayerController : MonoBehaviour
         StateMachine.CurrentState.PhysicsUpdate();
     }
 
-    // ²¹ÉÏ×´Ì¬Ààµ÷ÓÃµÄ Brake º¯Êı
+    // è¡¥ä¸ŠçŠ¶æ€ç±»è°ƒç”¨çš„ Brake å‡½æ•°
     public void Brake()
     {
         if (Mathf.Abs(rb.velocity.x) > 0.01f)
@@ -139,24 +158,31 @@ public class PlayerController : MonoBehaviour
 
     public void ApplyBrakeForce(float amount)
     {
-        // Ö»ÓĞÔÚÓĞË®Æ½ËÙ¶ÈÊ±²ÅÖ´ĞĞÉ²³µ
+        // åªæœ‰åœ¨æœ‰æ°´å¹³é€Ÿåº¦æ—¶æ‰æ‰§è¡Œåˆ¹è½¦
         if (Mathf.Abs(rb.velocity.x) > 0.01f)
         {
-            // Ëã³ö·´·½ÏòµÄÁ¦
+            // ç®—å‡ºåæ–¹å‘çš„åŠ›
             float forceX = -Mathf.Sign(rb.velocity.x) * amount;
             rb.AddForce(new Vector2(forceX, 0));
         }
         else
         {
-            // ËÙ¶È¼«Ğ¡Ê±Ö±½Ó¹éÁã£¬·ÀÖ¹ÎïÀíÒıÇæµÄÎ¢Ğ¡»¬¶¯
+            // é€Ÿåº¦æå°æ—¶ç›´æ¥å½’é›¶ï¼Œé˜²æ­¢ç‰©ç†å¼•æ“çš„å¾®å°æ»‘åŠ¨
             rb.velocity = new Vector2(0, rb.velocity.y);
         }
     }
 
     public void InitialJump()
     {
+        //å®ç°è·³è·ƒçš„ç‰©ç†åŠŸèƒ½
         rb.velocity = new Vector2(rb.velocity.x, jumpSpeedInitial);
+        
+        //å¯åŠ¨å˜é‡è·³è·ƒè®¡æ—¶å™¨
         varJumpTimer = varJumpTime;
+
+        //å…³é—­è·³è·ƒç¼“å†²
+        jumpBufferTimer = -1;
+
     }
 
     public void PlayAnimation(string name)
