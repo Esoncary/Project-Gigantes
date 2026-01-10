@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     public Collider2D col { get; private set; }
 
     [Header("检测器引用")]
+    // 对应报错里的 groundedCheckerManager
     public GroundedCheckerManager groundedCheckerManager;
     public CanClimbLeftCheckerManager canClimbLeftCheckerManager;//攀爬装置暂且不用
     public CanClimbRightCheckerManager canClimbRightCheckerManager;
@@ -58,30 +59,29 @@ public class PlayerController : MonoBehaviour
     public float minReleaseThrehold = 5f;
     public float timeScaleReleasing = 0.1f;
     public float currentStorage;
-    public float targetStorage;
-    public float decreaseSpeed = 40f;
-    public float decreaseTime = 0.5f;
-    public float minIncreaseSpeed = 50f;
-    public float midIncreaseSpeed = 100f;
-    public float maxIncreaseSpeed = 200f;
-    public float minIncreaseThreshold = 10f;
-    public float midIncreaseThreshold = 30f;
-    public float maxIncreaseThreshold = 60f;
-    public float explosionTime = 2f;
-    public bool willDecrease;
-    public bool canDecrease;
-    public float decreaseTimer;
-    public bool isOverLoaded;
+    public float targetStorage;//与currentVelocityMagnitude基本同步，若模上升则上升，若模下降则停留一段时间，再下降
+    public float currentVelocityMag;//角色的当前速度模
+    public float targetStorageFreezeTime;//若角色的速度模小于上一帧，targetStorage停留一段时间再下降
+    public float targetStorageDecreaseSpeed;//目标储量下降速度(目标储量和当前储量的下降速度都是一个较快的常量)
+    public float currentStorageFreezeTime;
+    public float currentStorageDefaultIncreaseSpeed;//当前储量默认增长速度（常量）
+    public float currentStorageIncreaseSpeed;//当前储量增长速度（变量，与速度模大小成正比）
+    public float currentStorageDecreaseSpeed = 40f;
+    public float explosionTime = 2f; 
+    public bool isOverloaded;
 
     [Header("实时变量")]
     public float InputX;
     public bool JumpInputDown;
     public bool ReleaseInputDown;
     public float varJumpTimer;
-    public float jumpBufferTimer;//跳跃缓冲时间
+    public float jumpBufferTimer;//跳跃缓冲计时器
     public float climbTimer;
     public float inputLockTimer;
-    public bool canJump; // 补上了这个变量
+    public float targetStorageFreezeTimer;//targetStorage停留计时器
+    public float currentStorageFreezeTimer;//currentStorage停留计时器
+    public float explosionTimer;//爆炸计时器
+    public bool canJump; // 与isGrounded相关
     public Vector2 releaseDirection;
     public GameObject arrowInstance;
 
@@ -130,10 +130,10 @@ public class PlayerController : MonoBehaviour
         //处理计时器
         if (inputLockTimer > 0) inputLockTimer -= Time.deltaTime;
         if (varJumpTimer > 0) varJumpTimer -= Time.deltaTime;
-        if (jumpBufferTimer > 0)
-        {
-            jumpBufferTimer -= Time.deltaTime;
-        }
+        if (jumpBufferTimer > 0) jumpBufferTimer -= Time.deltaTime;
+        if (currentStorageFreezeTime > 0) currentStorageFreezeTimer -= Time.deltaTime;
+        if (targetStorageFreezeTimer > 0) targetStorageFreezeTimer -= Time.deltaTime;
+        if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
 
         //处理其它状态（中立于各种状态）变量
         if (isGrounded && canJump == false && varJumpTimer <= 0) canJump = true;//落地后可以再次跳跃
@@ -179,7 +179,7 @@ public class PlayerController : MonoBehaviour
     {
         //实现跳跃的物理功能
         rb.velocity = new Vector2(rb.velocity.x, jumpSpeedInitial);
-        
+
         //启动变量跳跃计时器
         varJumpTimer = varJumpTime;
 
@@ -192,4 +192,5 @@ public class PlayerController : MonoBehaviour
     {
         if (Anim != null && !string.IsNullOrEmpty(name)) Anim.Play(name);
     }
+    
 }
