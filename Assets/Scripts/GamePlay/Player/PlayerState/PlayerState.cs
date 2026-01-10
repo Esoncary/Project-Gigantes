@@ -7,7 +7,7 @@ public abstract class PlayerState
     protected string animName;
 
     
-    protected float startTime;//×´Ì¬¿ªÊ¼Ê±¼ä £¨ÓÃÀ´¿ØÖÆ³å´ÌÊ±³¤¡¢ÊÜ»÷Ó²Ö±¡¢ÏŞËÙµÈ£©
+    protected float startTime;//çŠ¶æ€å¼€å§‹æ—¶é—´ ï¼ˆç”¨æ¥æ§åˆ¶å†²åˆºæ—¶é•¿ã€å—å‡»ç¡¬ç›´ã€é™é€Ÿç­‰ï¼‰
     
 
     public PlayerState(PlayerController _player, PlayerStateMachine _stateMachine, string _animName)
@@ -17,31 +17,31 @@ public abstract class PlayerState
         this.animName = _animName;
     }
 
-    // ½øÈë×´Ì¬£º´¦Àí³õÊ¼»¯¡¢²¥¶¯»­¡¢·ÅÌØĞ§
+    // è¿›å…¥çŠ¶æ€ï¼šå¤„ç†åˆå§‹åŒ–ã€æ’­åŠ¨ç”»ã€æ”¾ç‰¹æ•ˆ
     public virtual void Enter()
     {
-        player.PlayAnimation(animName); // µ÷ÓÃ¿ØÖÆÆ÷ÀïµÄÍø¹Øº¯Êı
+        player.PlayAnimation(animName); // è°ƒç”¨æ§åˆ¶å™¨é‡Œçš„ç½‘å…³å‡½æ•°
         startTime = Time.time;
-        // Debug.Log("½øÈë×´Ì¬: " + this.GetType().Name);
+        // Debug.Log("è¿›å…¥çŠ¶æ€: " + this.GetType().Name);
     }
 
-    // ÍË³ö×´Ì¬£º´¦ÀíÉÆºó¡¢¹Ø±ÕÌØĞ§¡¢»Ö¸´ÖØÁ¦
+    // é€€å‡ºçŠ¶æ€ï¼šå¤„ç†å–„åã€å…³é—­ç‰¹æ•ˆã€æ¢å¤é‡åŠ›
     public virtual void Exit()
     {
-        // Debug.Log("ÍË³ö×´Ì¬: " + this.GetType().Name);
+        // Debug.Log("é€€å‡ºçŠ¶æ€: " + this.GetType().Name);
     }
 
-    // Âß¼­Ö¡£ºUpdate ÀïµÄÊäÈë»ñÈ¡
+    // é€»è¾‘å¸§ï¼šUpdate é‡Œçš„è¾“å…¥è·å–
     public virtual void HandleInput()
     {
     }
 
-    // Âß¼­Ö¡£ºUpdate ÀïµÄ×´Ì¬ÇĞ»»ÅĞ¶¨
+    // é€»è¾‘å¸§ï¼šUpdate é‡Œçš„çŠ¶æ€åˆ‡æ¢åˆ¤å®š
     public virtual void LogicUpdate()
     {
     }
 
-    // ÎïÀíÖ¡£ºFixedUpdate ÀïµÄÁ¦Ñ§¼ÆËã
+    // ç‰©ç†å¸§ï¼šFixedUpdate é‡Œçš„åŠ›å­¦è®¡ç®—
     public virtual void PhysicsUpdate()
     {
         
@@ -49,12 +49,12 @@ public abstract class PlayerState
 
 
 
-    // ÎïÀí·´À¡£ºÓÉ PlayerController ×ª·¢Åö×²ÊÂ¼ş
+    // ç‰©ç†åé¦ˆï¼šç”± PlayerController è½¬å‘ç¢°æ’äº‹ä»¶
     public virtual void OnCollisionEnter(Collision2D collision)
     {
     }
 
-    // ´¥·¢Æ÷·´À¡£ºÓÉ PlayerController ×ª·¢´¥·¢ÊÂ¼ş
+    // è§¦å‘å™¨åé¦ˆï¼šç”± PlayerController è½¬å‘è§¦å‘äº‹ä»¶
     public virtual void OnTriggerEnter(Collider2D collider)
     {
     }

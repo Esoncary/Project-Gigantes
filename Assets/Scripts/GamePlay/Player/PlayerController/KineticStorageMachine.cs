@@ -3,7 +3,7 @@ using UnityEngine;
 public class KineticStorageMachine : MonoBehaviour
 {
     private PlayerController player;
-    private float explosionTimer; // ÓÃÓÚ´¦Àí¹ıÔØ×Ô±¬µÄÄÚ²¿¼ÆÊ±
+    private float explosionTimer; // ç”¨äºå¤„ç†è¿‡è½½è‡ªçˆ†çš„å†…éƒ¨è®¡æ—¶
 
     private void Awake()
     {
@@ -12,24 +12,24 @@ public class KineticStorageMachine : MonoBehaviour
 
     private void Update()
     {
-        // 1. »ñÈ¡ÎïÀíËÙ¶ÈµÄÄ£³¤×÷Îªµ±Ç°µÄÄ¿±ê
+        // 1. è·å–ç‰©ç†é€Ÿåº¦çš„æ¨¡é•¿ä½œä¸ºå½“å‰çš„ç›®æ ‡
         float velocityMag = player.rb.velocity.magnitude;
 
-        // 2. ºËĞÄÅĞ¶¨£º´¢Á¿Ôö³¤»¹ÊÇ¼õÉÙ
+        // 2. æ ¸å¿ƒåˆ¤å®šï¼šå‚¨é‡å¢é•¿è¿˜æ˜¯å‡å°‘
         if (velocityMag > player.currentStorage)
         {
-            // --- Ôö³¤Âß¼­ (³äÄÜÄ£Ê½) ---
+            // --- å¢é•¿é€»è¾‘ (å……èƒ½æ¨¡å¼) ---
             player.targetStorage = velocityMag;
             player.willDecrease = false;
             player.canDecrease = false;
-            player.decreaseTimer = player.decreaseTime; // Ö»ÒªÔÚÔö³¤£¬¾ÍË¢ĞÂË¥¼õÑÓ³Ù¼ÆÊ±Æ÷
+            player.decreaseTimer = player.decreaseTime; // åªè¦åœ¨å¢é•¿ï¼Œå°±åˆ·æ–°è¡°å‡å»¶è¿Ÿè®¡æ—¶å™¨
 
             ApplyGrowth(player.targetStorage);
         }
         else if (velocityMag < player.currentStorage)
         {
-            // --- Ë¥¼õÂß¼­ (Î¬³Ö/¼õÉÙÄ£Ê½) ---
-            // Ä¿±êÖµÒÀÈ»×·ËæËÙ¶È£¨°µºìÌõµôÏÂÈ¥£©£¬µ« currentStorage£¨ºìÌõ£©×¼±¸½øÈëÑÓ³ÙË¥¼õ
+            // --- è¡°å‡é€»è¾‘ (ç»´æŒ/å‡å°‘æ¨¡å¼) ---
+            // ç›®æ ‡å€¼ä¾ç„¶è¿½éšé€Ÿåº¦ï¼ˆæš—çº¢æ¡æ‰ä¸‹å»ï¼‰ï¼Œä½† currentStorageï¼ˆçº¢æ¡ï¼‰å‡†å¤‡è¿›å…¥å»¶è¿Ÿè¡°å‡
             player.targetStorage = velocityMag;
 
             if (!player.canDecrease)
@@ -40,11 +40,11 @@ public class KineticStorageMachine : MonoBehaviour
             ApplyDecay();
         }
 
-        // 3. ´¦Àí¹ıÔØ±¬Õ¨
+        // 3. å¤„ç†è¿‡è½½çˆ†ç‚¸
         HandleOverloadLogic();
     }
 
-    // ´¦Àí´¢Á¿Ôö³¤£ºÊ¹ÓÃÄãÉè¼ÆµÄÈı¶ÎãĞÖµËÙ¶È
+    // å¤„ç†å‚¨é‡å¢é•¿ï¼šä½¿ç”¨ä½ è®¾è®¡çš„ä¸‰æ®µé˜ˆå€¼é€Ÿåº¦
     private void ApplyGrowth(float target)
     {
         float growthSpeed = 0f;
@@ -59,10 +59,10 @@ public class KineticStorageMachine : MonoBehaviour
         player.currentStorage = Mathf.MoveTowards(player.currentStorage, target, growthSpeed * Time.deltaTime);
     }
 
-    // ´¦Àí´¢Á¿¼õÉÙ£ºÊµÏÖÎ¬³ÖÑÓ³Ù£¨decreaseTime£©
+    // å¤„ç†å‚¨é‡å‡å°‘ï¼šå®ç°ç»´æŒå»¶è¿Ÿï¼ˆdecreaseTimeï¼‰
     private void ApplyDecay()
     {
-        // Èç¹û»¹ÔÚÎ¬³ÖÆÚ£¬Ôò×ß¼ÆÊ±Æ÷
+        // å¦‚æœè¿˜åœ¨ç»´æŒæœŸï¼Œåˆ™èµ°è®¡æ—¶å™¨
         if (player.willDecrease && !player.canDecrease)
         {
             player.decreaseTimer -= Time.deltaTime;
@@ -73,7 +73,7 @@ public class KineticStorageMachine : MonoBehaviour
             }
         }
 
-        // ¹ıÁËÎ¬³ÖÆÚ£¬¿ªÊ¼ÕæÕı¿Û³ıÊıÖµ
+        // è¿‡äº†ç»´æŒæœŸï¼Œå¼€å§‹çœŸæ­£æ‰£é™¤æ•°å€¼
         if (player.canDecrease)
         {
             player.currentStorage = Mathf.MoveTowards(player.currentStorage, player.targetStorage, player.decreaseSpeed * Time.deltaTime);
@@ -85,7 +85,7 @@ public class KineticStorageMachine : MonoBehaviour
         }
     }
 
-    // ´¦Àí¹ıÔØ±¬Õ¨Âß¼­
+    // å¤„ç†è¿‡è½½çˆ†ç‚¸é€»è¾‘
     private void HandleOverloadLogic()
     {
         if (player.currentStorage > player.maxStorage)
@@ -93,15 +93,15 @@ public class KineticStorageMachine : MonoBehaviour
             player.isOverLoaded = true;
             explosionTimer += Time.deltaTime;
 
-            // ¿ÉÒÔÔÚÕâÀï¼ÓÈëÊÓ¾õ·´À¡£¬±ÈÈçÈÃÍæ¼ÒÄ£ĞÍÉÁºì
+            // å¯ä»¥åœ¨è¿™é‡ŒåŠ å…¥è§†è§‰åé¦ˆï¼Œæ¯”å¦‚è®©ç©å®¶æ¨¡å‹é—ªçº¢
             // player.Anim.SetBool("Overloaded", true);
 
             if (explosionTimer >= player.explosionTime)
             {
-                // ÇĞ»»µ½ËÀÍö×´Ì¬
-                // ¼ÙÉèÄãÒÑ¾­ÓĞÁË DieState£¬Èç¹ûÃ»ÓĞ£¬ÏÈ×¢ÊÍµôÕâĞĞ
+                // åˆ‡æ¢åˆ°æ­»äº¡çŠ¶æ€
+                // å‡è®¾ä½ å·²ç»æœ‰äº† DieStateï¼Œå¦‚æœæ²¡æœ‰ï¼Œå…ˆæ³¨é‡Šæ‰è¿™è¡Œ
                 // player.StateMachine.ChangeState(player.DieState); 
-                Debug.LogError("ÄÜÁ¿¹ıÔØ±¬Õ¨£¡");
+                Debug.LogError("èƒ½é‡è¿‡è½½çˆ†ç‚¸ï¼");
             }
         }
         else

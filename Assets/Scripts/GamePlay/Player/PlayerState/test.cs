@@ -13,11 +13,11 @@ public class test : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Input,stateÏà¹ØµÄ¶«Î÷
+        //Input,stateç›¸å…³çš„ä¸œè¥¿
     }
 
     private void FixedUpdate()
     {
-        //ÎïÀíÊä³ö
+        //ç‰©ç†è¾“å‡º
     }
 }
