@@ -53,7 +53,12 @@ public class RunState : PlayerState
             player.ApplyBrakeForce(player.brakeDeceleraion);
         }
 
-        // 加速与限速逻辑
+        // 加速与限速逻辑,oberSpeed状态之后的限速还没写
+        if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeed)
+        {
+            player.rb.velocity = new Vector2(inputX * player.minMoveSpeed, player.rb.velocity.y);
+        }
+
         if (Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeed)
         {
             player.rb.AddForce(new Vector2(inputX * player.moveSpeedAcc, 0));

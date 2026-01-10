@@ -10,14 +10,14 @@ public class ClimbState : PlayerState
     {
         base.Enter();
 
-        // 1. Ö±½ÓÔÚÕâÀïÖ´ĞĞÎü¸½£¨Âß¼­ÄÚ¾Û£©
+        // 1. ç›´æ¥åœ¨è¿™é‡Œæ‰§è¡Œå¸é™„ï¼ˆé€»è¾‘å†…èšï¼‰
         SnapToWallInternal();
 
-        // 2. ÎïÀíËø¶¨
+        // 2. ç‰©ç†é”å®š
         player.rb.velocity = Vector2.zero;
         player.rb.gravityScale = 0;
 
-        // 3. ¼ÆÊ±Æ÷
+        // 3. è®¡æ—¶å™¨
         player.climbTimer = player.climbTime;
     }
 
@@ -25,10 +25,10 @@ public class ClimbState : PlayerState
     {
         base.HandleInput();
 
-        // µÅÇ½ÌøÅĞ¶¨
+        // è¹¬å¢™è·³åˆ¤å®š
         if (player.JumpInputDown)
         {
-            WallJumpInternal(); // Âß¼­Ò²Ğ´ÔÚÏÂÃæ
+            WallJumpInternal(); // é€»è¾‘ä¹Ÿå†™åœ¨ä¸‹é¢
             stateMachine.ChangeState(player.MidAirState);
         }
     }
@@ -37,7 +37,7 @@ public class ClimbState : PlayerState
     {
         base.LogicUpdate();
 
-        // Ê¹ÓÃÄãÌáµ½µÄ×ÓÎïÌå¼ì²âÆ÷±äÁ¿½øĞĞÅĞ¶Ï
+        // ä½¿ç”¨ä½ æåˆ°çš„å­ç‰©ä½“æ£€æµ‹å™¨å˜é‡è¿›è¡Œåˆ¤æ–­
         bool touchingWall = player.isOnLeftWall || player.isOnRightWall;
 
         player.climbTimer -= Time.deltaTime;
@@ -51,39 +51,39 @@ public class ClimbState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        // ³ÖĞøËø¶¨£¬·ÀÖ¹ÈÎºÎ¶¶¶¯
+        // æŒç»­é”å®šï¼Œé˜²æ­¢ä»»ä½•æŠ–åŠ¨
         player.rb.velocity = Vector2.zero;
     }
 
     public override void Exit()
     {
         base.Exit();
-        player.rb.gravityScale = 1.0f;
+        player.rb.gravityScale = player.defaultGravityScale;
     }
 
-    #region ÄÚ²¿Ë½ÓĞÂß¼­ (Ö»ÔÚÅÊÅÀ×´Ì¬ÏÂÊ¹ÓÃµÄ¹¤¾ßº¯Êı)
+    #region å†…éƒ¨ç§æœ‰é€»è¾‘ (åªåœ¨æ”€çˆ¬çŠ¶æ€ä¸‹ä½¿ç”¨çš„å·¥å…·å‡½æ•°)
 
     private void SnapToWallInternal()
     {
-        // 1. È·¶¨·½Ïò£º´Ó PlayerController »ñÈ¡×ÓÎïÌåµÄ¼ì²â½á¹û
+        // 1. ç¡®å®šæ–¹å‘ï¼šä» PlayerController è·å–å­ç‰©ä½“çš„æ£€æµ‹ç»“æœ
         float direction = player.isOnRightWall ? 1f : -1f;
         Vector2 wallDir = new Vector2(direction, 0);
 
-        // 2. ÉäÏßÌ½²â£¨´ÓÖĞĞÄÏòÇ½µÄ·½Ïò£©
-        // Ê¹ÓÃ player.col »ñÈ¡ÉíÌåÅö×²ÌåµÄ³ß´ç
+        // 2. å°„çº¿æ¢æµ‹ï¼ˆä»ä¸­å¿ƒå‘å¢™çš„æ–¹å‘ï¼‰
+        // ä½¿ç”¨ player.col è·å–èº«ä½“ç¢°æ’ä½“çš„å°ºå¯¸
         float rayLength = player.col.bounds.extents.x + 0.2f;
 
-        // ×¢Òâ£ºÕâÀïĞèÒª·ÃÎÊ player ÉíÉÏ¶¨ÒåµÄ Ground LayerMask 
+        // æ³¨æ„ï¼šè¿™é‡Œéœ€è¦è®¿é—® player èº«ä¸Šå®šä¹‰çš„ Ground LayerMask 
         RaycastHit2D hit = Physics2D.Raycast(player.rb.position, wallDir, rayLength, player.groundedCheckerManager.Ground);
 
         if (hit.collider != null)
         {
             float halfWidth = player.col.bounds.extents.x;
-            float skin = 0.01f; // ÎïÀíÆ¤·ô¼ä¾à
+            float skin = 0.01f; // ç‰©ç†çš®è‚¤é—´è·
 
             float targetX = hit.point.x - (halfWidth * direction) + (skin * direction);
 
-            // Ë²¼äÎïÀíÍ¬²½
+            // ç¬é—´ç‰©ç†åŒæ­¥
             player.rb.position = new Vector2(targetX, player.rb.position.y);
             player.rb.velocity = Vector2.zero;
         }
@@ -91,16 +91,16 @@ public class ClimbState : PlayerState
 
     private void WallJumpInternal()
     {
-        // È·¶¨Ìø³ö·½Ïò
+        // ç¡®å®šè·³å‡ºæ–¹å‘
         float jumpDirX = player.isOnRightWall ? -1f : 1f;
 
-        // ×éºÏ 45 ¶ÈÏòÁ¿
+        // ç»„åˆ 45 åº¦å‘é‡
         Vector2 jumpVec = new Vector2(jumpDirX * player.wallJumpDirection.x, player.wallJumpDirection.y).normalized;
 
-        // ±¬·¢Î»ÒÆ
+        // çˆ†å‘ä½ç§»
         player.rb.velocity = jumpVec * player.wallJumpSpeed;
 
-        // ¿ªÆô¿ØÖÆÆ÷ÉÏµÄÊäÈëËø¶¨¼ÆÊ±Æ÷
+        // å¼€å¯æ§åˆ¶å™¨ä¸Šçš„è¾“å…¥é”å®šè®¡æ—¶å™¨
         player.inputLockTimer = player.inputLockTime;
     }
 

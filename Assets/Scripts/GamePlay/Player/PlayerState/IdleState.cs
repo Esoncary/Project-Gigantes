@@ -7,34 +7,36 @@ public class IdleState : PlayerState
 
     public override void Enter()
     {
-        base.Enter(); // ×Ô¶¯²¥¶¯»­
-        player.rb.velocity = new Vector2(0, player.rb.velocity.y); // ½øÈë¾²Ö¹Ê±¿ÉÒÔÑ¡Çå¿ÕXËÙ¶È
+        base.Enter(); // è‡ªåŠ¨æ’­åŠ¨ç”»
+        player.rb.velocity = new Vector2(0, player.rb.velocity.y); // è¿›å…¥é™æ­¢æ—¶å¯ä»¥é€‰æ¸…ç©ºXé€Ÿåº¦
     }
 
     public override void HandleInput()
     {
         base.HandleInput();
-        // ¿ÉÒÔÔÚÕâÀï´¦ÀíÊäÈë»º³å
+        // å¯ä»¥åœ¨è¿™é‡Œå¤„ç†è¾“å…¥ç¼“å†²
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        // 1. Èç¹ûÓĞË®Æ½ÊäÈë£¬ÇĞµ½ÅÜ²½
+        // 1. å¦‚æœæœ‰æ°´å¹³è¾“å…¥ï¼Œåˆ‡åˆ°è·‘æ­¥
         if (Mathf.Abs(player.InputX) > 0.01f)
         {
             stateMachine.ChangeState(player.RunState);
         }
 
-        // 2. Èç¹û°´ÏÂÌøÔ¾£¬Ö±½ÓÇĞµ½¿ÕÖĞ(»òÌøÔ¾)×´Ì¬
-        if (player.JumpInputDown)
+        // 2. å¦‚æœæŒ‰ä¸‹è·³è·ƒï¼Œç›´æ¥åˆ‡åˆ°ç©ºä¸­(æˆ–è·³è·ƒ)çŠ¶æ€
+        if (player.jumpBufferTimer > 0 && player.canJump)
         {
             player.InitialJump();
+            player.canJump = false; // è½åœ°å‰åªèƒ½è·³ä¸€æ¬¡
             stateMachine.ChangeState(player.MidAirState);
+            return;
         }
 
-        // 3. Èç¹ûÍ»È»½ÅÏÂÒ»¿Õ(µôÏÂÈ¥ÁË)£¬ÇĞµ½¿ÕÖĞ
+        // 3. å¦‚æœçªç„¶è„šä¸‹ä¸€ç©º(æ‰ä¸‹å»äº†)ï¼Œåˆ‡åˆ°ç©ºä¸­
         if (!player.groundedCheckerManager.isGrounded)
         {
             stateMachine.ChangeState(player.MidAirState);
@@ -44,7 +46,7 @@ public class IdleState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        // ÔÚÕâÀïÖ´ĞĞÉ²³µ£¬È·±£½ÇÉ«Õ¾µÃÎÈ
+        // åœ¨è¿™é‡Œæ‰§è¡Œåˆ¹è½¦ï¼Œç¡®ä¿è§’è‰²ç«™å¾—ç¨³
         if (Mathf.Abs(player.RB.velocity.x) > 0.01f)
         {
             player.Brake();

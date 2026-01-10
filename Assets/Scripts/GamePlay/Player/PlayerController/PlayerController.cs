@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     public float enforceMoveAccSpeedInMidAir = 15f;
 
     [Header("跳跃参数")]
+    public float defaultGravityScale;
     public float jumpSpeedInitial = 12f;
     public float jumpSpeedAcc = 80f;
     public float maxJumpSpeed = 15f;
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 wallJumpDirection = new Vector2(1, 1);
     public float inputLockTime = 0.2f;
 
-    [Header("重力装置相关")]
+    [Header("动力装置相关")]
     public float maxStorage = 100f;
     public float minReleaseThrehold = 5f;
     public float timeScaleReleasing = 0.1f;
@@ -93,6 +94,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        defaultGravityScale = rb.gravityScale;
         Anim = GetComponent<Animator>();
         col = GetComponent<Collider2D>();
 
@@ -120,7 +122,7 @@ public class PlayerController : MonoBehaviour
         ReleaseInputDown = Input.GetKeyDown(KeyCode.LeftControl);
 
         //启动输入缓冲(目前只有跳跃)
-        if (JumpInputDown == true)
+        if (JumpInputDown)
         {
             jumpBufferTimer = jumpBufferTime;
         }
@@ -134,7 +136,8 @@ public class PlayerController : MonoBehaviour
         }
 
         //处理其它状态（中立于各种状态）变量
-        if (isGrounded && canJump == false) canJump = true;//落地后可以再次跳跃
+        if (isGrounded && canJump == false && varJumpTimer <= 0) canJump = true;//落地后可以再次跳跃
+        if (isGrounded) rb.gravityScale = defaultGravityScale;//落地后重置重力
 
         //调用状态机内部更新
         StateMachine.CurrentState.HandleInput();

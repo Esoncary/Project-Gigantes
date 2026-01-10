@@ -9,19 +9,19 @@ public class ReleaseState : PlayerState
     {
         base.Enter();
 
-        // 1. ¿ªÆô×Óµ¯Ê±¼ä
+        // 1. å¼€å¯å­å¼¹æ—¶é—´
         Time.timeScale = player.timeScaleReleasing;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale; // ±ØĞëÍ¬²½ĞŞ¸ÄÎïÀí²½³¤£¬·ÀÖ¹¿¨¶Ù
+        Time.fixedDeltaTime = 0.02f * Time.timeScale; // å¿…é¡»åŒæ­¥ä¿®æ”¹ç‰©ç†æ­¥é•¿ï¼Œé˜²æ­¢å¡é¡¿
 
-        // 2. ÎïÀí¶³½á£º·ÀÖ¹ÔÚÃé×¼Ê±µôÏÂÈ¥
+        // 2. ç‰©ç†å†»ç»“ï¼šé˜²æ­¢åœ¨ç„å‡†æ—¶æ‰ä¸‹å»
         player.rb.velocity = Vector2.zero;
         player.rb.gravityScale = 0;
 
-        // 3. ÏÔÊ¾ UI ¼ıÍ·
+        // 3. æ˜¾ç¤º UI ç®­å¤´
         if (player.arrowInstance != null)
         {
             player.arrowInstance.SetActive(true);
-            // ³õÊ¼Ä¬ÈÏ·½Ïò£ºÈç¹ûÃ»ÓĞÊäÈë¹ı£¬Ä¬ÈÏÖ¸ÏòÉÏ
+            // åˆå§‹é»˜è®¤æ–¹å‘ï¼šå¦‚æœæ²¡æœ‰è¾“å…¥è¿‡ï¼Œé»˜è®¤æŒ‡å‘ä¸Š
             if (player.releaseDirection == Vector2.zero) player.releaseDirection = Vector2.up;
         }
     }
@@ -30,7 +30,7 @@ public class ReleaseState : PlayerState
     {
         base.HandleInput();
 
-        // 4. Ãé×¼Âß¼­£º¶ÁÈ¡ WASD/Ò¡¸Ë·½Ïò
+        // 4. ç„å‡†é€»è¾‘ï¼šè¯»å– WASD/æ‘‡æ†æ–¹å‘
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
@@ -39,10 +39,10 @@ public class ReleaseState : PlayerState
             player.releaseDirection = new Vector2(h, v).normalized;
         }
 
-        // 5. ×´Ì¬ÍË³öÅĞ¶¨£ºËÉ¿ªÊÍ·Å¼ü (LeftControl)
+        // 5. çŠ¶æ€é€€å‡ºåˆ¤å®šï¼šæ¾å¼€é‡Šæ”¾é”® (LeftControl)
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            stateMachine.ChangeState(player.MidAirState); // ÍË³öµ½¿ÕÖĞ×´Ì¬
+            stateMachine.ChangeState(player.MidAirState); // é€€å‡ºåˆ°ç©ºä¸­çŠ¶æ€
         }
     }
 
@@ -50,18 +50,18 @@ public class ReleaseState : PlayerState
     {
         base.LogicUpdate();
 
-        // ÊµÊ±Ğı×ª¼ıÍ·
+        // å®æ—¶æ—‹è½¬ç®­å¤´
         if (player.arrowInstance != null)
         {
             float angle = Mathf.Atan2(player.releaseDirection.y, player.releaseDirection.x) * Mathf.Rad2Deg;
-            // Èç¹ûÄãÖ®Ç°µÄ¼ıÍ·Æ«ÁË 90 ¶È£¬ÕâÀï¼ÇµÃ¼ÓÉÏÄÇ¸ö offset
+            // å¦‚æœä½ ä¹‹å‰çš„ç®­å¤´åäº† 90 åº¦ï¼Œè¿™é‡Œè®°å¾—åŠ ä¸Šé‚£ä¸ª offset
             player.arrowInstance.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
         }
     }
 
     public override void PhysicsUpdate()
     {
-        // ÎïÀíÖ¡±£³Ö¾²Ö¹£¬È·±£Ñ¡·½ÏòÊ±¾ø¶Ô¾«×¼
+        // ç‰©ç†å¸§ä¿æŒé™æ­¢ï¼Œç¡®ä¿é€‰æ–¹å‘æ—¶ç»å¯¹ç²¾å‡†
         player.rb.velocity = Vector2.zero;
     }
 
@@ -69,25 +69,25 @@ public class ReleaseState : PlayerState
     {
         base.Exit();
 
-        // 6. »Ö¸´Ê±¼ä³£Êı
+        // 6. æ¢å¤æ—¶é—´å¸¸æ•°
         Time.timeScale = 1.0f;
         Time.fixedDeltaTime = 0.02f;
 
-        // 7. »Ö¸´ÖØÁ¦
-        player.rb.gravityScale = 1.0f;
+        // 7. æ¢å¤é‡åŠ›
+        player.rb.gravityScale = player.defaultGravityScale;
 
-        // 8. ¡¾ºËĞÄÎïÀíÊä³ö¡¿£ºË²¼äµ¯ÉäÎ»ÒÆ
-        // ËÙ¶È = ·½Ïò * ´¢ÄÜ×°ÖÃÀïµÄµ±Ç°ÊıÖµ
-        // ×¢Òâ£ºÕâÀï½¨ÒéÖ±½Ó¸ÄËÙ¶È£¬ÒòÎªÕâÊôÓÚË²¼ä±¬·¢
+        // 8. ã€æ ¸å¿ƒç‰©ç†è¾“å‡ºã€‘ï¼šç¬é—´å¼¹å°„ä½ç§»
+        // é€Ÿåº¦ = æ–¹å‘ * å‚¨èƒ½è£…ç½®é‡Œçš„å½“å‰æ•°å€¼
+        // æ³¨æ„ï¼šè¿™é‡Œå»ºè®®ç›´æ¥æ”¹é€Ÿåº¦ï¼Œå› ä¸ºè¿™å±äºç¬é—´çˆ†å‘
         player.rb.velocity = player.releaseDirection * player.currentStorage;
 
-        // 9. ×ÊÔ´Çå¿ÕÓëËø¶¨
-        player.currentStorage = 0; // Çå¿Õ´¢ÄÜ
-        player.inputLockTimer = player.inputLockTime; // ¿ªÆôÊäÈëËø¶¨£¬·ÀÖ¹±»¿ÕÖĞÒÆ¶¯Âß¼­¸ÉÈÅÎ»ÒÆ
+        // 9. èµ„æºæ¸…ç©ºä¸é”å®š
+        player.currentStorage = 0; // æ¸…ç©ºå‚¨èƒ½
+        player.inputLockTimer = player.inputLockTime; // å¼€å¯è¾“å…¥é”å®šï¼Œé˜²æ­¢è¢«ç©ºä¸­ç§»åŠ¨é€»è¾‘å¹²æ‰°ä½ç§»
 
-        // 10. Òş²Ø¼ıÍ·
+        // 10. éšè—ç®­å¤´
         if (player.arrowInstance != null) player.arrowInstance.SetActive(false);
 
-        // Debug.Log("ÊÍ·Å³É¹¦£¡ËÙ¶ÈÎª£º" + player.rb.velocity.magnitude);
+        // Debug.Log("é‡Šæ”¾æˆåŠŸï¼é€Ÿåº¦ä¸ºï¼š" + player.rb.velocity.magnitude);
     }
 }

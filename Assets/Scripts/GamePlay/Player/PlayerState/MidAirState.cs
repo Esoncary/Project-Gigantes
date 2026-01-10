@@ -19,10 +19,15 @@ public class MidAirState : PlayerState
         if (player.rb.velocity.y > 0.1f)
         {
             player.PlayAnimation("Jump_Up");
+            if (!Input.GetKey(KeyCode.Space))
+            {
+                player.rb.gravityScale = player.defaultGravityScale * 4f; // 松开跳跃键时增加重力加速度
+            }
         }
         else if (player.rb.velocity.y < -0.1f)
         {
             player.PlayAnimation("Fall_Down");
+            player.rb.gravityScale = player.defaultGravityScale * 2f; // 下落时增加重力加速度
         }
 
         //--- 1. 空中跳跃 ---
@@ -100,10 +105,7 @@ public class MidAirState : PlayerState
         // 这里的逻辑对应你之前的 varJumpTimer
         if (Input.GetKey(KeyCode.Space) && player.varJumpTimer > 0)
         {
-            if (player.rb.velocity.y < player.maxJumpSpeed)
-            {
-                player.rb.AddForce(new Vector2(0, player.jumpSpeedAcc));
-            }
+            player.rb.velocity = new Vector2(player.rb.velocity.x, player.jumpSpeedInitial);
         }
     }
 
@@ -112,18 +114,18 @@ public class MidAirState : PlayerState
         // 当垂直速度接近 0（到达抛物线顶端）时，减小重力产生滞空感
         if (Mathf.Abs(player.rb.velocity.y) < player.gravityContractionThreshold)
         {
-            player.rb.gravityScale = player.gravityContractionScale;
+            player.rb.gravityScale = player.gravityContractionScale * player.defaultGravityScale;
         }
-        else
-        {
-            player.rb.gravityScale = 1.0f; // 恢复正常重力
-        }
+        //else
+        //{
+        //    player.rb.gravityScale = player.defaultGravityScale; // 恢复正常重力
+        //}
     }
 
     public override void Exit()
     {
         base.Exit();
         // 离开空中状态时，务必恢复重力常数，防止影响其他状态
-        player.rb.gravityScale = 1.0f;
+        player.rb.gravityScale =  player.defaultGravityScale;
     }
 }
