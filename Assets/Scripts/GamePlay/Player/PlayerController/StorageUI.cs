@@ -18,7 +18,7 @@ public class StorageUI : MonoBehaviour
         float currentRatio = player.currentStorage / player.maxStorage;
 
         // 更新 UI 填充值 (范围 0 到 1)
-        targetFillImage.fillAmount = Mathf.Clamp01(targetRatio);
+        targetFillImage.fillAmount = Mathf.MoveTowards(targetFillImage.fillAmount, Mathf.Clamp01(targetRatio), 1f * Time.deltaTime);//虽然targetStorage在逻辑上是每帧瞬间变动的，但视觉上加个平滑过渡会好看一些，就像DNF里的血条和蓝条
         currentFillImage.fillAmount = Mathf.Clamp01(currentRatio);
     }
 }

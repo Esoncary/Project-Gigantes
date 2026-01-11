@@ -279,7 +279,7 @@ Transform:
   m_GameObject: {fileID: 236627708}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.11, y: -5.68, z: 0}
+  m_LocalPosition: {x: 0.04, y: -5.82, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -365,7 +365,15 @@ MonoBehaviour:
   timeScaleReleasing: 0.1
   currentStorage: 0
   targetStorage: 0
-  decreaseSpeed: 4
+  currentVelocityMag: 0
+  targetStorageFreezeTime: 1
+  targetStorageDefaultIncreaseSpeed: 0
+  targetStorageIncreaseSpeed: 0
+  targetStorageDecreaseSpeed: 0
+  currentStorageFreezeTime: 1
+  currentStorageDefaultIncreaseSpeed: 5
+  currentStorageIncreaseSpeed: 0
+  currentStorageDecreaseSpeed: 10
   decreaseTime: 0.5
   minIncreaseSpeed: 2
   midIncreaseSpeed: 4
@@ -374,10 +382,7 @@ MonoBehaviour:
   midIncreaseThreshold: 20
   maxIncreaseThreshold: 30
   explosionTime: 1
-  willDecrease: 0
-  canDecrease: 0
-  decreaseTimer: 0
-  isOverLoaded: 0
+  isOverloaded: 0
   InputX: 0
   JumpInputDown: 0
   ReleaseInputDown: 0
@@ -385,6 +390,9 @@ MonoBehaviour:
   jumpBufferTimer: 0
   climbTimer: 0
   inputLockTimer: 0
+  targetStorageFreezeTimer: 0
+  currentStorageFreezeTimer: 0
+  explosionTimer: 0
   canJump: 1
   releaseDirection: {x: 0, y: 0}
   arrowInstance: {fileID: 5863498205552918895, guid: 767189a1e62eefc46b22419aaf22c848, type: 3}
