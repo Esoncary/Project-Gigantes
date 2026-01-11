@@ -1,3 +1,4 @@
+using GamePlay.Player.Interface;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -142,6 +143,8 @@ public class PlayerController : MonoBehaviour
         //调用状态机内部更新
         StateMachine.CurrentState.HandleInput();
         StateMachine.CurrentState.LogicUpdate();
+        
+        
     }
 
     private void FixedUpdate()
@@ -186,6 +189,26 @@ public class PlayerController : MonoBehaviour
         //关闭跳跃缓冲
         jumpBufferTimer = -1;
 
+    }
+
+    public void ApplyForce(IPlayerForce forceSource)
+    {
+        Vector2 newVelocity = forceSource.CalculateVelocity(rb.velocity);
+        
+        // 根据力的类型应用不同的处理方式
+        switch (forceSource.ForceType)
+        {
+            // 内部力
+            case ForceType.Internal:
+                Debug.Log("触发内部力: " + newVelocity);
+                rb.velocity = newVelocity;
+                break;
+            // 外部力
+            case ForceType.External:
+                Debug.Log("触发外部力: " + newVelocity);
+                rb.velocity = newVelocity;
+                break;
+        }
     }
 
     public void PlayAnimation(string name)
