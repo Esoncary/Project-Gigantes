@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour
 
     public void ApplyForce(IPlayerForce forceSource)
     {
-        Vector2 newVelocity = forceSource.CalculateVelocity(rb.velocity);
+        Vector2 newVelocity = forceSource.CalculateVelocity(rb.velocity, transform.position);
         
         // 根据力的类型应用不同的处理方式
         switch (forceSource.ForceType)

@@ -56,8 +56,10 @@
     <Compile Include="Assets/Scripts/GamePlay/IA/Switch.cs" />
     <Compile Include="Assets/Scripts/GamePlay/Player/PlayerState/RunState.cs" />
     <Compile Include="Assets/Scripts/GamePlay/Player/Interface/IPlayerForce.cs" />
+    <Compile Include="Assets/Scripts/GamePlay/IA/Switchable.cs" />
     <Compile Include="Assets/Scripts/GamePlay/wasted/PlayerController.cs" />
     <Compile Include="Assets/Scripts/GamePlay/Player/PlayerController/GroundedCheckerManager.cs" />
+    <Compile Include="Assets/Scripts/GamePlay/IA/Fan.cs" />
     <Compile Include="Assets/Scripts/GamePlay/Player/PlayerState/ReleaseState.cs" />
     <Compile Include="Assets/Scripts/GamePlay/Player/PlayerController/PlayerStateMachine.cs" />
     <Compile Include="Assets/Scripts/GamePlay/Player/PlayerState/test.cs" />

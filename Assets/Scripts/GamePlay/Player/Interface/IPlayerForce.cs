@@ -8,7 +8,8 @@ namespace GamePlay.Player.Interface
     public interface IPlayerForce
     {
         // 根据当前速度计算施加力后的新速度
-        Vector2 CalculateVelocity(Vector2 currentVelocity);
+        // 入参：当前速度，玩家位置
+        Vector2 CalculateVelocity(Vector2 currentVelocity, Vector2 playerPosition);
         ForceType ForceType { get; }
     }
     
