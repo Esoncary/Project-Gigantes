@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using GamePlay.Player.Interface;
+using UnityEngine;
+
 namespace GamePlay.IA
 {
     public class Switch : MonoBehaviour

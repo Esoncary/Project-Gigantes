@@ -4,7 +4,7 @@ namespace GamePlay.IA
 {
     using UnityEngine;
 
-    public class Trampoline : MonoBehaviour, IPlayerForce
+    public class Trampoline : MonoBehaviour, IPlayerForce, ISwitchable
     {
         [Header("蹦床设置")]
         [Tooltip("蹦床弹力大小")]
