@@ -64,6 +64,7 @@
     <Compile Include="Assets/Scripts/GamePlay/Player/PlayerController/KineticMachine.cs" />
     <Compile Include="Assets/Scripts/GamePlay/Player/PlayerController/StorageUI.cs" />
     <Compile Include="Assets/Scripts/GamePlay/IA/Trampoline.cs" />
+    <Compile Include="Assets/Scripts/GamePlay/Player/Interface/ISwitchable.cs" />
     <Reference Include="UnityEngine">
       <HintPath>/Volumes/Untitled/Unity/Editor_mac/2022.3.62f3c1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

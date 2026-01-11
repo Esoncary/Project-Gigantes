@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace GamePlay.Player.Interface
 {
+    /**
+     * 对玩家施加力的接口
+     */
     public interface IPlayerForce
     {
         // 根据当前速度计算施加力后的新速度
