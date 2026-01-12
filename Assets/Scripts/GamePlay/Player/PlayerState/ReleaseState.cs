@@ -5,6 +5,8 @@ public class ReleaseState : PlayerState
     public ReleaseState(PlayerController _player, PlayerStateMachine _stateMachine, string _animName)
         : base(_player, _stateMachine, _animName) { }
 
+    bool release = false;
+
     public override void Enter()
     {
         base.Enter();
@@ -22,72 +24,128 @@ public class ReleaseState : PlayerState
         {
             player.arrowInstance.SetActive(true);
             // 初始默认方向：如果没有输入过，默认指向上
-            if (player.releaseDirection == Vector2.zero) player.releaseDirection = Vector2.up;
+            if (player.releaseDir == Vector2.zero) player.releaseDir = Vector2.up;
         }
     }
 
     public override void HandleInput()
     {
         base.HandleInput();
-
-        // 4. 瞄准逻辑：读取 WASD/摇杆方向
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
-
-        if (Mathf.Abs(h) > 0.05f || Mathf.Abs(v) > 0.05f)
-        {
-            player.releaseDirection = new Vector2(h, v).normalized;
-        }
-
-        // 5. 状态退出判定：松开释放键 (LeftControl)
-        if (Input.GetKeyUp(KeyCode.LeftControl))
-        {
-            stateMachine.ChangeState(player.MidAirState); // 退出到空中状态
-        }
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
-        // 实时旋转箭头
-        if (player.arrowInstance != null)
+        if (Input.GetKey(KeyCode.LeftControl))
         {
-            float angle = Mathf.Atan2(player.releaseDirection.y, player.releaseDirection.x) * Mathf.Rad2Deg;
-            // 如果你之前的箭头偏了 90 度，这里记得加上那个 offset
-            player.arrowInstance.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+            Aim();
         }
+
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            release = true;
+        }
+
     }
 
     public override void PhysicsUpdate()
     {
         // 物理帧保持静止，确保选方向时绝对精准
         player.rb.velocity = Vector2.zero;
+
+        if (release)
+        {
+            Release();
+
+            //判断是退出到地面状态还是空中状态
+            if (!Input.GetKey(KeyCode.LeftControl))
+            {
+                if (player.groundedCheckerManager.isGrounded)
+                {
+                    // 要么run
+                    if (Mathf.Abs(player.InputX) > 0.01f)
+                    {
+                        stateMachine.ChangeState(player.RunState);
+                        return;
+                    }
+                    else//要么brake或者idle
+                    {
+                        stateMachine.ChangeState(player.BrakeState);
+
+                        return;
+                    }
+
+                }
+                else
+                {
+                    stateMachine.ChangeState(player.MidAirState);
+                    return;
+                }
+            }
+        }
     }
 
     public override void Exit()
     {
         base.Exit();
+        //恢复重力
+        player.rb.gravityScale = player.defaultGravityScale;
 
-        // 6. 恢复时间常数
+        //恢复时间
         Time.timeScale = 1.0f;
         Time.fixedDeltaTime = 0.02f;
 
-        // 7. 恢复重力
-        player.rb.gravityScale = player.defaultGravityScale;
+        // 关闭箭头
+        player.arrowInstance.SetActive(false);
 
-        // 8. 【核心物理输出】：瞬间弹射位移
-        // 速度 = 方向 * 储能装置里的当前数值
-        // 注意：这里建议直接改速度，因为这属于瞬间爆发
-        player.rb.velocity = player.releaseDirection * player.currentStorage;
+        //将release设置为false
+        release = false;    
 
-        // 9. 资源清空与锁定
-        player.currentStorage = 0; // 清空储能
-        player.inputLockTimer = player.inputLockTime; // 开启输入锁定，防止被空中移动逻辑干扰位移
 
-        // 10. 隐藏箭头
-        if (player.arrowInstance != null) player.arrowInstance.SetActive(false);
+    }
 
-        // Debug.Log("释放成功！速度为：" + player.rb.velocity.magnitude);
+    void Aim()
+    {
+
+        // --- 方案 A：鼠标指向 (PC 玩家最精准的操作方式) ---
+        player.releaseDir = player.MouseDir;
+
+        //// --- 方案 B：手柄摇杆 / 键盘 (使用 GetAxis 而不是 GetAxisRaw) ---
+        //// GetAxis 会有 0 到 1 之间的中间值，手柄摇杆可以实现 360 度
+        //float h = Input.GetAxis("Horizontal");
+        //float v = Input.GetAxis("Vertical");
+
+        //if (Mathf.Abs(h) > 0.2f || Mathf.Abs(v) > 0.2f)
+        //{
+        //    dir = new Vector2(h, v).normalized;
+        //}
+
+        // --- 最终方向锁定 ---
+        // 只有当有输入时才更新方向，否则保持上一帧的方向 (类似奥日的方向记忆)
+        //if (player.releaseDir != Vector2.zero)
+        //{
+        //    player.releaseDir = dir;
+        //}
+
+
+        //暂时把箭头方向（视觉效果）和转向逻辑放在一起了
+        if (player.arrowInstance != null)
+        {
+            // 使用 Atan2 算出弧度并转为角度
+            float angle = Mathf.Atan2(player.releaseDir.y, player.releaseDir.x) * Mathf.Rad2Deg;
+
+            // 修正：你的图片默认向上，所以需要减去 90 度偏移
+            // 如果你的箭头尖端指向右，则不需要这个 -90f
+            player.arrowInstance.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+        }
+    }
+
+    void Release()
+    {
+        //赋予玩家速度
+        player.rb.velocity = player.currentStorage * player.releaseDir;
+
+        //清空当前储量
+        player.currentStorage = 0;
     }
 }

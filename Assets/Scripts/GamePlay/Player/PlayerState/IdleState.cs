@@ -9,6 +9,7 @@ public class IdleState : PlayerState
     {
         base.Enter(); // 自动播动画
         player.rb.velocity = new Vector2(0, player.rb.velocity.y); // 进入静止时可以选清空X速度
+        player.canJump = true;//将canJump设置为True
     }
 
     public override void HandleInput()
@@ -39,6 +40,7 @@ public class IdleState : PlayerState
         // 3. 如果突然脚下一空(掉下去了)，切到空中
         if (!player.groundedCheckerManager.isGrounded)
         {
+            player.jumpCoyoteTimer = player.jumpCoyoteTime;//开启跳跃土狼时间计时器
             stateMachine.ChangeState(player.MidAirState);
         }
     }

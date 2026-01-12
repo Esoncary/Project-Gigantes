@@ -19,8 +19,8 @@ public class RunState : PlayerState
         // 2. 状态切换：跳跃
         if (player.jumpBufferTimer > 0 && player.canJump)
         {
-            player.InitialJump();
-            player.canJump = false; // 落地前只能跳一次
+            player.InitialJump(); 
+            player.canJump = false; //落地前只能跳一次
             stateMachine.ChangeState(player.MidAirState);
             return;
         }
@@ -28,6 +28,7 @@ public class RunState : PlayerState
         // 3. 状态切换：掉落
         if (!player.groundedCheckerManager.isGrounded)
         {
+            player.jumpCoyoteTimer = player.jumpCoyoteTime;//开启跳跃土狼时间计时器
             stateMachine.ChangeState(player.MidAirState);
             return;
         }
@@ -44,29 +45,31 @@ public class RunState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        RunMovement();
+        
+    }
 
-        float inputX = player.InputX;
-
+    void RunMovement()
+    {
         // 转向处理
-        if (Mathf.Abs(player.rb.velocity.x) > 0.1f && Mathf.Sign(player.rb.velocity.x) != inputX)
+        if (Mathf.Abs(player.rb.velocity.x) > 0.1f && Mathf.Sign(player.rb.velocity.x) != player.InputX)
         {
-            player.ApplyBrakeForce(player.brakeDeceleraion);
+            player.TurnRoundBrake(player.turnRoundBrakeDec);
         }
 
-        // 加速与限速逻辑,oberSpeed状态之后的限速还没写
-        if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeed)
+        // 加速与限速逻辑,Launched状态之后的限速还没写
+        if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeed)//如果小于最小移动速度，直接设置为最小移动速度，确保起步流畅
         {
-            player.rb.velocity = new Vector2(inputX * player.minMoveSpeed, player.rb.velocity.y);
+            player.rb.velocity = new Vector2(player.InputX * player.minMoveSpeed, player.rb.velocity.y);
         }
-
-        if (Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeed)
+        else if (Mathf.Abs(player.rb.velocity.x) >= player.minMoveSpeed && Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeed)//如果未达到最大移动速度，加速
         {
-            player.rb.AddForce(new Vector2(inputX * player.moveSpeedAcc, 0));
-            
+            //player.rb.AddForce(new Vector2(inputX * player.moveSpeedAcc, 0));
+            player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeed * Mathf.Sign(player.rb.velocity.x), player.moveSpeedAcc * Time.fixedDeltaTime), player.rb.velocity.y);
         }
-        else
+        else if (Mathf.Abs(player.rb.velocity.x) > player.maxMoveSpeed)//如果超过最大跑动速度，则限速
         {
-            player.rb.velocity = new Vector2(Mathf.Sign(player.rb.velocity.x) * player.maxMoveSpeed, player.rb.velocity.y);
+            player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeed * Mathf.Sign(player.rb.velocity.x), player.turnRoundBrakeDec * Time.fixedDeltaTime), player.rb.velocity.y);
         }
     }
 }

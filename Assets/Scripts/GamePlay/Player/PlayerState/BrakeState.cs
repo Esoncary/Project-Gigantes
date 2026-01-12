@@ -24,9 +24,9 @@ public class BrakeState : PlayerState
         }
 
         // --- 2. 灵敏度优先：如果刹车中途按下跳跃，立刻起跳 ---
-        if (player.JumpInputDown && player.canJump)
+        if (player.jumpBufferTimer > 0 && player.canJump)
         {
-            player.InitialJump();
+            player.InitialJump(); 
             stateMachine.ChangeState(player.MidAirState);
             return;
         }
@@ -40,7 +40,7 @@ public class BrakeState : PlayerState
 
         // --- 4. 状态切换：速度足够慢了，正式进入 Idle ---
         // 使用 Mathf.Abs 确保向左向右滑动都能正确检测
-        if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeed)
+        if (Mathf.Abs(player.rb.velocity.x) < 0.01)
         {
             stateMachine.ChangeState(player.IdleState);
             return;
@@ -55,9 +55,8 @@ public class BrakeState : PlayerState
         // 这里的刹车力可以比普通的 idle 摩擦力更大一点，体现“刹车”的动作感
         if (Mathf.Abs(player.rb.velocity.x) > 0.01f)
         {
-            // 向当前运动的反方向施加力
-            float forceX = -Mathf.Sign(player.rb.velocity.x) * player.brakeDeceleraion;
-            player.rb.AddForce(new Vector2(forceX, 0));
+            //使当前速度趋向于0
+            player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, 0, player.turnRoundBrakeDec * Time.fixedDeltaTime), player.rb.velocity.y);    
         }
         else
         {

@@ -31,29 +31,34 @@ public class PlayerController : MonoBehaviour
     public float moveSpeedAcc = 50f;
     public float maxMoveSpeed = 8f;
     public float minMoveSpeed = 0.1f;
-    public float brakeDeceleraion = 30f;
+    public float turnRoundBrakeDec = 30f;//转向刹车加速度,数值偏大，不然不够丝滑
     public float enforceDeceleraion = 20f;
 
     [Header("空中参数")]
     public float moveSpeedAccInMidAir = 25f;
+    public float minMoveSpeedInMidAir = 6f;
     public float maxMoveSpeedInMidAir = 8f;
     public float enforceMoveAccSpeedInMidAir = 15f;
 
     [Header("跳跃参数")]
-    public float defaultGravityScale;
+    public float defaultGravityScale;//默认重力数值，在inspector中设置为3
     public float jumpSpeedInitial = 12f;
-    public float jumpSpeedAcc = 80f;
-    public float maxJumpSpeed = 15f;
     public float varJumpTime = 0.2f;
     public float gravityContractionThreshold = 1f;
     public float gravityContractionScale = 0.5f;
     public float jumpBufferTime;
+    public float jumpCoyoteTime;//跳跃土狼时间，使玩家在离开平台踩空的几帧内也可以跳出来
+    public float jumpCoyoteTimer;
 
     [Header("攀爬参数")]
     public float climbTime = 2.0f;
     public float wallJumpSpeed = 15f;
     public Vector2 wallJumpDirection = new Vector2(1, 1);
     public float inputLockTime = 0.2f;
+
+    [Header("发射参数")]
+    public float speedLimitOffTime;
+    public float speedLimitOffTimer;
 
     [Header("动力装置相关")]
     public float maxStorage = 100f;
@@ -75,6 +80,8 @@ public class PlayerController : MonoBehaviour
     public float InputX;
     public bool JumpInputDown;
     public bool ReleaseInputDown;
+    public Vector2 MouseWorldPos;
+    public Vector2 MouseDir;
     public float varJumpTimer;
     public float jumpBufferTimer;//跳跃缓冲计时器
     public float climbTimer;
@@ -83,11 +90,12 @@ public class PlayerController : MonoBehaviour
     public float currentStorageFreezeTimer;//currentStorage停留计时器
     public float explosionTimer;//爆炸计时器
     public bool canJump; // 与isGrounded相关
-    public Vector2 releaseDirection;
+    public Vector2 releaseDir;
     public GameObject arrowInstance;
 
     // 快捷属性绑定
     public bool isGrounded => groundedCheckerManager != null && groundedCheckerManager.isGrounded;
+
     public bool isOnLeftWall => canClimbLeftCheckerManager != null && canClimbLeftCheckerManager.canClimb;
     public bool isOnRightWall => canClimbRightCheckerManager != null && canClimbRightCheckerManager.canClimb;
     public bool canClimb => isOnLeftWall || isOnRightWall;
@@ -117,10 +125,12 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        //处理输入:横向输入,跳跃输入,释放输入（释放的功能还没实现）
+        //处理输入:横向输入,跳跃输入,释放输入,鼠标输入
         InputX = Input.GetAxisRaw("Horizontal");
         JumpInputDown = Input.GetKeyDown(KeyCode.Space);
         ReleaseInputDown = Input.GetKeyDown(KeyCode.LeftControl);
+        MouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        MouseDir = ((Vector2)MouseWorldPos - (Vector2)this.transform.position).normalized;
 
         //启动输入缓冲(目前只有跳跃)
         if (JumpInputDown)
@@ -135,16 +145,21 @@ public class PlayerController : MonoBehaviour
         if (currentStorageFreezeTime > 0) currentStorageFreezeTimer -= Time.deltaTime;
         if (targetStorageFreezeTimer > 0) targetStorageFreezeTimer -= Time.deltaTime;
         if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
+        if (speedLimitOffTimer > 0) speedLimitOffTimer -= Time.deltaTime;
+        if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
 
-        //处理其它状态（中立于各种状态）变量
-        if (isGrounded && canJump == false && varJumpTimer <= 0) canJump = true;//落地后可以再次跳跃
-        if (isGrounded) rb.gravityScale = defaultGravityScale;//落地后重置重力
-
-        //调用状态机内部更新
+        //调用状态机内部更新：必须放在“处理其他状态之前”！
         StateMachine.CurrentState.HandleInput();
         StateMachine.CurrentState.LogicUpdate();
+
+        //处理其它状态（中立于两个或两个以上状态）变量
+        //if (isGrounded && canJump == false && varJumpTimer <= 0 && rb.velocity.y <= 0) canJump = true;//落地后可以再次跳跃
+        if (!isGrounded && jumpCoyoteTimer <= 0 ) canJump = false;//离地且土狼时间结束后不能跳跃
+        if (isGrounded) rb.gravityScale = defaultGravityScale;//落地后重置重力
+
+        //这里解释一下，为什么“调用状态机内部更新”必须要放在“处理其它状态”的上面：因为在RunState & IdleState的脚本里走离平台的逻辑中加入了“开启土狼时间计时器”后，如果后者在前者的下面，canJump会先被设置成false，然后土狼计时器才启动，所以后者在前者前面的根本目的是保证土狼计时器先启动。我不清楚这里有没有更加合理和漂亮的解决方案，总之，所有与在状态机中触发的计时器和状态的变量相关的脚本，必须放在“调用状态机内部更新”之后
         
-        
+        //两小时之后：我发现上述问题会产生的根本原因是一个逻辑更新紧随于一个物理更新之后。虽然在游戏世界中大部分情况逻辑更新在物理更新之前，但是土狼时间的启动，以及release（我正好写到这里就发现）中必须在物理输出结束后（也就是实现了清空currentStorage之后，不然的话状态切换会先于物理输出）再进行状态切换，都属于物理更新先于逻辑更新的情况。这种问题似乎是不可避免的。
     }
 
     private void FixedUpdate()
@@ -157,12 +172,12 @@ public class PlayerController : MonoBehaviour
     {
         if (Mathf.Abs(rb.velocity.x) > 0.01f)
         {
-            float forceX = -Mathf.Sign(rb.velocity.x) * brakeDeceleraion;
+            float forceX = -Mathf.Sign(rb.velocity.x) * turnRoundBrakeDec;
             rb.AddForce(new Vector2(forceX, 0));
         }
     }
 
-    public void ApplyBrakeForce(float amount)
+    public void TurnRoundBrake(float amount)
     {
         // 只有在有水平速度时才执行刹车
         if (Mathf.Abs(rb.velocity.x) > 0.01f)
@@ -180,6 +195,7 @@ public class PlayerController : MonoBehaviour
 
     public void InitialJump()
     {
+
         //实现跳跃的物理功能
         rb.velocity = new Vector2(rb.velocity.x, jumpSpeedInitial);
 
@@ -188,6 +204,12 @@ public class PlayerController : MonoBehaviour
 
         //关闭跳跃缓冲
         jumpBufferTimer = -1;
+
+        //关闭canJump
+        canJump = false;
+
+        //关闭土狼时间计时器
+        jumpCoyoteTimer = -1;
 
     }
 

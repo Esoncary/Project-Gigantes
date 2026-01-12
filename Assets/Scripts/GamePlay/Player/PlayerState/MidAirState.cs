@@ -19,7 +19,7 @@ public class MidAirState : PlayerState
         if (player.rb.velocity.y > 0.1f)
         {
             player.PlayAnimation("Jump_Up");
-            if (!Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
             {
                 player.rb.gravityScale = player.defaultGravityScale * 4f; // 松开跳跃键时增加重力加速度
             }
@@ -30,25 +30,32 @@ public class MidAirState : PlayerState
             player.rb.gravityScale = player.defaultGravityScale * 2f; // 下落时增加重力加速度
         }
 
-        //--- 1. 空中跳跃 ---
-        if (player.jumpBufferTimer > 0 && player.canJump)
+        //---1.空中跳跃-- -
+        if (player.jumpBufferTimer > 0 && player.canJump )
         {
             player.InitialJump();
             player.canJump = false; // 落地前只能跳一次
             stateMachine.ChangeState(player.MidAirState);
             return;
         }
-                
+
         // --- 2. 状态切换：落地 ---
         if (player.groundedCheckerManager.isGrounded && player.rb.velocity.y <= 0.01f)
         {
             // 如果落地时还有较大的水平输入，直接进入 Run，否则进入 Brake 或 Idle
             if (Mathf.Abs(player.InputX) > 0.01f)
+            {
+                player.canJump = true;//恢复跳跃次数
                 stateMachine.ChangeState(player.RunState);
+            }
             else
+            {
+                player.canJump = true;//恢复跳跃次数
                 stateMachine.ChangeState(player.BrakeState);
 
-            return;
+                return;
+            }
+                
         }
 
         // --- 3. 状态切换：攀爬 ---
@@ -72,35 +79,40 @@ public class MidAirState : PlayerState
         base.PhysicsUpdate();
 
         // --- 5. 水平空中移动控制 ---
-        HandleAirMovement();
+        AirMovement();
 
         // --- 6. 持续跳跃加力 (长按跳得高) ---
-        HandleVariableJump();
+        VarJump();
 
-        // --- 7. 到达顶峰时的重力缩减 (Apex Float) ---
-        HandleApexFloat();
+        // --- 7. 到达顶峰时的滞空效果
+        HangInMidAir();
     }
 
-    private void HandleAirMovement()
+    private void AirMovement()
     {
-        float inputX = player.InputX;
-
-        // 只有在未达上限，或者正在反向转向时，才允许加力
-        if (Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeedInMidAir || Mathf.Sign(inputX) != Mathf.Sign(player.rb.velocity.x))
+        // 转向处理
+        if (Mathf.Abs(player.rb.velocity.x) > 0.1f && Mathf.Sign(player.rb.velocity.x) != player.InputX)
         {
-            player.rb.AddForce(new Vector2(inputX * player.moveSpeedAccInMidAir, 0));
+            player.TurnRoundBrake(player.turnRoundBrakeDec);
         }
 
-        // 空中强制减速：如果弹射后的速度依然超过上限，且已经过了保护期
-        if (Mathf.Abs(player.rb.velocity.x) > player.maxMoveSpeedInMidAir && player.inputLockTimer <= 0)
+        // 加速与限速逻辑,Launched状态之后的限速还没写
+        if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeedInMidAir)//如果小于最小移动速度，直接设置为最小移动速度，确保起步流畅
         {
-            // 施加空气阻力
-            float decelerateForce = -Mathf.Sign(player.rb.velocity.x) * player.enforceMoveAccSpeedInMidAir;
-            player.rb.AddForce(new Vector2(decelerateForce, 0));
+            player.rb.velocity = new Vector2(player.InputX * player.minMoveSpeedInMidAir, player.rb.velocity.y);
+        }
+        else if (Mathf.Abs(player.rb.velocity.x) >= player.minMoveSpeedInMidAir && Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeedInMidAir)//如果未达到最大移动速度，加速
+        {
+            //player.rb.AddForce(new Vector2(inputX * player.moveSpeedAcc, 0));
+            player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.moveSpeedAccInMidAir * Time.fixedDeltaTime), player.rb.velocity.y);
+        }
+        else if (Mathf.Abs(player.rb.velocity.x) > player.maxMoveSpeedInMidAir)//如果超过最大跑动速度，则限速
+        {
+            player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.turnRoundBrakeDec * Time.fixedDeltaTime), player.rb.velocity.y);
         }
     }
 
-    private void HandleVariableJump()
+    private void VarJump()
     {
         // 这里的逻辑对应你之前的 varJumpTimer
         if (Input.GetKey(KeyCode.Space) && player.varJumpTimer > 0)
@@ -109,7 +121,7 @@ public class MidAirState : PlayerState
         }
     }
 
-    private void HandleApexFloat()
+    private void HangInMidAir()//滞空处理
     {
         // 当垂直速度接近 0（到达抛物线顶端）时，减小重力产生滞空感
         if (Mathf.Abs(player.rb.velocity.y) < player.gravityContractionThreshold)
@@ -118,7 +130,7 @@ public class MidAirState : PlayerState
         }
         //else
         //{
-        //    player.rb.gravityScale = player.defaultGravityScale; // 恢复正常重力
+        //    player.rb.gravityScale = player.defaultGravityScale; // 恢复正常重力 //由于整个跳跃过程的重力都被控制了，所以不需要else恢复重力
         //}
     }
 
