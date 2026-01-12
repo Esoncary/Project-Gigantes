@@ -10,13 +10,5 @@ namespace GamePlay.Player.Interface
         // 根据当前速度计算施加力后的新速度
         // 入参：当前速度，玩家位置
         Vector2 CalculateVelocity(Vector2 currentVelocity, Vector2 playerPosition);
-        ForceType ForceType { get; }
-    }
-    
-    // 力的类型：内部力（如加速）或外部力（如风力、碰撞力）
-    public enum ForceType
-    {
-        Internal,
-        External
     }
 }

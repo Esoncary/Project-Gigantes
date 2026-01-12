@@ -22,8 +22,6 @@ namespace GamePlay.IA
         }
         
         // IPlayerForce 实现
-        // 设定力的类型与计算
-        public ForceType ForceType => ForceType.External;
         public Vector2 CalculateVelocity(Vector2 currentVelocity, Vector2 playerPosition)
         {
             if (IsActive)
