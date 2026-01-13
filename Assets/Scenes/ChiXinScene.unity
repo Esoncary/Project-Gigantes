@@ -350,11 +350,12 @@ MonoBehaviour:
   minMoveSpeedInMidAir: 7
   maxMoveSpeedInMidAir: 10
   enforceMoveAccSpeedInMidAir: 5
-  defaultGravityScale: 0
-  jumpSpeedInitial: 15
-  varJumpTime: 0.3
-  gravityContractionThreshold: 0.5
-  gravityContractionScale: 0.5
+  defaultGravityScale: 3
+  jumpSpeedInitial: 20
+  varJumpTime: 0.1
+  canVarJump: 0
+  gravityContractionThreshold: 0.3
+  gravityContractionScale: 1
   jumpBufferTime: 0.2
   jumpCoyoteTime: 0.1
   jumpCoyoteTimer: -1
@@ -390,7 +391,7 @@ MonoBehaviour:
   targetStorageFreezeTimer: 0
   currentStorageFreezeTimer: 0
   explosionTimer: 0
-  canJump: 1
+  canJump: 0
   releaseDir: {x: 0, y: 0}
   arrowInstance: {fileID: 1449876100}
 --- !u!70 &236627714
@@ -1025,10 +1026,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a94f7352fd744975a4625733442cd345, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bounceForce: 50
-  defaultIsOn: 1
   boundSwitch: {fileID: 1359328273}
   followSwitch: 1
+  defaultIsOn: 1
+  bounceForce: 50
 --- !u!1 &841296979
 GameObject:
   m_ObjectHideFlags: 0

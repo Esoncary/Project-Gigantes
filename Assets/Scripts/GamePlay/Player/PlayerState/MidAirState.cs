@@ -14,12 +14,22 @@ public class MidAirState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        if ((Input.GetKeyUp(KeyCode.Space) && player.varJumpTimer >= 0) || player.varJumpTimer <= 0) //关掉变量跳跃窗口
+        {
+            player.canVarJump = false;
+            player.varJumpTimer = -1f; 
+        }
+
 
         // --- 根据垂直速度切换上升/下落动画 ---
-        if (player.rb.velocity.y > 0.1f)
+        if (player.rb.velocity.y > 0.1f && !player.canVarJump)//player处于上升阶段且不在变量跳跃期间
         {
             player.PlayAnimation("Jump_Up");
             if (Input.GetKey(KeyCode.Space))
+            {
+                player.rb.gravityScale = player.defaultGravityScale * 2f; // 持续按住跳跃键时使用正常重力
+            }
+            else
             {
                 player.rb.gravityScale = player.defaultGravityScale * 4f; // 松开跳跃键时增加重力加速度
             }
@@ -27,7 +37,7 @@ public class MidAirState : PlayerState
         else if (player.rb.velocity.y < -0.1f)
         {
             player.PlayAnimation("Fall_Down");
-            player.rb.gravityScale = player.defaultGravityScale * 2f; // 下落时增加重力加速度
+            player.rb.gravityScale = player.defaultGravityScale * 3.5f; // 下落时增加重力加速度
         }
 
         //---1.空中跳跃-- -
@@ -82,7 +92,11 @@ public class MidAirState : PlayerState
         AirMovement();
 
         // --- 6. 持续跳跃加力 (长按跳得高) ---
-        VarJump();
+        if (player.canVarJump)
+        {
+            VarJump();
+        }
+        
 
         // --- 7. 到达顶峰时的滞空效果
         HangInMidAir();
@@ -115,10 +129,9 @@ public class MidAirState : PlayerState
     private void VarJump()
     {
         // 这里的逻辑对应你之前的 varJumpTimer
-        if (Input.GetKey(KeyCode.Space) && player.varJumpTimer > 0)
-        {
-            player.rb.velocity = new Vector2(player.rb.velocity.x, player.jumpSpeedInitial);
-        }
+        //player.rb.velocity = new Vector2(player.rb.velocity.x, player.jumpSpeedInitial);
+        player.rb.gravityScale = 0; // 在变量跳跃期间取消重力影响
+
     }
 
     private void HangInMidAir()//滞空处理

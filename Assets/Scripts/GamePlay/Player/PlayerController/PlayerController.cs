@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     public float defaultGravityScale;//默认重力数值，在inspector中设置为3
     public float jumpSpeedInitial = 12f;
     public float varJumpTime = 0.2f;
+    public bool canVarJump = false;
     public float gravityContractionThreshold = 1f;
     public float gravityContractionScale = 0.5f;
     public float jumpBufferTime;
@@ -210,6 +211,9 @@ public class PlayerController : MonoBehaviour
 
         //关闭土狼时间计时器
         jumpCoyoteTimer = -1;
+
+        //允许变量跳跃
+        canVarJump = true;
 
     }
 
