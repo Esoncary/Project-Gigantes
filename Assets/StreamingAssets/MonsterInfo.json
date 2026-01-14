@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "resName": "Monster/1",
+        "animator": "Animator/Monster/1",
+        "atk": 5,
+        "moveSpeed": 10,
+        "roundSpeed": 100,
+        "hp": 10,
+        "atkCD": 1
+    }
+]

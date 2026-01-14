@@ -1,0 +1,67 @@
+[
+    {
+        "id": 1,
+        "res": "Role/1",
+        "atk": 5,
+        "info": "最帅的男人",
+        "lockMoney": 0,
+        "type": 1,
+        "hitEff ": "Eff/1"
+    },
+    {
+        "id": 2,
+        "res": "Role/2",
+        "atk": 2,
+        "info": "最温柔的男人",
+        "lockMoney": 0,
+        "type": 2,
+        "hitEff ": "Eff/2"
+    },
+    {
+        "id": 3,
+        "res": "Role/3",
+        " atk": 3,
+        "info": "最凶的男人",
+        "lockMoney": 200,
+        "type": 2,
+        "hitEff ": "Eff/3"
+    },
+    {
+        "id": 4,
+        "res": "Role/4",
+        " atk": 4,
+        "info": "最可爱的男人",
+        "lockMoney": 300,
+        "type": 2,
+        "hitEff ": "Eff/4",
+        "": ""
+    },
+    {
+        "id": 5,
+        "res": "Role/5",
+        " atk": 5,
+        "info": "最小的男人",
+        "lockMoney": 400,
+        "type": 2,
+        "hitEff ": "Eff/5"
+    },
+    {
+        "id": 6,
+        "res": "Role/6",
+        " atk": 6,
+        "info": "最大的男人",
+        "lockMoney": 500,
+        "type": 2,
+        "hitEff ": "Eff/6",
+        "": ""
+    },
+    {
+        "id": 7,
+        "res": "Role/7",
+        " atk": 7,
+        "info": "最屌的男人",
+        "lockMoney": 600,
+        "type": 2,
+        "hitEff ": "Eff/7"
+    }
+]
