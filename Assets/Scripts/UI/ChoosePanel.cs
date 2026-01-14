@@ -48,13 +48,13 @@ public class ChoosePanel : BasePanel
         {
             --nowIndex;
             if (nowIndex < 0)
-                nowIndex = GameDataMgr.Instance.roleInfos.Count;
+                nowIndex = GameDataMgr.Instance.list_RoleData.Count;
             LoadRole();
         });
         rightBtn.onClick.AddListener(() =>
         {
             ++nowIndex;
-            if (nowIndex >= GameDataMgr.Instance.roleInfos.Count)
+            if (nowIndex >= GameDataMgr.Instance.list_RoleData.Count)
                 nowIndex = 0;
             LoadRole();
         });
@@ -86,7 +86,7 @@ public class ChoosePanel : BasePanel
             Destroy(roleObj);
             roleObj = null;
         }
-        nowData = GameDataMgr.Instance.roleInfos[nowIndex];
+        nowData = GameDataMgr.Instance.list_RoleData[nowIndex];
         roleObj = Instantiate(Resources.Load<GameObject>(nowData.res), RolePos.position, RolePos.rotation);
         // characterName.text = nowData.info.ToString();
         // Destroy(roleObj.GetComponent<PlayerObj>());

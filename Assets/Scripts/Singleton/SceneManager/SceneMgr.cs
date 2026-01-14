@@ -6,16 +6,13 @@ using UnityEngine;
 
 public class SceneMgr
 {
-    public List<SceneData> sceneInfos;
+    public List<LevelData> sceneInfos;
 
     private static SceneMgr instance = new SceneMgr();
     public static SceneMgr Instance => instance;
     private SceneMgr()
     {
-        foreach (SceneData sceneData in GameDataMgr.Instance.sceneDatas)
-        {
-            sceneInfos.Add(sceneData);
-        }
+        sceneInfos = GameDataMgr.Instance.list_LevelData;
     }
     // private PlayerObj playerObj;
     public void InitInfo()
@@ -31,25 +28,28 @@ public class SceneMgr
     }
 
     // 加载场景数据
-    public SceneData GetSceneData(int index)
+    public LevelData GetSceneData(int index)
     {
-        SceneData sceneInfo = sceneInfos[index];
+        LevelData sceneInfo = sceneInfos[index];
         return sceneInfo;
     }
+
     // 加载场景
     public void LoadScene(int index)
     {
-        AsyncOperation ao = SceneManager.LoadSceneAsync(sceneInfos[index].id);
+        AsyncOperation ao = SceneManager.LoadSceneAsync(sceneInfos[index].LevelId);
 
         ao.completed += (obj) =>
         {
             InitInfo();
         };
     }
-    //判断是否胜利
-    public bool IsPass()
+
+    // 通关自动保存
+    public void PassAndAutoSave(int index)
     {
-        return true;
+        GameDataMgr.Instance.currentSave.MaxUnlockedLevelId++;
+        GameDataMgr.Instance.SavePlayerSaveData();
     }
 
 }

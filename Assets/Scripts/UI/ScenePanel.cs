@@ -22,14 +22,14 @@ public class ScenePanel : BasePanel
              print("left");
              --nowIndex;
              if (nowIndex < 0)
-                 nowIndex = GameDataMgr.Instance.sceneDatas.Count;
+                 nowIndex = GameDataMgr.Instance.list_LevelData.Count;
              GetCurrentSceneData();
          });
         rightBtn.onClick.AddListener(() =>
         {
             print("right");
             ++nowIndex;
-            if (nowIndex >= GameDataMgr.Instance.sceneDatas.Count)
+            if (nowIndex >= GameDataMgr.Instance.list_LevelData.Count)
                 nowIndex = 0;
             GetCurrentSceneData();
         });
@@ -46,8 +46,8 @@ public class ScenePanel : BasePanel
     }
     public void GetCurrentSceneData()
     {
-        SceneData sceneInfo = SceneMgr.Instance.GetSceneData(nowIndex);
-        name.text = sceneInfo.name;
+        LevelData sceneInfo = SceneMgr.Instance.GetSceneData(nowIndex);
+        name.text = sceneInfo.SceneName;
         image.sprite = Resources.Load<Sprite>(sceneInfo.imgRes);
     }
 }
