@@ -13,9 +13,20 @@ public class KineticMachine : MonoBehaviour
 
     private void Update()
     {
-        //初始化currentVelocityMag
+        //每帧同步currentVelocityMag
         player.currentVelocityMag = player.rb.velocity.magnitude;
 
+        if (player.coolerTimer <= 0)
+        {
+            KineticMachineOperate();
+        }
+
+        
+
+        
+    }
+    void KineticMachineOperate()//动力装置的所有运作逻辑
+    {
         //先来处理目标储量
         //如果速度模大于等于目标储量，则将速度模赋值给目标储量
         if (player.targetStorage <= player.currentVelocityMag)
@@ -24,7 +35,7 @@ public class KineticMachine : MonoBehaviour
             SetTargetStorage();//这是一个赋值函数
         }
         //如果速度模小于目标储量
-        else if (player.targetStorage > player.currentVelocityMag )
+        else if (player.targetStorage > player.currentVelocityMag)
         {
             if (player.targetStorageFreezeTimer == -1)//如果此时计时器还没有启动
             {
@@ -35,10 +46,8 @@ public class KineticMachine : MonoBehaviour
                 player.targetStorageFreezeTimer = -1;//关掉计时器
                 SetTargetStorage();//将速度模赋值给目标储量,也就是允许目标储量下降
             }
-            
-        }
 
-        
+        }
 
         //现在来处理当前储量
         //计算当前储量上升速度
@@ -50,9 +59,9 @@ public class KineticMachine : MonoBehaviour
             CurrentStorageIncrease();//当前储量上升函数
         }
         //如果当前储量大于目标储量
-        else if (player.currentStorage > player.targetStorage )
+        else if (player.currentStorage > player.targetStorage)
         {
-            if ( player.currentStorageFreezeTimer == -1)//如果计时器是关闭状态
+            if (player.currentStorageFreezeTimer == -1)//如果计时器是关闭状态
             {
                 player.currentStorageFreezeTimer = player.currentStorageFreezeTime;//启动冻结当前储量计时器
             }
@@ -82,9 +91,8 @@ public class KineticMachine : MonoBehaviour
             player.isOverloaded = false;//将过载状态设为假
             player.explosionTimer = -1;//关闭过载计时器
         }
-
-        
     }
+
 
     // 目标储量设定函数
     void SetTargetStorage()

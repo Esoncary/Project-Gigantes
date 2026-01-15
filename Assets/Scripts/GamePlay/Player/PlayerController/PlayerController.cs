@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public MidAirState MidAirState { get; private set; }
     public ClimbState ClimbState { get; private set; }
     public ReleaseState ReleaseState { get; private set; }
+    public DieState DieState { get; private set; }
 
     // --- 组件引用 (根据报错，统一使用状态脚本里期待的名字) ---
     public Rigidbody2D rb { get; private set; } // 你要求的写小写
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour
     public float speedLimitOffTime;
     public float speedLimitOffTimer;
 
-    [Header("动力装置相关")]
+    [Header("动力装置参数")]
     public float maxStorage = 100f;
     public float minReleaseThrehold = 5f;
     public float timeScaleReleasing = 0.1f;
@@ -76,6 +77,9 @@ public class PlayerController : MonoBehaviour
     public float currentStorageDecreaseSpeed = 40f;
     public float explosionTime = 2f; 
     public bool isOverloaded;
+
+    [Header("道具参数")]
+    public float coolerTimer;
 
     [Header("实时变量")]
     public float InputX;
@@ -117,6 +121,7 @@ public class PlayerController : MonoBehaviour
         MidAirState = new MidAirState(this, StateMachine, "MidAir");
         ClimbState = new ClimbState(this, StateMachine, "Climb");
         ReleaseState = new ReleaseState(this, StateMachine, "Release");
+        DieState = new DieState(this, StateMachine, "Die");
     }
 
     private void Start()
@@ -148,6 +153,7 @@ public class PlayerController : MonoBehaviour
         if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
         if (speedLimitOffTimer > 0) speedLimitOffTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
+        if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！
         StateMachine.CurrentState.HandleInput();
@@ -168,6 +174,8 @@ public class PlayerController : MonoBehaviour
         StateMachine.CurrentState.PhysicsUpdate();
     }
 
+
+    #region 中立于两个或两个以上状态的状态内函数
     // 补上状态类调用的 Brake 函数
     public void Brake()
     {
@@ -217,6 +225,32 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    #endregion
+
+    #region 道具函数
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //如果碰到道具
+        IPickUp thisPickUp = collision.GetComponent<IPickUp>();
+        
+        if (thisPickUp != null)
+        {
+            Debug.Log("触发道具函数");
+            thisPickUp.PickUpEffect(this);
+        }
+
+        //如果碰到地标
+        ILandmark thisLandmark = collision.GetComponent<ILandmark>();
+
+        if (thisLandmark != null)
+        {
+            Debug.Log("触发地标函数");
+            thisLandmark.LandmarkEffect();
+        }
+    }
+    #endregion
+
+    #region 地形函数
     public void ApplyForce(IPlayerForce forceSource)
     {
         //Vector2 newVelocity = forceSource.CalculateVelocity(rb.velocity);
@@ -237,9 +271,14 @@ public class PlayerController : MonoBehaviour
         //}
     }
 
+
+
+    #endregion
+
+    # region 动画函数
     public void PlayAnimation(string name)
     {
         if (Anim != null && !string.IsNullOrEmpty(name)) Anim.Play(name);
     }
-    
+#endregion
 }
