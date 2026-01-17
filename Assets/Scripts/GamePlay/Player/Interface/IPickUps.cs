@@ -4,8 +4,5 @@ using UnityEngine;
 
 public interface IPickUp
 {
-    void PickUpEffect(PlayerController player)
-    {
-        
-    }
+    void PickUpEffect(PlayerController player);
 }

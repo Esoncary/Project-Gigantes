@@ -2,17 +2,16 @@ using System.Collections.Generic;
 using GamePlay.Player.Interface;
 using UnityEngine;
 
-namespace GamePlay.IA
+namespace GamePlay.IA.Base
 {
     public class Switch : MonoBehaviour
     {
         [Header("开关行为")] [SerializeField] private bool initialIsOn;
 
-        private readonly List<ISwitchable> _switchableObjects = new();
+        public bool IsOn { get; set; }
+        protected HashSet<ISwitchable> SwitchableObjects { get; set; }
         private bool _isLeave = true; // 玩家是否在在开关区域外
-
-        public bool IsOn { get; private set; }
-
+        
         private void Awake()
         {
             // 初始化开关状态
@@ -22,7 +21,7 @@ namespace GamePlay.IA
         private void Start()
         {
             // 通知所有注册的对象当前状态
-            NotifyAll();
+            Notify();
         }
         
         private void OnTriggerEnter2D(Collider2D collision)
@@ -39,27 +38,24 @@ namespace GamePlay.IA
         {
             _isLeave = true;
         }
+        
+        // 将可切换对象注册到自身
+        public void RegisterSwitchable(ISwitchable switchable)
+        {
+            SwitchableObjects ??= new HashSet<ISwitchable>();
+            SwitchableObjects.Add(switchable);
+        }
 
         // 切换开关状态
         void Toggle()
         {
             IsOn = !IsOn;
-            NotifyAll();
-        }
-        
-        // 注册可切换对象
-        public void RegisterSwitchable(ISwitchable switchable)
-        {
-            if (switchable != null && !_switchableObjects.Contains(switchable))
-            {
-                _switchableObjects.Add(switchable);
-            }
+            Notify();
         }
 
-
-        private void NotifyAll()
+        private void Notify()
         {
-            foreach (var obj in _switchableObjects)
+            foreach (var obj in SwitchableObjects)
             {
                 if (IsOn)
                 {

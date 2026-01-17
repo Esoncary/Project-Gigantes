@@ -1,4 +1,5 @@
 using System;
+using GamePlay.IA.Base;
 using GamePlay.Player.Interface;
 using UnityEngine;
 

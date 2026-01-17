@@ -23,7 +23,7 @@ public class LevelMgr : MonoBehaviour
     [Header("引用")]
     public PlayerController player; // 玩家的引用
 
-    [Header("坐标设置")]
+    [Header("重生点坐标设置")]
     public Vector2 currentRebornPos;
 
     // Start is called before the first frame update

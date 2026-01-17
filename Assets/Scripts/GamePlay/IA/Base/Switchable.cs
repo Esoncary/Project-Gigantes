@@ -1,15 +1,13 @@
 using GamePlay.Player.Interface;
 using UnityEngine;
 
-namespace GamePlay.IA
+namespace GamePlay.IA.Base
 {
     public abstract class Switchable : MonoBehaviour, ISwitchable
     {
         [Header("开关绑定")]
         [Tooltip("绑定开关对象")]
         [SerializeField] protected Switch boundSwitch;
-        [Tooltip("是否跟随开关状态")]
-        [SerializeField] protected bool followSwitch;
         [Tooltip("是否默认激活")]
         [SerializeField] protected bool defaultIsOn = true;
 
@@ -17,10 +15,10 @@ namespace GamePlay.IA
 
         protected virtual void Awake()
         {
-            if (followSwitch && boundSwitch != null)
+            if (boundSwitch != null)
             {
                 IsActive = boundSwitch.IsOn;
-                boundSwitch.RegisterSwitchable(this);
+                boundSwitch.RegisterSwitchable(this); // 绑定开关
             }
             else
             {

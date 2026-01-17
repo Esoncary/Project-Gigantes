@@ -1,3 +1,4 @@
+using GamePlay.IA.Base;
 using GamePlay.Player.Interface;
 
 namespace GamePlay.IA
