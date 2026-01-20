@@ -61,6 +61,9 @@ public class PlayerController : MonoBehaviour
     [Header("发射参数")]
     public float speedLimitOffTime;
     public float speedLimitOffTimer;
+    [Tooltip("发射后重力衰减持续时间")]public float postReleaseGravityReductionTime = 0.5f;
+    [Tooltip("重力衰减缩放比例(0-1)")]public float postReleaseGravityScale = 0.2f;
+    public float postReleaseGravityTimer;
 
     [Header("动力装置参数")]
     public float maxStorage = 100f;
@@ -154,6 +157,15 @@ public class PlayerController : MonoBehaviour
         if (speedLimitOffTimer > 0) speedLimitOffTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
         if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
+        if (postReleaseGravityTimer > 0)
+        {
+            postReleaseGravityTimer -= Time.deltaTime;
+            if (postReleaseGravityTimer <= 0)
+            {
+                // 重力回复
+                rb.gravityScale = defaultGravityScale;
+            }
+        }
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！
         StateMachine.CurrentState.HandleInput();

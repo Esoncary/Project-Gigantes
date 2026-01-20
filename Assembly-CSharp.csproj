@@ -83,8 +83,8 @@
     <Compile Include="Assets/Scripts/GamePlay/Player/PlayerState/LaunchedState.cs" />
     <Compile Include="Assets/Scripts/UI/Main.cs" />
     <Compile Include="Assets/Scripts/Singleton/Json/LitJson/JsonReader.cs" />
-    <Compile Include="Assets/Scripts/Singleton/Json/LitJson/Lexer.cs" />
     <Compile Include="Assets/Scripts/GamePlay/IA/Base/Switchable.cs" />
+    <Compile Include="Assets/Scripts/Singleton/Json/LitJson/Lexer.cs" />
     <Compile Include="Assets/Scripts/GamePlay/Player/Interface/IPickUps.cs" />
     <Compile Include="Assets/Scripts/GamePlay/Player/PlayerState/RunState.cs" />
     <Compile Include="Assets/Scripts/UI/ChoosePanel.cs" />

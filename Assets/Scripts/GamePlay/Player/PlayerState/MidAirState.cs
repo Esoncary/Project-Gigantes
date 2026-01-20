@@ -20,26 +20,6 @@ public class MidAirState : PlayerState
             player.varJumpTimer = -1f; 
         }
 
-
-        // --- 根据垂直速度切换上升/下落动画 ---
-        if (player.rb.velocity.y > 0.1f && !player.canVarJump)//player处于上升阶段且不在变量跳跃期间
-        {
-            player.PlayAnimation("Jump_Up");
-            if (Input.GetKey(KeyCode.Space))
-            {
-                player.rb.gravityScale = player.defaultGravityScale * 2f; // 持续按住跳跃键时使用正常重力
-            }
-            else
-            {
-                player.rb.gravityScale = player.defaultGravityScale * 4f; // 松开跳跃键时增加重力加速度
-            }
-        }
-        else if (player.rb.velocity.y < -0.1f)
-        {
-            player.PlayAnimation("Fall_Down");
-            player.rb.gravityScale = player.defaultGravityScale * 3.5f; // 下落时增加重力加速度
-        }
-
         //---1.空中跳跃-- -
         if (player.jumpBufferTimer > 0 && player.canJump )
         {
@@ -81,6 +61,32 @@ public class MidAirState : PlayerState
         {
             stateMachine.ChangeState(player.ReleaseState);
             return;
+        }
+        
+        if (player.postReleaseGravityTimer > 0)
+        {
+            player.rb.gravityScale = player.defaultGravityScale * player.postReleaseGravityScale;
+            return;
+        }
+
+
+        // --- 根据垂直速度切换上升/下落动画 ---
+        if (player.rb.velocity.y > 0.1f && !player.canVarJump)//player处于上升阶段且不在变量跳跃期间
+        {
+            player.PlayAnimation("Jump_Up");
+            if (Input.GetKey(KeyCode.Space))
+            {
+                player.rb.gravityScale = player.defaultGravityScale * 2f; // 持续按住跳跃键时使用正常重力
+            }
+            else
+            {
+                player.rb.gravityScale = player.defaultGravityScale * 4f; // 松开跳跃键时增加重力加速度
+            }
+        }
+        else if (player.rb.velocity.y < -0.1f)
+        {
+            player.PlayAnimation("Fall_Down");
+            player.rb.gravityScale = player.defaultGravityScale * 3.5f; // 下落时增加重力加速度
         }
     }
 

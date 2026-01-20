@@ -88,8 +88,8 @@ public class ReleaseState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        //恢复重力
-        player.rb.gravityScale = player.defaultGravityScale;
+        // 重力衰减
+        player.postReleaseGravityTimer = player.postReleaseGravityReductionTime;
 
         //恢复时间
         Time.timeScale = 1.0f;
