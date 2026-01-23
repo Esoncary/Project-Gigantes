@@ -43,6 +43,14 @@ public class IdleState : PlayerState
             player.jumpCoyoteTimer = player.jumpCoyoteTime;//开启跳跃土狼时间计时器
             stateMachine.ChangeState(player.MidAirState);
         }
+
+        // 4. 状态切换：释放 (由外部输入触发，但切入 ReleaseState)
+        // 注意：这里只需判断是否要进入释放状态，具体的数值由 KineticDevice 处理
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            stateMachine.ChangeState(player.ReleaseState);
+            return;
+        }
     }
 
     public override void PhysicsUpdate()

@@ -70,7 +70,6 @@ public class PlayerController : MonoBehaviour
     public float targetStorage;//与currentVelocityMagnitude基本同步，若模上升则上升，若模下降则停留一段时间，再下降
     public float currentVelocityMag;//角色的当前速度模
     public float targetStorageFreezeTime;//若角色的速度模小于上一帧，targetStorage停留一段时间再下降
-    public float targetStorageDecreaseSpeed;//目标储量下降速度(目标储量和当前储量的下降速度都是一个较快的常量)
     public float currentStorageFreezeTime;
     public float currentStorageDefaultIncreaseSpeed;//当前储量默认增长速度（常量）
     public float currentStorageIncreaseSpeed;//当前储量增长速度（变量，与速度模大小成正比）

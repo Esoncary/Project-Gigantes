@@ -103,7 +103,7 @@ public class KineticMachine : MonoBehaviour
     //当前储量上升速度计算函数
     void currentStorageIncreaseSpeedCalculate()
     {
-        //当前储量上升速度与目标储量成正比，20f是我设定的系数
+        //当前储量上升速度与目标储量成正比，f是我随意设定的系数
         player.currentStorageIncreaseSpeed = player.currentStorageDefaultIncreaseSpeed * (player.targetStorage / 20f);
     }
 
