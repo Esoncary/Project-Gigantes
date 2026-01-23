@@ -42,9 +42,13 @@ public class GameMgr : MonoBehaviour
         Debug.Log("Game State Changed to: " + newState);
     }
 
+    //玩家死亡或者手动重启当前关卡
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         ChangeGameState(GameState.Playing);
     }
+
+    
+
 }

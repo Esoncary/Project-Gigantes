@@ -129,7 +129,7 @@ public class KineticMachine : MonoBehaviour
         //处理爆炸计时器
         if (player.explosionTimer <= 0)//如果计时器结束
         {
-            //player.StateMachine.ChangeState(player.DieState)// 切换到死亡状态，但是死亡状态还没写
+            player.StateMachine.ChangeState(player.DieState);// 切换到死亡状态，但是死亡状态还没写
              
                 Debug.LogError("能量过载爆炸！");
         }

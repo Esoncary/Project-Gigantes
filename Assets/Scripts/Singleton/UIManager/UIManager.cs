@@ -55,6 +55,7 @@ public class UIManager
             }
         }
     }
+
     // 得到面板
     public T GetPanel<T>() where T : BasePanel
     {

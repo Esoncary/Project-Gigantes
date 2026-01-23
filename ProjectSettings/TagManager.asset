@@ -41,6 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: New Layer 1
+  - name: BackgroundFar
+    uniqueID: 487348543
+    locked: 0
+  - name: BackgroundMid
     uniqueID: 3914828943
+    locked: 0
+  - name: Gameplay
+    uniqueID: 1210811031
+    locked: 0
+  - name: UI
+    uniqueID: 1081483557
     locked: 0

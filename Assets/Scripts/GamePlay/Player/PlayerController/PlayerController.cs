@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("道具参数")]
     public float coolerTimer;
+    public IInteractable currentInteractable;
 
     [Header("实时变量")]
     public float InputX;
@@ -131,6 +132,14 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        //交互物函数，暂时不知道放在哪里先放这儿
+        if (currentInteractable != null & Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("触发交互物函数");
+            currentInteractable.Interact();
+        }
+
+
         //处理输入:横向输入,跳跃输入,释放输入,鼠标输入
         InputX = Input.GetAxisRaw("Horizontal");
         JumpInputDown = Input.GetKeyDown(KeyCode.Space);
@@ -227,48 +236,54 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    #region 道具函数
+    #region 道具、交互物函数
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //如果碰到道具
         IPickUp thisPickUp = collision.GetComponent<IPickUp>();
-        
         if (thisPickUp != null)
         {
             Debug.Log("触发道具函数");
             thisPickUp.PickUpEffect(this);
         }
 
+        //如果碰到交互物
+        IInteractable thisInteractable = collision.GetComponent<IInteractable>();
+        if (thisInteractable != null)
+        {
+            //视觉上显示可以按E，这里还没写
+            
+            currentInteractable = thisInteractable;
+            if (currentInteractable != null & Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("触发交互物函数");
+                thisInteractable.Interact();
+            }
+        }
+
         //如果碰到地标
         ILandmark thisLandmark = collision.GetComponent<ILandmark>();
-
         if (thisLandmark != null)
         {
             Debug.Log("触发地标函数");
             thisLandmark.LandmarkEffect();
         }
     }
+
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        currentInteractable = null;//玩家离开交互物将当前交互物设为null
+    }
+
     #endregion
 
     #region 地形函数
     public void ApplyForce(IPlayerForce forceSource)
     {
-        //Vector2 newVelocity = forceSource.CalculateVelocity(rb.velocity);
+        Vector2 newVelocity = forceSource.CalculateVelocity(rb.velocity, transform.position);
 
-        //// 根据力的类型应用不同的处理方式
-        //switch (forceSource.ForceType)
-        //{
-        //    // 内部力
-        //    case ForceType.Internal:
-        //        Debug.Log("触发内部力: " + newVelocity);
-        //        rb.velocity = newVelocity;
-        //        break;
-        //    // 外部力
-        //    case ForceType.External:
-        //        Debug.Log("触发外部力: " + newVelocity);
-        //        rb.velocity = newVelocity;
-        //        break;
-        //}
+        rb.velocity = newVelocity;
     }
 
 
