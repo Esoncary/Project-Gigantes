@@ -202,6 +202,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIMgr
       objectReference: {fileID: 0}
+    - target: {fileID: 3381683555107328276, guid: 374935b086bb0484faf4a206ed876032, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3871760835593865878, guid: 374935b086bb0484faf4a206ed876032, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
