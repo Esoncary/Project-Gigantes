@@ -35,7 +35,7 @@ public class DieState : PlayerState
         // 触发死亡动画
         //player.PlayAnimation("Die");
 
-        // 3. 广播信号：告诉 LevelManager 玩家死了
+        // 3. 广播信号：告诉所有人玩家死了
         GameEvents.PlayerDie?.Invoke();
     }
 

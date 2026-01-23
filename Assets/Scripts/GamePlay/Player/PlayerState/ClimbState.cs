@@ -100,8 +100,7 @@ public class ClimbState : PlayerState
         // 爆发位移
         player.rb.velocity = jumpVec * player.wallJumpSpeed;
 
-        // 开启控制器上的输入锁定计时器
-        player.inputLockTimer = player.inputLockTime;
+
     }
 
     #endregion

@@ -19,6 +19,8 @@ namespace GamePlay.IA
             {
                 // 施加向上的弹力
                 playerController.ApplyForce(this);
+                //打开后释放计时器
+                playerController.postReleaseTimer = playerController.postReleaseTime;
             }
         }
         

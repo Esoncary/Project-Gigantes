@@ -99,7 +99,10 @@ public class ReleaseState : PlayerState
         player.arrowInstance.SetActive(false);
 
         //将release设置为false
-        release = false;    
+        release = false;
+
+        //启动后释放计时器
+        player.postReleaseTimer = player.postReleaseTime;
 
 
     }

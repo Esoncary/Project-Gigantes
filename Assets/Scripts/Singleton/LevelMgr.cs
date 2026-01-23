@@ -60,7 +60,7 @@ public class LevelMgr : MonoBehaviour
     }
     #endregion
 
-    #region 关卡切换函数和协程
+    #region 关卡载入函数和协程
     //切换关卡函数和协程
     public void StartLoadNextLevel(string levelName)
     {
@@ -111,7 +111,7 @@ public class LevelMgr : MonoBehaviour
         // 重新加载当前场景
         AsyncOperation op = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         while (!op.isDone) yield return null;
-        yield return new WaitForSeconds(0.2f);//等个0.2s，给场景稳定，不然会卡
+        //yield return new WaitForSeconds(0.2f);//等个0.2s，给场景稳定，不然会卡
 
 
         UIMgr.Instance.StartBlackImageFadeOut();

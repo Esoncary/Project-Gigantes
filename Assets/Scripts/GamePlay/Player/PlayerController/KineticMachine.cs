@@ -27,6 +27,8 @@ public class KineticMachine : MonoBehaviour
     }
     void KineticMachineOperate()//动力装置的所有运作逻辑
     {
+        
+        
         //先来处理目标储量
         //如果速度模大于等于目标储量，则将速度模赋值给目标储量
         if (player.targetStorage <= player.currentVelocityMag)
@@ -46,7 +48,11 @@ public class KineticMachine : MonoBehaviour
                 player.targetStorageFreezeTimer = -1;//关掉计时器
                 SetTargetStorage();//将速度模赋值给目标储量,也就是允许目标储量下降
             }
-
+        }
+        //限量逻辑。如果目标储量大于最大储量，则将目标储量设为最大储量
+        if (player.targetStorage > player.maxStorage)
+        {
+            player.targetStorage = player.maxStorage;
         }
 
         //现在来处理当前储量
@@ -80,13 +86,23 @@ public class KineticMachine : MonoBehaviour
         }
 
         //现在来处理过载状态
-        if (player.currentStorage >= player.maxStorage)
+        if (player.currentStorage >= player.explosionStorageThrehold)
         {
-            player.isOverloaded = true;//将过载状态设为真
-            player.explosionTimer = player.explosionTime;//启动过载计时器
-            Overloaded();//过载行为函数
+            if (player.explosionTimer == -1)//如果过载计时器是关闭状态
+            {
+                player.isOverloaded = true;//将过载状态设为真
+                player.explosionTimer = player.explosionTime;//启动过载计时器
+                Debug.Log("启动过载函数1");
+                Overloaded();//过载行为函数
+            }
+            else if ( player.explosionTimer != -1)
+            {
+                Debug.Log("启动过载函数2");
+                Overloaded();//过载行为函数
+            }
+           
         }
-        else if (player.currentStorage < player.maxStorage)
+        else if (player.currentStorage < player.explosionStorageThrehold )
         {
             player.isOverloaded = false;//将过载状态设为假
             player.explosionTimer = -1;//关闭过载计时器
@@ -97,7 +113,7 @@ public class KineticMachine : MonoBehaviour
     // 目标储量设定函数
     void SetTargetStorage()
     {
-        player.targetStorage = player.currentVelocityMag;
+        player.targetStorage = player.currentVelocityMag ;
     }
 
     //当前储量上升速度计算函数
@@ -124,16 +140,12 @@ public class KineticMachine : MonoBehaviour
     // 过载/爆炸函数
     private void Overloaded()
     {
-        //过载时没有特殊行为，但是如果玩家在过载时release，动力会更强，这条逻辑会写在release中
-
         //处理爆炸计时器
         if (player.explosionTimer <= 0)//如果计时器结束
         {
-            player.StateMachine.ChangeState(player.DieState);// 切换到死亡状态，但是死亡状态还没写
-             
+            player.StateMachine.ChangeState(player.DieState);
                 Debug.LogError("能量过载爆炸！");
-        }
-       
-        
+            player.explosionTimer = -1;//关闭计时器,以免死后重复触发
+        }  
     }
 }

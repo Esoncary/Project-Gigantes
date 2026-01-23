@@ -56,14 +56,17 @@ public class PlayerController : MonoBehaviour
     public float climbTime = 2.0f;
     public float wallJumpSpeed = 15f;
     public Vector2 wallJumpDirection = new Vector2(1, 1);
-    public float inputLockTime = 0.2f;
 
-    [Header("发射参数")]
-    public float speedLimitOffTime;
-    public float speedLimitOffTimer;
+    [Header("释放参数")]
+    public float postReleaseTime = 1.0f;//后释放时间.在这段时间内，角色的移速加速度和重力缩放系数会被调整
+    public float postReleaseTimer;//后释放计时器
+    public float currentMoveSpeedAccScale;//当前移速加速度缩放系数。在后释放期间，角色的移动加速度应当从弱到强
+    public float moveSpeedAccScaleRecoverSpeed;//移速缩放系数恢复速度，也就是从0到1的恢复速度
+    public float postReleaseGravityScale;//在后释放期间，重力缩放系数
 
     [Header("动力装置参数")]
-    public float maxStorage = 100f;
+    public float explosionStorageThrehold; //储量爆炸阈值,比最大储量值小一点
+    public float maxStorage; //最大储量值.允许玩家在过载状态多装一点能量，以便于卡住过载状态释放
     public float minReleaseThrehold = 5f;
     public float timeScaleReleasing = 0.1f;
     public float currentStorage;
@@ -90,7 +93,6 @@ public class PlayerController : MonoBehaviour
     public float varJumpTimer;
     public float jumpBufferTimer;//跳跃缓冲计时器
     public float climbTimer;
-    public float inputLockTimer;
     public float targetStorageFreezeTimer;//targetStorage停留计时器
     public float currentStorageFreezeTimer;//currentStorage停留计时器
     public float explosionTimer;//爆炸计时器
@@ -153,15 +155,14 @@ public class PlayerController : MonoBehaviour
         }
 
         //处理计时器
-        if (inputLockTimer > 0) inputLockTimer -= Time.deltaTime;
         if (varJumpTimer > 0) varJumpTimer -= Time.deltaTime;
         if (jumpBufferTimer > 0) jumpBufferTimer -= Time.deltaTime;
         if (currentStorageFreezeTime > 0) currentStorageFreezeTimer -= Time.deltaTime;
         if (targetStorageFreezeTimer > 0) targetStorageFreezeTimer -= Time.deltaTime;
         if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
-        if (speedLimitOffTimer > 0) speedLimitOffTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
         if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
+        if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！
         StateMachine.CurrentState.HandleInput();
