@@ -86,6 +86,7 @@ public class PlayerController : MonoBehaviour
     [Header("道具参数")]
     public float coolerTimer;
     public IInteractable currentInteractable;
+    public float postReleaseTimer;//后释放计时器
 
     [Header("实时变量")]
     public float InputX;
@@ -166,6 +167,7 @@ public class PlayerController : MonoBehaviour
         if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
         if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
+        if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！

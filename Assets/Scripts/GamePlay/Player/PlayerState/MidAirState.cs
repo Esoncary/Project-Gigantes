@@ -13,7 +13,6 @@ public class MidAirState : PlayerState
 
     public override void LogicUpdate()
     {
-        base.LogicUpdate();
         //这里处理计时器
         //关掉变量跳跃计时器
         if ((Input.GetKeyUp(KeyCode.Space) && player.varJumpTimer >= 0) || player.varJumpTimer <= 0) 
@@ -21,15 +20,8 @@ public class MidAirState : PlayerState
             player.canVarJump = false;
             player.varJumpTimer = -1f; 
         }
-
-
-        // --- 根据垂直速度切换上升/下落动画 ---
-        if (player.postReleaseTimer > 0)//如果处于后释放期间
-        {
-            player.rb.gravityScale = player.defaultGravityScale * player.postReleaseGravityScale;//使用后释放的中立缩放系数
-        }
-        //如果不处于后释放期间，有两种情况，一是上升，二是下落
-        else if (player.rb.velocity.y > 0.1f && !player.canVarJump)//player处于上升阶段且不在变量跳跃期间
+        // 有两种情况，一是上升，二是下落
+        if (player.rb.velocity.y > 0.1f && !player.canVarJump)//player处于上升阶段且不在变量跳跃期间
         {
             player.PlayAnimation("Jump_Up");
             if (Input.GetKey(KeyCode.Space))
@@ -118,9 +110,9 @@ public class MidAirState : PlayerState
             // 转向处理
             if (Mathf.Abs(player.rb.velocity.x) > 0.1f && Mathf.Sign(player.rb.velocity.x) != player.InputX)
             {
-                player.TurnRoundBrake(player.turnRoundBrakeDec * player.currentMoveSpeedAccScale);
+                player.TurnRoundBrake(player.turnRoundBrakeDec);
             }
-
+        
             // 加速与限速逻辑,Launched状态之后的限速还没写
             if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeedInMidAir)//如果小于最小移动速度，直接设置为最小移动速度，确保起步流畅
             {
@@ -129,7 +121,7 @@ public class MidAirState : PlayerState
             else if (Mathf.Abs(player.rb.velocity.x) >= player.minMoveSpeedInMidAir && Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeedInMidAir)//如果未达到最大移动速度，加速
             {
                 //player.rb.AddForce(new Vector2(inputX * player.moveSpeedAcc, 0));
-                player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.moveSpeedAccInMidAir * player.currentMoveSpeedAccScale * Time.fixedDeltaTime), player.rb.velocity.y);
+                player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.moveSpeedAccInMidAir *  Time.fixedDeltaTime), player.rb.velocity.y);
             }
             else if (Mathf.Abs(player.rb.velocity.x) > player.maxMoveSpeedInMidAir)//如果超过最大跑动速度，则限速
             {
