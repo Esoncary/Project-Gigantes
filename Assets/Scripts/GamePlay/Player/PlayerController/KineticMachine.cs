@@ -27,8 +27,6 @@ public class KineticMachine : MonoBehaviour
     }
     void KineticMachineOperate()//动力装置的所有运作逻辑
     {
-        
-        
         //先来处理目标储量
         //如果速度模大于等于目标储量，则将速度模赋值给目标储量
         if (player.targetStorage <= player.currentVelocityMag)
@@ -113,7 +111,7 @@ public class KineticMachine : MonoBehaviour
     // 目标储量设定函数
     void SetTargetStorage()
     {
-        player.targetStorage = player.currentVelocityMag ;
+        player.targetStorage = player.currentVelocityMag;
     }
 
     //当前储量上升速度计算函数
