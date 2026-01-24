@@ -21,19 +21,6 @@ public class MidAirState : PlayerState
             player.canVarJump = false;
             player.varJumpTimer = -1f; 
         }
-        //关掉后释放计时器并且善后
-        if (player.postReleaseTimer <= 0)
-        {
-            player.postReleaseTimer = -1f;
-            player.currentMoveSpeedAccScale = 1f; //手动修正移动加速度系数为1
-        }
-
-
-        //如果后释放计时器打开，不断恢复移动加速度系数.注意如果使用lerp，那么当前值永远不会达到1，我会在计时器结束后手动修正
-        if (player.postReleaseTimer > 0)
-        {
-            player.currentMoveSpeedAccScale = Mathf.Lerp(player.currentMoveSpeedAccScale, 1, player.moveSpeedAccScaleRecoverSpeed * Time.deltaTime);
-        }
 
 
         // --- 根据垂直速度切换上升/下落动画 ---
@@ -62,7 +49,7 @@ public class MidAirState : PlayerState
         
 
         //---1.空中跳跃-- -
-        if (player.jumpBufferTimer > 0 && player.canJump)
+        if (player.jumpBufferTimer > 0 && player.canJump )
         {
             player.InitialJump();
             player.canJump = false; // 落地前只能跳一次
