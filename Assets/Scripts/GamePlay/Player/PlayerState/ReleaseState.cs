@@ -5,12 +5,10 @@ public class ReleaseState : PlayerState
     public ReleaseState(PlayerController _player, PlayerStateMachine _stateMachine, string _animName)
         : base(_player, _stateMachine, _animName) { }
 
-    bool release = false;
-
     public override void Enter()
     {
         base.Enter();
-
+        
         // 1. 开启子弹时间
         Time.timeScale = player.timeScaleReleasing;
         Time.fixedDeltaTime = 0.02f * Time.timeScale; // 必须同步修改物理步长，防止卡顿
@@ -36,77 +34,74 @@ public class ReleaseState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
         if (Input.GetKey(KeyCode.LeftControl))
         {
             Aim();
         }
-
+        
+        // 释放
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            release = true;
+            Debug.Log("currentStorage " + player.currentStorage);
+            Debug.Log("releaseThreshold " + player.releaseThreshold);
+            if (player.currentStorage < player.releaseThreshold)
+            {
+                TransitionToNextState();
+            }
+            else
+            {
+                ExecuteRelease();
+            }
         }
-
     }
 
     public override void PhysicsUpdate()
     {
         // 物理帧保持静止，确保选方向时绝对精准
         player.rb.velocity = Vector2.zero;
-
-        if (release)
-        {
-            Release();
-
-            //判断是退出到地面状态还是空中状态
-            if (!Input.GetKey(KeyCode.LeftControl))
-            {
-                if (player.groundedCheckerManager.isGrounded)
-                {
-                    // 要么run
-                    if (Mathf.Abs(player.InputX) > 0.01f)
-                    {
-                        stateMachine.ChangeState(player.RunState);
-                        return;
-                    }
-                    else//要么brake或者idle
-                    {
-                        stateMachine.ChangeState(player.BrakeState);
-
-                        return;
-                    }
-
-                }
-                else
-                {
-                    stateMachine.ChangeState(player.MidAirState);
-                    return;
-                }
-            }
-        }
     }
 
     public override void Exit()
     {
         base.Exit();
-        // 重力衰减
-        player.postReleaseGravityTimer = player.postReleaseGravityReductionTime;
 
         //恢复时间
         Time.timeScale = 1.0f;
         Time.fixedDeltaTime = 0.02f;
 
         // 关闭箭头
-        player.arrowInstance.SetActive(false);
-
-        //将release设置为false
-        release = false;    
-
-
+        if (player.arrowInstance != null)
+            player.arrowInstance.SetActive(false);
+        
+        // 恢复重力
+        if (player.rb.gravityScale == 0)
+            player.rb.gravityScale = player.defaultGravityScale;
     }
+
+    /**
+     * 状态机切换
+     */
+    private void TransitionToNextState()
+    {
+        if (player.isGrounded)
+        {
+            // 地面：根据输入决定 Brake 或 Run
+            if (Mathf.Abs(player.InputX) > 0.01f)
+                stateMachine.ChangeState(player.RunState);
+            else
+                stateMachine.ChangeState(player.BrakeState);
+        }
+        else
+        {
+            // 空中：切换到 MidAirState
+            stateMachine.ChangeState(player.MidAirState);
+        }
+    }
+
 
     void Aim()
     {
-
         // --- 方案 A：鼠标指向 (PC 玩家最精准的操作方式) ---
         player.releaseDir = player.MouseDir;
 
@@ -139,13 +134,16 @@ public class ReleaseState : PlayerState
             player.arrowInstance.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
         }
     }
-
-    void Release()
+    
+    /**
+     * 进入发射状态
+     */
+    private void ExecuteRelease()
     {
-        //赋予玩家速度
-        player.rb.velocity = player.currentStorage * player.releaseDir;
-
-        //清空当前储量
-        player.currentStorage = 0;
+        // 隐藏箭头
+        if (player.arrowInstance != null)
+            player.arrowInstance.SetActive(false);
+        
+        stateMachine.ChangeState(player.LaunchedState);
     }
 }

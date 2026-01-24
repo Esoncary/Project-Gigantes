@@ -62,12 +62,6 @@ public class MidAirState : PlayerState
             stateMachine.ChangeState(player.ReleaseState);
             return;
         }
-        
-        if (player.postReleaseGravityTimer > 0)
-        {
-            player.rb.gravityScale = player.defaultGravityScale * player.postReleaseGravityScale;
-            return;
-        }
 
 
         // --- 根据垂直速度切换上升/下落动画 ---

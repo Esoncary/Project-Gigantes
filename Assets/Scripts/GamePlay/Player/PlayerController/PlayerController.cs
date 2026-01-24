@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public RunState RunState { get; private set; }
     public BrakeState BrakeState { get; private set; }
     public MidAirState MidAirState { get; private set; }
+    public LaunchedState LaunchedState { get; private set; }
     public ClimbState ClimbState { get; private set; }
     public ReleaseState ReleaseState { get; private set; }
     public DieState DieState { get; private set; }
@@ -59,11 +60,13 @@ public class PlayerController : MonoBehaviour
     public float inputLockTime = 0.2f;
 
     [Header("发射参数")]
-    public float speedLimitOffTime;
     public float speedLimitOffTimer;
-    [Tooltip("发射后重力衰减持续时间")]public float postReleaseGravityReductionTime = 0.5f;
-    [Tooltip("重力衰减缩放比例(0-1)")]public float postReleaseGravityScale = 0.2f;
-    public float postReleaseGravityTimer;
+    [Tooltip("衰减停止的速度阈值，低于此值停止衰减")] public float releaseMinSpeedThreshold = 1f;
+    [Tooltip("线性阻力系数（每秒衰减速度），越大停得越快")] public float releaseDragCoefficient = 2.5f;
+    [Tooltip("满能量时的衰减持续时间")]public float releaseDragTime = 0.4f;
+    [Tooltip("释放的最低能量限度，低于此将不会触发发射")]public float releaseThreshold = 10f;
+    [Tooltip("基础发射速度")]public float baseSpeed = 15f;
+    [Tooltip("最大发射速度，能量满时初始速度最大")]public float maxSpeed = 20f;
 
     [Header("动力装置参数")]
     public float maxStorage = 100f;
@@ -124,6 +127,7 @@ public class PlayerController : MonoBehaviour
         MidAirState = new MidAirState(this, StateMachine, "MidAir");
         ClimbState = new ClimbState(this, StateMachine, "Climb");
         ReleaseState = new ReleaseState(this, StateMachine, "Release");
+        LaunchedState = new LaunchedState(this, StateMachine, "Launched");
         DieState = new DieState(this, StateMachine, "Die");
     }
 
@@ -157,15 +161,6 @@ public class PlayerController : MonoBehaviour
         if (speedLimitOffTimer > 0) speedLimitOffTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
         if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
-        if (postReleaseGravityTimer > 0)
-        {
-            postReleaseGravityTimer -= Time.deltaTime;
-            if (postReleaseGravityTimer <= 0)
-            {
-                // 重力回复
-                rb.gravityScale = defaultGravityScale;
-            }
-        }
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！
         StateMachine.CurrentState.HandleInput();
