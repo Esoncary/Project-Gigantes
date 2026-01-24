@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public RunState RunState { get; private set; }
     public BrakeState BrakeState { get; private set; }
     public MidAirState MidAirState { get; private set; }
+    public LaunchedState LaunchedState { get; private set; }
     public ClimbState ClimbState { get; private set; }
     public ReleaseState ReleaseState { get; private set; }
     public DieState DieState { get; private set; }
@@ -57,12 +58,14 @@ public class PlayerController : MonoBehaviour
     public float wallJumpSpeed = 15f;
     public Vector2 wallJumpDirection = new Vector2(1, 1);
 
-    [Header("释放参数")]
-    public float postReleaseTime = 1.0f;//后释放时间.在这段时间内，角色的移速加速度和重力缩放系数会被调整
-    public float postReleaseTimer;//后释放计时器
-    public float currentMoveSpeedAccScale;//当前移速加速度缩放系数。在后释放期间，角色的移动加速度应当从弱到强
-    public float moveSpeedAccScaleRecoverSpeed;//移速缩放系数恢复速度，也就是从0到1的恢复速度
-    public float postReleaseGravityScale;//在后释放期间，重力缩放系数
+    [Header("发射参数")]
+    public float speedLimitOffTimer;
+    [Tooltip("衰减停止的速度阈值，低于此值停止衰减")] public float releaseMinSpeedThreshold = 1f;
+    [Tooltip("线性阻力系数（每秒衰减速度），越大停得越快")] public float releaseDragCoefficient = 2.5f;
+    [Tooltip("满能量时的衰减持续时间")]public float releaseDragTime = 0.4f;
+    [Tooltip("释放的最低能量限度，低于此将不会触发发射")]public float releaseThreshold = 0;
+    [Tooltip("基础发射速度")]public float baseSpeed = 15f;
+    [Tooltip("最大发射速度，能量满时初始速度最大")]public float maxSpeed = 20f;
 
     [Header("动力装置参数")]
     public float explosionStorageThrehold; //储量爆炸阈值,比最大储量值小一点
@@ -79,10 +82,13 @@ public class PlayerController : MonoBehaviour
     public float currentStorageDecreaseSpeed = 40f;
     public float explosionTime = 2f; 
     public bool isOverloaded;
+    public float storageScale = 1.2f;
+    public float Kin_gravityContractionScale = 1f;
 
     [Header("道具参数")]
     public float coolerTimer;
     public IInteractable currentInteractable;
+    public float postReleaseTimer;//后释放计时器
 
     [Header("实时变量")]
     public float InputX;
@@ -123,6 +129,7 @@ public class PlayerController : MonoBehaviour
         MidAirState = new MidAirState(this, StateMachine, "MidAir");
         ClimbState = new ClimbState(this, StateMachine, "Climb");
         ReleaseState = new ReleaseState(this, StateMachine, "Release");
+        LaunchedState = new LaunchedState(this, StateMachine, "Launched");
         DieState = new DieState(this, StateMachine, "Die");
     }
 
@@ -162,6 +169,7 @@ public class PlayerController : MonoBehaviour
         if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
         if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
+        if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！
