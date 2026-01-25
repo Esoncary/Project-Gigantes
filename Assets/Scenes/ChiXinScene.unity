@@ -447,6 +447,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6265352635880396246, guid: 374935b086bb0484faf4a206ed876032, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8472428524134355905, guid: 374935b086bb0484faf4a206ed876032, type: 3}
       propertyPath: player
       value: 
@@ -1452,16 +1456,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6213741056009816778, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: m_Size.x
-      value: 2.5
+      value: 7.2
       objectReference: {fileID: 0}
     - target: {fileID: 6213741056009816778, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: m_Size.y
-      value: 2.5
+      value: 7.2
       objectReference: {fileID: 0}
     - target: {fileID: 6213741056009816778, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 14560fa387338c942889be0f7c3ce51e, type: 3}
+      objectReference: {fileID: 21300000, guid: 764b78ebbe855114ba52b5eba9dae55c, type: 3}
     - target: {fileID: 6213741056009816778, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: m_DrawMode
       value: 1
@@ -1472,11 +1476,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6500014633196818234, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.62
+      value: -6.14
       objectReference: {fileID: 0}
     - target: {fileID: 6500014633196818234, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.47
+      value: -5.44
       objectReference: {fileID: 0}
     - target: {fileID: 6500014633196818234, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1515,6 +1519,14 @@ PrefabInstance:
       value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7959033047973009608, guid: f51abdf52624f56449d39ba280849873, type: 3}
+      propertyPath: maxSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7959033047973009608, guid: f51abdf52624f56449d39ba280849873, type: 3}
+      propertyPath: baseSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7959033047973009608, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: maxStorage
       value: 40
       objectReference: {fileID: 0}
@@ -1527,6 +1539,10 @@ PrefabInstance:
       value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7959033047973009608, guid: f51abdf52624f56449d39ba280849873, type: 3}
+      propertyPath: releaseDragTime
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7959033047973009608, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: postReleaseGravityScale
       value: 3
       objectReference: {fileID: 0}
@@ -1537,6 +1553,10 @@ PrefabInstance:
     - target: {fileID: 7959033047973009608, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: explosionStorageThrehold
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7959033047973009608, guid: f51abdf52624f56449d39ba280849873, type: 3}
+      propertyPath: Kin_gravityContractionScale
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 7959033047973009608, guid: f51abdf52624f56449d39ba280849873, type: 3}
       propertyPath: currentStorageDecreaseSpeed

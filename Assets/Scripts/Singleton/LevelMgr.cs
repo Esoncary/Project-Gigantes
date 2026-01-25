@@ -70,6 +70,7 @@ public class LevelMgr : MonoBehaviour
     }
     public IEnumerator LoadNextLevel(string levelName)
     {
+        Debug.Log("开始载入下一个关卡");
         //保存所有持久化数据
 
         //异步加载新的场景
@@ -105,17 +106,15 @@ public class LevelMgr : MonoBehaviour
     }
     private IEnumerator ReloadCurrentLevel()
     {
-        UIMgr.Instance.StartBlackImageFadeIn();
-        yield return new WaitForSeconds(0.5f); // 等待淡入动画完成
+        Debug.Log("开始重载当前关卡");
+        
+        yield return StartCoroutine(UIMgr.Instance.BlackImageFadeIn()); // 等待淡入动画完成
 
         // 重新加载当前场景
         AsyncOperation op = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        while (!op.isDone) yield return null;
-        //yield return new WaitForSeconds(0.2f);//等个0.2s，给场景稳定，不然会卡
+        while (!op.isDone) yield return null; // 等待淡入动画完成
 
-
-        UIMgr.Instance.StartBlackImageFadeOut();
-        yield return new WaitForSeconds(0.5f); // 等待淡出动画完成
+        yield return StartCoroutine(UIMgr.Instance.BlackImageFadeOut());
     }
     #endregion
 

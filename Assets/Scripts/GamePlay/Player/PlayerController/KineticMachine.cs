@@ -46,8 +46,7 @@ public class KineticMachine : MonoBehaviour
 
         if (player.targetStorage <= player.currentVelocityMag)
         {
-            if (player.targetStorage != 0)
-                Debug.Log("targetStorage:" + player.targetStorage);
+            
 
             player.targetStorageFreezeTimer = -1;//如果有冻结目标储量计时器正在运作，关掉它
             SetTargetStorage();//这是一个赋值函数
