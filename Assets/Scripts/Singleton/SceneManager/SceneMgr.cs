@@ -72,4 +72,5 @@ public class SceneMgr
         // 2. 更新 LevelMgr 内部的 player 引用
         player = newPlayerObj.GetComponent<PlayerController>();
     }
+
 }
