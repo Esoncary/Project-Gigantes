@@ -47,28 +47,32 @@
 //         StartCoroutine(BlackImageFadeOut());
 //     }
 
-//     public IEnumerator BlackImageFadeOut()
+// public IEnumerator BlackImageFadeOut()
+// {
+//     Debug.Log("开始淡出");
+//     //blackImage.enabled = true;
+//     blackImageAlpha = 1;
+//     while (blackImageAlpha > 0)
 //     {
-//         blackImageAlpha = 1;
-//         while (blackImageAlpha > 0)
-//         {
-//             blackImageAlpha -= Time.deltaTime;
-//             blackImage.color = new Color(0, 0, 0, blackImageAlpha);
-//             yield return null;
-//         }
-//         blackImage.enabled = false;
+//         blackImageAlpha -= Time.deltaTime;
+//         blackImage.color = new Color(0, 0, 0, blackImageAlpha);
+//         yield return null;
 //     }
+//     blackImage.enabled = false;
+// }
 
-//     public IEnumerator BlackImageFadeIn()
+// public  IEnumerator BlackImageFadeIn()
+// {
+//     Debug.Log("开始淡入");
+//     blackImage.enabled = true;
+//     blackImageAlpha = 0;
+//     while (blackImageAlpha < 1)
 //     {
-//         blackImage.enabled = true;
-//         blackImageAlpha = 0;
-//         while (blackImageAlpha < 1)
-//         {
-//             blackImageAlpha += Time.deltaTime;
-//             blackImage.color = new Color(0, 0, 0, blackImageAlpha);
-//             yield return null;
-//         }
+//         blackImageAlpha += Time.deltaTime;
+//         blackImage.color = new Color(0, 0, 0, blackImageAlpha);
+//         yield return null;
 //     }
+//     //blackImage.enabled = false;
+// }
 
 // }
