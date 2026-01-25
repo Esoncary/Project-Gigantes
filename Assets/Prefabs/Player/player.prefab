@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 6739062875613254122}
   m_Layer: 0
   m_Name: player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -336,7 +336,6 @@ MonoBehaviour:
   climbTime: 2
   wallJumpSpeed: 15
   wallJumpDirection: {x: 1, y: 1}
-  speedLimitOffTimer: 0
   releaseMinSpeedThreshold: 1
   releaseDragCoefficient: 2.5
   releaseDragTime: 0.4

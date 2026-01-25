@@ -8,6 +8,7 @@ public class GamePanel : BasePanel
 
     public Button backBtn;
     public Button settingBtn;
+    public Image blackImage;
     public override void Init()
     {
 

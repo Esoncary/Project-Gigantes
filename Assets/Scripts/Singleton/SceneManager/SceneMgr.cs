@@ -3,35 +3,37 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 using UnityEngine;
+using System.Threading.Tasks;
+using UnityEngine.UI;
 
 public class SceneMgr
 {
     public List<LevelData> sceneInfos;
-    [Header("引用")]
-    public PlayerController player; // 玩家的引用
-    public GameObject playerPrefab;
-
-    [Header("重生点坐标设置")]
     public Vector2 currentRebornPos;
+    public PlayerController playerController;
+    private bool isReloading = false; // 防止重复触发死亡
 
     private static SceneMgr instance = new SceneMgr();
     public static SceneMgr Instance => instance;
     private SceneMgr()
     {
         sceneInfos = GameDataMgr.Instance.list_LevelData;
+        // 监听玩家死亡事件
+        GameEvents.PlayerDie += OnPlayerDie;
+        GameEvents.UpdateRebornPoint += UpdateRebornPoint;
+    }
+    public void Dispose()
+    {
+        GameEvents.PlayerDie -= OnPlayerDie;
+        GameEvents.UpdateRebornPoint -= UpdateRebornPoint;
     }
     // private PlayerObj playerObj;
     public void InitInfo()
     {
+        InstiatePlayer();
         // UI显示
         UIManager.Instance.ShowPanel<GamePanel>();
-        InstiatePlayer();
-
-        // 角色加载
-        // Transform playerPos = GameObject.Find("PlayerPos").transform;
-        // GameObject obj = GameObject.Instantiate(Resources.Load<GameObject>(roleInfo.res), playerPos.position, playerPos.rotation, playerPos);
-        // playerObj = obj.GetComponent<PlayerObj>();
-        // playerObj.InitPlayerInfo(roleInfo.atk, GameDataMgr.Instance.sceneDatas[GameDataMgr.Instance.nowSceneIndex].money);
+        UIManager.Instance.ShowPanel<DeathMask>();
     }
 
     // 加载场景数据
@@ -58,19 +60,46 @@ public class SceneMgr
         GameDataMgr.Instance.currentSave.MaxUnlockedLevelId++;
         GameDataMgr.Instance.SavePlayerSaveData();
     }
+
+    // 初始化角色信息
+    public void InstiatePlayer()
+    {
+        GameObject playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player.prefab");
+
+        var rebornObj = GameObject.Find("RebornPos");
+        currentRebornPos = rebornObj != null ? rebornObj.transform.position : Vector2.zero;
+        GameObject obj = GameObject.Instantiate(playerPrefab, currentRebornPos, Quaternion.identity);
+        playerController = obj.GetComponent<PlayerController>();
+    }
+
+    private async void OnPlayerDie()
+    {
+        if (isReloading) return; // 防止连续触发
+        isReloading = true;
+
+        await ReloadCurrentLevelAsync();
+
+        isReloading = false;
+    }
+
     void UpdateRebornPoint(Vector2 pos)
     {
         currentRebornPos = pos;
     }
-    public void InstiatePlayer()
+    private async Task ReloadCurrentLevelAsync()
     {
-        playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player.prefab");
-        currentRebornPos = GameObject.Find("PlayerPos").transform.position;
-        // 1. 生成玩家实例
-        GameObject newPlayerObj = GameObject.Instantiate(playerPrefab, currentRebornPos, Quaternion.identity);
+        Debug.Log("sfasfas");
+        // 淡入
+        await UIManager.Instance.GetPanel<DeathMask>().BlackImageFadeIn(0.4f);
 
-        // 2. 更新 LevelMgr 内部的 player 引用
-        player = newPlayerObj.GetComponent<PlayerController>();
+        await ResetLevelState();
+        // 淡出
+        await UIManager.Instance.GetPanel<DeathMask>().BlackImageFadeOut(0.4f);
     }
+    private async Task ResetLevelState()
+    {
+        playerController.transform.position = currentRebornPos;
+        // 所有机关重置
 
+    }
 }

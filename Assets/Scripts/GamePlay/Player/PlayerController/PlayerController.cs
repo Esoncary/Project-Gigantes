@@ -68,10 +68,10 @@ public class PlayerController : MonoBehaviour
     // 速度衰减低于阈值或衰减时间到达为两种直接的退出状态方式
     [Tooltip("衰减停止的速度阈值，低于此值停止衰减 建议与空中启动速度匹配")] public float releaseMinSpeedThreshold = 10f;
     [Tooltip("线性阻力系数（每秒衰减速度），越大停得越快")] public float releaseDragCoefficient = 50f;
-    [Tooltip("满能量时的衰减持续时间")]public float releaseDragTime = 0.2f;
-    [Tooltip("释放的最低能量限度，低于此将不会触发发射")]public float releaseThreshold = 0;
-    [Tooltip("基础发射速度")]public float baseSpeed = 25f;
-    [Tooltip("最大发射速度，能量满时初始速度最大")]public float maxSpeed = 35f;
+    [Tooltip("满能量时的衰减持续时间")] public float releaseDragTime = 0.2f;
+    [Tooltip("释放的最低能量限度，低于此将不会触发发射")] public float releaseThreshold = 0;
+    [Tooltip("基础发射速度")] public float baseSpeed = 25f;
+    [Tooltip("最大发射速度，能量满时初始速度最大")] public float maxSpeed = 35f;
 
     [Header("动力装置参数")]
     [Tooltip("释放冷却时间")] public float releaseCoolingLimit = 1f;
@@ -272,7 +272,7 @@ public class PlayerController : MonoBehaviour
         IPickUp thisPickUp = collision.GetComponent<IPickUp>();
         if (thisPickUp != null)
         {
-            Debug.Log("触发道具函数");
+            // Debug.Log("触发道具函数");
             thisPickUp.PickUpEffect(this);
         }
 

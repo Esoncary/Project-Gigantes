@@ -35,30 +35,26 @@ public class GameDataMgr
 
     public GameDataMgr()
     {
-        list_PlayerSaveData = JsonMgr.Instance.LoadData<List<PlayerSaveData>>("PlayerSaveData");
+        list_PlayerSaveData = JsonMgr.Instance.LoadData<List<PlayerSaveData>>("PlayerSaveData") ?? new List<PlayerSaveData>();
         musicDatas = JsonMgr.Instance.LoadData<MusicData>("MusicData") ?? new MusicData();
         list_RoleData = JsonMgr.Instance.LoadData<List<RoleData>>("RoleData") ?? new List<RoleData>();
         list_LevelData = JsonMgr.Instance.LoadData<List<LevelData>>("LevelData") ?? new List<LevelData>();
         // monsterInfos = JsonMgr.Instance.LoadData<List<MonsterInfo>>("MonsterInfo");
 
-        if (list_PlayerSaveData == null)
-        {
-            list_PlayerSaveData = new List<PlayerSaveData>();
-        }
 
-        if (list_PlayerSaveData.Count < saveDateNum)
-        {
-            for (int i = list_PlayerSaveData.Count; i < saveDateNum; i++)
-            {
-                PlayerSaveData playerSaveData = new PlayerSaveData();
-                // 初始化关卡数据
-                foreach (LevelData item in list_LevelData)
-                {
-                    playerSaveData.LevelProgress.Add(item.LevelId, new LevelProgressData(item.TotalCollectibles));
-                }
-                list_PlayerSaveData.Add(playerSaveData);
-            }
-        }
+        // if (list_PlayerSaveData.Count < saveDateNum)
+        // {
+        //     for (int i = list_PlayerSaveData.Count; i < saveDateNum; i++)
+        //     {
+        //         PlayerSaveData playerSaveData = new PlayerSaveData();
+        //         // 初始化关卡数据
+        //         foreach (LevelData item in list_LevelData)
+        //         {
+        //             playerSaveData.LevelProgress.Add(item.LevelId, new LevelProgressData(item.TotalCollectibles));
+        //         }
+        //         list_PlayerSaveData.Add(playerSaveData);
+        //     }
+        // }
     }
 
     // 存储玩家存档数据

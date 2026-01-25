@@ -46,8 +46,8 @@ public class KineticMachine : MonoBehaviour
 
         if (player.targetStorage <= player.currentVelocityMag)
         {
-            if (player.targetStorage != 0)
-                Debug.Log("targetStorage:" + player.targetStorage);
+            // if (player.targetStorage != 0)
+            // Debug.Log("targetStorage:" + player.targetStorage);
 
 
 

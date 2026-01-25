@@ -43,7 +43,7 @@ public class ScenePanel : BasePanel
         bakcBtn.onClick.AddListener(() =>
         {
             UIManager.Instance.HidePanel<ScenePanel>();
-            UIManager.Instance.ShowPanel<ChoosePanel>();
+            UIManager.Instance.ShowPanel<BeginPanel>();
         });
     }
     public void GetCurrentSceneData()
