@@ -49,6 +49,8 @@ public class UIMgr : MonoBehaviour
 
     public IEnumerator BlackImageFadeOut()
     {
+        Debug.Log("开始淡出");
+        //blackImage.enabled = true;
         blackImageAlpha = 1;
         while (blackImageAlpha > 0)
         {
@@ -61,6 +63,7 @@ public class UIMgr : MonoBehaviour
 
     public  IEnumerator BlackImageFadeIn()
     {
+        Debug.Log("开始淡入");
         blackImage.enabled = true;
         blackImageAlpha = 0;
         while (blackImageAlpha < 1)
@@ -69,6 +72,7 @@ public class UIMgr : MonoBehaviour
             blackImage.color = new Color(0, 0, 0, blackImageAlpha);
             yield return null;
         }
+        //blackImage.enabled = false;
     }
 
 }

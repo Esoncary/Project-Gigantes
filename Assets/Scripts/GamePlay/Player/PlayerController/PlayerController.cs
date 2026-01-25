@@ -310,7 +310,7 @@ public class PlayerController : MonoBehaviour
     # region 动画函数
     public void PlayAnimation(string name)
     {
-        if (Anim != null && !string.IsNullOrEmpty(name)) Anim.Play(name);
+        //if (Anim != null && !string.IsNullOrEmpty(name)) Anim.Play(name);
     }
 #endregion
 }
