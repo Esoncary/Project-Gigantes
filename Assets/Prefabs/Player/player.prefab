@@ -143,7 +143,7 @@ Transform:
   m_GameObject: {fileID: 5940301008981992557}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0072, y: -0.9978, z: 0}
+  m_LocalPosition: {x: -0.02, y: -1.09, z: 0}
   m_LocalScale: {x: 0.74, y: -0.03, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -208,7 +208,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.04, y: 4.16}
   m_EdgeRadius: 0
 --- !u!1 &8425540982678542637
 GameObject:
@@ -289,12 +289,12 @@ SpriteRenderer:
   m_SortingLayerID: 1210811031
   m_SortingLayer: 3
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 18ccb253d455fdf4e8ac5b5f96ce2fdb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e24e3b6f7e684874189604018dd9eb15, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_DrawMode: 1
+  m_Size: {x: 2.5, y: 2.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -320,10 +320,10 @@ MonoBehaviour:
   minMoveSpeed: 7
   turnRoundBrakeDec: 60
   enforceDeceleraion: 5
-  moveSpeedAccInMidAir: 20
-  minMoveSpeedInMidAir: 7
   maxMoveSpeedInMidAir: 10
-  enforceMoveAccSpeedInMidAir: 5
+  airDragWithoutInput: 0.3
+  airResponsiveness: 30
+  airTurnBrakeForce: 40
   defaultGravityScale: 3
   jumpSpeedInitial: 20
   varJumpTime: 0.1
@@ -336,24 +336,32 @@ MonoBehaviour:
   climbTime: 2
   wallJumpSpeed: 15
   wallJumpDirection: {x: 1, y: 1}
-  inputLockTime: 0.2
-  speedLimitOffTime: 0
   speedLimitOffTimer: 0
-  maxStorage: 20
+  releaseMinSpeedThreshold: 1
+  releaseDragCoefficient: 2.5
+  releaseDragTime: 0.4
+  releaseThreshold: 0
+  baseSpeed: 15
+  maxSpeed: 20
+  releaseCoolingLimit: 1
+  explosionStorageThrehold: 30
+  maxStorage: 40
   minReleaseThrehold: 0
   timeScaleReleasing: 0.1
   currentStorage: 0
   targetStorage: 0
   currentVelocityMag: 0
   targetStorageFreezeTime: 1
-  targetStorageDecreaseSpeed: 0
   currentStorageFreezeTime: 1
-  currentStorageDefaultIncreaseSpeed: 5
+  currentStorageDefaultIncreaseSpeed: 20
   currentStorageIncreaseSpeed: 0
-  currentStorageDecreaseSpeed: 10
+  currentStorageDecreaseSpeed: 40
   explosionTime: 1
   isOverloaded: 0
+  storageScale: 1.2
+  Kin_gravityContractionScale: 1
   coolerTimer: 0
+  postReleaseTimer: 0
   InputX: 0
   JumpInputDown: 0
   ReleaseInputDown: 0
@@ -362,10 +370,10 @@ MonoBehaviour:
   varJumpTimer: -1
   jumpBufferTimer: -1
   climbTimer: 0
-  inputLockTimer: 0
   targetStorageFreezeTimer: 0
   currentStorageFreezeTimer: 0
-  explosionTimer: 0
+  explosionTimer: -1
+  releaseCoolingTimer: 0
   canJump: 0
   releaseDir: {x: 0, y: 0}
   arrowInstance: {fileID: 5622798079700821494}
@@ -440,6 +448,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.1}
   m_Size: {x: 1, y: 2}
   m_Direction: 0

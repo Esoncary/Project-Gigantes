@@ -66,13 +66,13 @@ public class PlayerController : MonoBehaviour
     public float speedLimitOffTimer;
     [Tooltip("衰减停止的速度阈值，低于此值停止衰减")] public float releaseMinSpeedThreshold = 1f;
     [Tooltip("线性阻力系数（每秒衰减速度），越大停得越快")] public float releaseDragCoefficient = 2.5f;
-    [Tooltip("满能量时的衰减持续时间")]public float releaseDragTime = 0.4f;
-    [Tooltip("释放的最低能量限度，低于此将不会触发发射")]public float releaseThreshold = 0;
-    [Tooltip("基础发射速度")]public float baseSpeed = 15f;
-    [Tooltip("最大发射速度，能量满时初始速度最大")]public float maxSpeed = 20f;
+    [Tooltip("满能量时的衰减持续时间")] public float releaseDragTime = 0.4f;
+    [Tooltip("释放的最低能量限度，低于此将不会触发发射")] public float releaseThreshold = 0;
+    [Tooltip("基础发射速度")] public float baseSpeed = 15f;
+    [Tooltip("最大发射速度，能量满时初始速度最大")] public float maxSpeed = 20f;
 
     [Header("动力装置参数")]
-    [Tooltip("释放冷却时间")]  public float releaseCoolingLimit = 1f;
+    [Tooltip("释放冷却时间")] public float releaseCoolingLimit = 1f;
     public float explosionStorageThrehold; //储量爆炸阈值,比最大储量值小一点
     public float maxStorage; //最大储量值.允许玩家在过载状态多装一点能量，以便于卡住过载状态释放
     public float minReleaseThrehold = 5f;
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
     public float currentStorageDefaultIncreaseSpeed;//当前储量默认增长速度（常量）
     public float currentStorageIncreaseSpeed;//当前储量增长速度（变量，与速度模大小成正比）
     public float currentStorageDecreaseSpeed = 40f;
-    public float explosionTime = 2f; 
+    public float explosionTime = 2f;
     public bool isOverloaded;
     public float storageScale = 1.2f;
     public float Kin_gravityContractionScale = 1f;
@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour
     {
         StateMachine.Initialize(IdleState);
     }
-
+    float lastDir;
     private void Update()
     {
         //交互物函数，暂时不知道放在哪里先放这儿
@@ -155,7 +155,19 @@ public class PlayerController : MonoBehaviour
 
 
         //处理输入:横向输入,跳跃输入,释放输入,鼠标输入
-        InputX = Input.GetAxisRaw("Horizontal");
+        // InputX = Input.GetAxisRaw("Horizontal");
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            lastDir = -1;
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            lastDir = 1;
+        //计算最终InputX
+        float moveA = Input.GetKey(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) ? -1f : 0f;
+        float moveD = Input.GetKey(KeyCode.D) | Input.GetKeyDown(KeyCode.RightArrow) ? 1f : 0f;
+        if (moveA != 0 && moveD != 0)
+            InputX = lastDir;//双向冲突，取最后按下的
+        else
+            InputX = moveA + moveD;//单向或无向，直接求和
+
         JumpInputDown = Input.GetKeyDown(KeyCode.Space);
         ReleaseInputDown = Input.GetKeyDown(KeyCode.LeftControl);
         MouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -185,11 +197,11 @@ public class PlayerController : MonoBehaviour
 
         //处理其它状态（中立于两个或两个以上状态）变量
         //if (isGrounded && canJump == false && varJumpTimer <= 0 && rb.velocity.y <= 0) canJump = true;//落地后可以再次跳跃
-        if (!isGrounded && jumpCoyoteTimer <= 0 ) canJump = false;//离地且土狼时间结束后不能跳跃
+        if (!isGrounded && jumpCoyoteTimer <= 0) canJump = false;//离地且土狼时间结束后不能跳跃
         if (isGrounded) rb.gravityScale = defaultGravityScale;//落地后重置重力
 
         //这里解释一下，为什么“调用状态机内部更新”必须要放在“处理其它状态”的上面：因为在RunState & IdleState的脚本里走离平台的逻辑中加入了“开启土狼时间计时器”后，如果后者在前者的下面，canJump会先被设置成false，然后土狼计时器才启动，所以后者在前者前面的根本目的是保证土狼计时器先启动。我不清楚这里有没有更加合理和漂亮的解决方案，总之，所有与在状态机中触发的计时器和状态的变量相关的脚本，必须放在“调用状态机内部更新”之后
-        
+
         //两小时之后：我发现上述问题会产生的根本原因是一个逻辑更新紧随于一个物理更新之后。虽然在游戏世界中大部分情况逻辑更新在物理更新之前，但是土狼时间的启动，以及release（我正好写到这里就发现）中必须在物理输出结束后（也就是实现了清空currentStorage之后，不然的话状态切换会先于物理输出）再进行状态切换，都属于物理更新先于逻辑更新的情况。这种问题似乎是不可避免的。
     }
 
@@ -267,7 +279,7 @@ public class PlayerController : MonoBehaviour
         if (thisInteractable != null)
         {
             //视觉上显示可以按E，这里还没写
-            
+
             currentInteractable = thisInteractable;
             if (currentInteractable != null & Input.GetKeyDown(KeyCode.E))
             {
@@ -310,5 +322,5 @@ public class PlayerController : MonoBehaviour
     {
         if (Anim != null && !string.IsNullOrEmpty(name)) Anim.Play(name);
     }
-#endregion
+    #endregion
 }

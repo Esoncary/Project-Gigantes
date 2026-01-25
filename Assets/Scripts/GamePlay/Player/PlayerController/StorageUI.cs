@@ -8,6 +8,11 @@ public class StorageUI : MonoBehaviour
     public Image targetFillImage;   // 拖入 TargetFill 图片
     public Image currentFillImage;  // 拖入 CurrentFill 图片
 
+    void Start()
+    {
+        player = SceneMgr.Instance.player;
+        Debug.Log("123123" + player);
+    }
     void Update()
     {
         if (player == null) return;

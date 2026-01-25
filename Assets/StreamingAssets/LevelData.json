@@ -1,0 +1,26 @@
+[
+    {
+        "LevelId": 0,
+        "imgRes": "imgs/1",
+        "SceneName": "关卡1",
+        "WorldId": 1,
+        "OrderInWorld": 1,
+        "TotalCollectibles": 5
+    },
+    {
+        "LevelId": 1,
+        "imgRes": "imgs/2",
+        "SceneName": "关卡2",
+        "WorldId": 1,
+        "OrderInWorld": 2,
+        "TotalCollectibles": 5
+    },
+    {
+        "LevelId": 2,
+        "imgRes": "imgs/3",
+        "SceneName": "关卡3",
+        "WorldId": 1,
+        "OrderInWorld": 3,
+        "TotalCollectibles": 5
+    }
+]

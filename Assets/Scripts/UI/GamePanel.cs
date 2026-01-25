@@ -5,35 +5,22 @@ using UnityEngine.UI;
 
 public class GamePanel : BasePanel
 {
-    public Slider sliderHp;
-    public Text wave;
-    public Text money;
-    public Text hpText;
+
     public Button backBtn;
-    public Transform botTrans;
-    public List<TowerBtn> listTowerBtn;
+    public Button settingBtn;
     public override void Init()
     {
 
         backBtn.onClick.AddListener(() =>
         {
-            UIManager.Instance.HidePanel<GamePanel>();
-            SceneManager.LoadScene("BeginScene");
-            //场景转换
+            UIManager.Instance.ShowPanel<ConfirmPanel>();
         });
-        // botTrans.gameObject.SetActive(false);
+        settingBtn.onClick.AddListener(() =>
+        {
+            // UIManager.Instance.HidePanel<GamePanel>();
+            UIManager.Instance.ShowPanel<SettingPanel>();
+        });
+
     }
-    public void ChangeHp(int hp, int maxHp)
-    {
-        sliderHp.value = (float)(maxHp - hp) / maxHp;
-        hpText.text = hp + "/" + maxHp;
-    }
-    public void ChangWave(int nowNum, int maxNum)
-    {
-        wave.text = nowNum + "/" + maxNum;
-    }
-    public void ChangeMoney(int v)
-    {
-        money.text = v.ToString();
-    }
+
 }

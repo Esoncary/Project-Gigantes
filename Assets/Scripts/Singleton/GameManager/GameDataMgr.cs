@@ -90,7 +90,7 @@ public class GameDataMgr
     // 存储音乐数据
     public void SaveMusicData()
     {
-        JsonMgr.Instance.SaveData(musicDatas, "MusicDatas");
+        JsonMgr.Instance.SaveData(musicDatas, "MusicData");
     }
 
 }

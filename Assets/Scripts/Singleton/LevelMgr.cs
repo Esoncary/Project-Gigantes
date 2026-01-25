@@ -31,13 +31,13 @@ public class LevelMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     #region 监听广播函数
@@ -65,8 +65,8 @@ public class LevelMgr : MonoBehaviour
     public void StartLoadNextLevel(string levelName)
     {
         StartCoroutine(LoadNextLevel(levelName));//启动关卡切换协程
-        
-        
+
+
     }
     public IEnumerator LoadNextLevel(string levelName)
     {
@@ -75,8 +75,8 @@ public class LevelMgr : MonoBehaviour
         //异步加载新的场景
         AsyncOperation operation = SceneManager.LoadSceneAsync(levelName);
 
-        //黑屏淡入（UIMgr中）
-        UIMgr.Instance.StartBlackImageFadeIn();
+        //黑屏淡入（UIManager中）
+        UIManager.Instance.StartBlackImageFadeIn();
 
         // 只要没加载完，就一直等待
         while (!operation.isDone)
@@ -95,7 +95,7 @@ public class LevelMgr : MonoBehaviour
         //重新设定相机follow对象
         VirtualCameraController.Instance.ResetCameraTarget(player.transform);
         //黑屏淡出(使新场景显现)
-        UIMgr.Instance.StartBlackImageFadeOut();
+        UIManager.Instance.StartBlackImageFadeOut();
     }
 
     //重载当前关卡
@@ -105,7 +105,7 @@ public class LevelMgr : MonoBehaviour
     }
     private IEnumerator ReloadCurrentLevel()
     {
-        UIMgr.Instance.StartBlackImageFadeIn();
+        UIManager.Instance.StartBlackImageFadeIn();
         yield return new WaitForSeconds(0.5f); // 等待淡入动画完成
 
         // 重新加载当前场景
@@ -114,7 +114,7 @@ public class LevelMgr : MonoBehaviour
         //yield return new WaitForSeconds(0.2f);//等个0.2s，给场景稳定，不然会卡
 
 
-        UIMgr.Instance.StartBlackImageFadeOut();
+        UIManager.Instance.StartBlackImageFadeOut();
         yield return new WaitForSeconds(0.5f); // 等待淡出动画完成
     }
     #endregion
