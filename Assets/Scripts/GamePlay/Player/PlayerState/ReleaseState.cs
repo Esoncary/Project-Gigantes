@@ -8,6 +8,13 @@ public class ReleaseState : PlayerState
     public override void Enter()
     {
         base.Enter();
+
+        if (player.releaseCoolingTimer > 0)
+        {
+            Debug.Log("释放器处于 CD 中");
+            TransitionToNextState();
+            return;
+        }
         
         // 1. 开启子弹时间
         Time.timeScale = player.timeScaleReleasing;
@@ -43,8 +50,6 @@ public class ReleaseState : PlayerState
         // 释放
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            Debug.Log("currentStorage " + player.currentStorage);
-            Debug.Log("releaseThreshold " + player.releaseThreshold);
             if (player.currentStorage < player.releaseThreshold)
             {
                 TransitionToNextState();
@@ -140,6 +145,7 @@ public class ReleaseState : PlayerState
      */
     private void ExecuteRelease()
     {
+        player.releaseCoolingTimer = player.releaseCoolingLimit;
         // 隐藏箭头
         if (player.arrowInstance != null)
             player.arrowInstance.SetActive(false);
