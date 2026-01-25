@@ -39,11 +39,11 @@ public class PlayerController : MonoBehaviour
     [Header("空中参数")]
     // public float moveSpeedAccInMidAir = 25f;
     // public float minMoveSpeedInMidAir = 6f;
-    public float maxMoveSpeedInMidAir = 8f;
+    public float maxMoveSpeedInMidAir = 10f;
     // public float enforceMoveAccSpeedInMidAir = 15f;
     [Tooltip("无输入时的空气阻力（越小惯性越大）")] public float airDragWithoutInput = 0.3f;
     [Tooltip("有输入时的响应加速度")] public float airResponsiveness = 30f;
-    [Tooltip("空中转向时的刹车力度")] public float airTurnBrakeForce = 40f;
+    [Tooltip("空中转向时的刹车力度")] public float airTurnBrakeForce = 200f;
 
 
     [Header("跳跃参数")]
@@ -63,13 +63,15 @@ public class PlayerController : MonoBehaviour
     public Vector2 wallJumpDirection = new Vector2(1, 1);
 
     [Header("发射参数")]
-    public float speedLimitOffTimer;
-    [Tooltip("衰减停止的速度阈值，低于此值停止衰减")] public float releaseMinSpeedThreshold = 1f;
-    [Tooltip("线性阻力系数（每秒衰减速度），越大停得越快")] public float releaseDragCoefficient = 2.5f;
-    [Tooltip("满能量时的衰减持续时间")]public float releaseDragTime = 0.4f;
+    // public float speedLimitOffTimer;
+    // 初始速度越高，阻力系数越大，爆发感越强
+    // 速度衰减低于阈值或衰减时间到达为两种直接的退出状态方式
+    [Tooltip("衰减停止的速度阈值，低于此值停止衰减 建议与空中启动速度匹配")] public float releaseMinSpeedThreshold = 10f;
+    [Tooltip("线性阻力系数（每秒衰减速度），越大停得越快")] public float releaseDragCoefficient = 50f;
+    [Tooltip("满能量时的衰减持续时间")]public float releaseDragTime = 0.2f;
     [Tooltip("释放的最低能量限度，低于此将不会触发发射")]public float releaseThreshold = 0;
-    [Tooltip("基础发射速度")]public float baseSpeed = 15f;
-    [Tooltip("最大发射速度，能量满时初始速度最大")]public float maxSpeed = 20f;
+    [Tooltip("基础发射速度")]public float baseSpeed = 25f;
+    [Tooltip("最大发射速度，能量满时初始速度最大")]public float maxSpeed = 35f;
 
     [Header("动力装置参数")]
     [Tooltip("释放冷却时间")]  public float releaseCoolingLimit = 1f;
