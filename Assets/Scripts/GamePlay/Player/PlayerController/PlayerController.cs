@@ -37,10 +37,14 @@ public class PlayerController : MonoBehaviour
     public float enforceDeceleraion = 20f;
 
     [Header("空中参数")]
-    public float moveSpeedAccInMidAir = 25f;
-    public float minMoveSpeedInMidAir = 6f;
+    // public float moveSpeedAccInMidAir = 25f;
+    // public float minMoveSpeedInMidAir = 6f;
     public float maxMoveSpeedInMidAir = 8f;
-    public float enforceMoveAccSpeedInMidAir = 15f;
+    // public float enforceMoveAccSpeedInMidAir = 15f;
+    [Tooltip("无输入时的空气阻力（越小惯性越大）")] public float airDragWithoutInput = 0.3f;
+    [Tooltip("有输入时的响应加速度")] public float airResponsiveness = 30f;
+    [Tooltip("空中转向时的刹车力度")] public float airTurnBrakeForce = 40f;
+
 
     [Header("跳跃参数")]
     public float defaultGravityScale;//默认重力数值，在inspector中设置为3
@@ -68,6 +72,7 @@ public class PlayerController : MonoBehaviour
     [Tooltip("最大发射速度，能量满时初始速度最大")]public float maxSpeed = 20f;
 
     [Header("动力装置参数")]
+    [Tooltip("释放冷却时间")]  public float releaseCoolingLimit = 1f;
     public float explosionStorageThrehold; //储量爆炸阈值,比最大储量值小一点
     public float maxStorage; //最大储量值.允许玩家在过载状态多装一点能量，以便于卡住过载状态释放
     public float minReleaseThrehold = 5f;
@@ -102,6 +107,7 @@ public class PlayerController : MonoBehaviour
     public float targetStorageFreezeTimer;//targetStorage停留计时器
     public float currentStorageFreezeTimer;//currentStorage停留计时器
     public float explosionTimer;//爆炸计时器
+    public float releaseCoolingTimer; // 释放冷却
     public bool canJump; // 与isGrounded相关
     public Vector2 releaseDir;
     public GameObject arrowInstance;
@@ -171,6 +177,7 @@ public class PlayerController : MonoBehaviour
         if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
+        if (releaseCoolingTimer > 0) releaseCoolingTimer -= Time.deltaTime;
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！
         StateMachine.CurrentState.HandleInput();

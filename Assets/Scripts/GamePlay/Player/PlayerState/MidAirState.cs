@@ -105,27 +105,63 @@ public class MidAirState : PlayerState
     private void AirMovement()
     {
         //我们这里有两种情况，一种是正常情况，一种是后释放情况。这里通过一个函数来实现，用currentMoveSpeedAccScale这个变量来控制两种情况。如果是正常情况，这个变量就是1；如果是后释放情况，这个变量会小于1然后逐渐恢复到1。
-        if (player.postReleaseTimer <= 0)
-        {
-            // 转向处理
-            if (Mathf.Abs(player.rb.velocity.x) > 0.1f && Mathf.Sign(player.rb.velocity.x) != player.InputX)
-            {
-                player.TurnRoundBrake(player.turnRoundBrakeDec);
-            }
+        // 转向处理
+        // if (Mathf.Abs(player.rb.velocity.x) > 0.1f && Mathf.Sign(player.rb.velocity.x) != player.InputX)
+        // {
+        //     player.TurnRoundBrake(player.turnRoundBrakeDec);
+        // }
+        // Debug.Log("0");
+        // // 加速与限速逻辑,Launched状态之后的限速还没写
+        // if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeedInMidAir)//如果小于最小移动速度，直接设置为最小移动速度，确保起步流畅
+        // {
+        //     Debug.Log("1");
+        //     // player.rb.velocity = new Vector2(player.InputX * player.minMoveSpeedInMidAir, player.rb.velocity.y);
+        // }
+        // else if (Mathf.Abs(player.rb.velocity.x) >= player.minMoveSpeedInMidAir && Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeedInMidAir)//如果未达到最大移动速度，加速
+        // {
+        //     Debug.Log("2");
+        //     //player.rb.AddForce(new Vector2(inputX * player.moveSpeedAcc, 0));
+        //     player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.moveSpeedAccInMidAir *  Time.fixedDeltaTime), player.rb.velocity.y);
+        // }
+        // else
         
-            // 加速与限速逻辑,Launched状态之后的限速还没写
-            if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeedInMidAir)//如果小于最小移动速度，直接设置为最小移动速度，确保起步流畅
+        // 如果超过最大跑动速度，则限速
+        if (Mathf.Abs(player.rb.velocity.x) > player.maxMoveSpeedInMidAir)
+        {
+            player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.turnRoundBrakeDec * Time.fixedDeltaTime), player.rb.velocity.y);
+        }
+        bool hasInput = Mathf.Abs(player.InputX) > 0.01f;
+        if (!hasInput)
+        {
+            // 无输入：保留惯性，只应用轻微阻力
+            float currentSpeedX = player.rb.velocity.x;
+            float newSpeedX = Mathf.MoveTowards(
+                currentSpeedX,
+                0,
+                player.airDragWithoutInput * Time.fixedDeltaTime
+            );
+            player.rb.velocity = new Vector2(newSpeedX, player.rb.velocity.y);
+        }
+        else
+        {
+            // 有输入：提供操控感
+
+            // 1. 转向刹车：速度方向与输入相反时快速减速
+            if (Mathf.Abs(player.rb.velocity.x) > 0.1f &&
+                Mathf.Sign(player.rb.velocity.x) != player.InputX)
             {
-                player.rb.velocity = new Vector2(player.InputX * player.minMoveSpeedInMidAir, player.rb.velocity.y);
+                player.TurnRoundBrake(player.airTurnBrakeForce);
             }
-            else if (Mathf.Abs(player.rb.velocity.x) >= player.minMoveSpeedInMidAir && Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeedInMidAir)//如果未达到最大移动速度，加速
+            // 2. 正常加速：向输入方向响应
+            else
             {
-                //player.rb.AddForce(new Vector2(inputX * player.moveSpeedAcc, 0));
-                player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.moveSpeedAccInMidAir *  Time.fixedDeltaTime), player.rb.velocity.y);
-            }
-            else if (Mathf.Abs(player.rb.velocity.x) > player.maxMoveSpeedInMidAir)//如果超过最大跑动速度，则限速
-            {
-                player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.turnRoundBrakeDec * Time.fixedDeltaTime), player.rb.velocity.y);
+                float targetSpeed = player.maxMoveSpeedInMidAir * player.InputX;
+                float newX = Mathf.MoveTowards(
+                    player.rb.velocity.x,
+                    targetSpeed,
+                    player.airResponsiveness * Time.fixedDeltaTime
+                );
+                player.rb.velocity = new Vector2(newX, player.rb.velocity.y);
             }
         }
         

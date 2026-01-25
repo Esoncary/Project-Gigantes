@@ -81,6 +81,8 @@ public class LaunchedState : PlayerState
         else
         {
             launchTimer += Time.fixedDeltaTime;
+            // player.currentStorage = 0;
+            // player.targetStorage = 0;
             UpdateLaunchingPhysics();
         }
     }
