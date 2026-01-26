@@ -15,8 +15,6 @@ public class DeathMask : BasePanel
     {
         maskImage.enabled = true;
         if (maskImage == null) return;
-        Debug.Log("kkk");
-        // maskImage.color = Color.black;
         maskImage.fillMethod = Image.FillMethod.Horizontal;
         maskImage.fillOrigin = (int)Image.OriginHorizontal.Left;
         maskImage.fillAmount = 0;
@@ -26,11 +24,9 @@ public class DeathMask : BasePanel
         {
             elapsed += Time.unscaledDeltaTime;
             maskImage.fillAmount = Mathf.Clamp01(elapsed / duration);
-            Debug.Log($"当前进度: {maskImage.fillAmount}");
             await Task.Yield();
         }
         maskImage.fillAmount = 1;
-        Debug.Log("jjj");
     }
     public async Task BlackImageFadeOut(float duration)
     {

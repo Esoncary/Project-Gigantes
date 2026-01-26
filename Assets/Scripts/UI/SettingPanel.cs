@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class SettingPanel : BasePanel
@@ -10,6 +11,9 @@ public class SettingPanel : BasePanel
     public Slider musicSlider;
     public Slider effectSlider;
     public Button closeBtn;
+    public Button continueGameBtn;
+    public Button restartBtn;
+    public Button mainMenuBtn;
     public override void Init()
     {
         //初始时 得到存储的数据
@@ -43,5 +47,45 @@ public class SettingPanel : BasePanel
             GameDataMgr.Instance.SaveMusicData();
             UIManager.Instance.HidePanel<SettingPanel>();
         });
+        continueGameBtn.onClick.AddListener(() =>
+        {
+            GameDataMgr.Instance.SaveMusicData();
+            UIManager.Instance.HidePanel<SettingPanel>();
+        });
+        restartBtn.onClick.AddListener(() =>
+        {
+            SceneMgr.Instance.TriggerReload();
+            UIManager.Instance.HidePanel<SettingPanel>();
+        });
+        mainMenuBtn.onClick.AddListener(() =>
+        {
+            // SceneMgr.Instance.TriggerReload();
+            // UIManager.Instance.HidePanel<SettingPanel>();
+            UIManager.Instance.ShowPanel<ConfirmPanel>();
+        });
     }
+    public override void ShowMe()
+    {
+        base.ShowMe();
+        Time.timeScale = 0;
+    }
+    public override void HideMe(UnityAction callBack)
+    {
+        base.HideMe(callBack);
+        Time.timeScale = 1;
+    }
+
+    public void HideBtn()
+    {
+        continueGameBtn.gameObject.SetActive(false);
+        restartBtn.gameObject.SetActive(false);
+        mainMenuBtn.gameObject.SetActive(false);
+    }
+    public void ShowBtn()
+    {
+        continueGameBtn.gameObject.SetActive(true);
+        restartBtn.gameObject.SetActive(true);
+        mainMenuBtn.gameObject.SetActive(true);
+    }
+
 }

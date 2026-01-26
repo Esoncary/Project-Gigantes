@@ -18,6 +18,8 @@ public class BeginPanel : BasePanel
             Debug.Log("开始游戏");
 
             UIManager.Instance.ShowPanel<ScenePanel>();
+            // 默认选择存档1
+            GameDataMgr.Instance.LoadChoosePlayerSaveData(0);
         });
 
         // 设置按钮
@@ -25,6 +27,7 @@ public class BeginPanel : BasePanel
         {
             //进入设置界面
             UIManager.Instance.ShowPanel<SettingPanel>();
+            UIManager.Instance.GetPanel<SettingPanel>().HideBtn();
         });
 
         // 退出按钮

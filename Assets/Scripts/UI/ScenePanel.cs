@@ -17,6 +17,7 @@ public class ScenePanel : BasePanel
 
     public override void Init()
     {
+        CheckSuspendedRecord();
         GetCurrentSceneData();
         leftBtn.onClick.AddListener(() =>
          {
@@ -53,5 +54,16 @@ public class ScenePanel : BasePanel
         levelId.text = "第" + sceneInfo.LevelId + "关";
         collectNum.text = "一共" + sceneInfo.TotalCollectibles + "个物品";
         image.sprite = Resources.Load<Sprite>(sceneInfo.imgRes);
+    }
+    // 检查是否有中断记录
+    public void CheckSuspendedRecord()
+    {
+        // Debug.Log(GameDataMgr.Instance.currentSave);
+        if (GameDataMgr.Instance.currentSave.HasSuspendedRecord)
+        {
+            // 显示是否继续面板
+            UIManager.Instance.ShowPanel<SuspendedPanel>();
+        }
+        // UIManager.Instance.ShowPanel<SuspendedPanel>();
     }
 }
