@@ -10,6 +10,7 @@ namespace GamePlay.IA
         [Header("蹦床设置")]
         [Tooltip("蹦床弹力大小")]
         [SerializeField] private float bounceForce = 50f;
+        [Tooltip("限制其他力的作用计时器，触碰后开始计时，应与实际效果时间一致")][SerializeField] private float forceLimitTime = 1f;
         
         // 玩家实体触碰蹦床
         private void OnTriggerEnter2D(Collider2D collision)
@@ -18,7 +19,7 @@ namespace GamePlay.IA
             if (playerController != null)
             {
                 // 施加向上的弹力
-                playerController.ApplyForce(this);
+                playerController.ApplyForce(this, forceLimitTime);
                 //打开后释放计时器
                 // playerController.postReleaseTimer = playerController.postReleaseTime;
             }
