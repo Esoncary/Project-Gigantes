@@ -28,13 +28,13 @@ public class UIMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     //黑屏淡入和淡出函数与协程
@@ -61,7 +61,7 @@ public class UIMgr : MonoBehaviour
         blackImage.enabled = false;
     }
 
-    public  IEnumerator BlackImageFadeIn()
+    public IEnumerator BlackImageFadeIn()
     {
         Debug.Log("开始淡入");
         blackImage.enabled = true;

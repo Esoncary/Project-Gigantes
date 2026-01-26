@@ -7,6 +7,12 @@ using UnityEngine;
 public class SceneMgr
 {
     public List<LevelData> sceneInfos;
+    [Header("引用")]
+    public PlayerController player; // 玩家的引用
+    public GameObject playerPrefab;
+
+    [Header("重生点坐标设置")]
+    public Vector2 currentRebornPos;
 
     private static SceneMgr instance = new SceneMgr();
     public static SceneMgr Instance => instance;
@@ -19,6 +25,7 @@ public class SceneMgr
     {
         // UI显示
         UIManager.Instance.ShowPanel<GamePanel>();
+        InstiatePlayer();
 
         // 角色加载
         // Transform playerPos = GameObject.Find("PlayerPos").transform;
@@ -51,5 +58,18 @@ public class SceneMgr
         GameDataMgr.Instance.currentSave.MaxUnlockedLevelId++;
         GameDataMgr.Instance.SavePlayerSaveData();
     }
+    void UpdateRebornPoint(Vector2 pos)
+    {
+        currentRebornPos = pos;
+    }
+    public void InstiatePlayer()
+    {
+        playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player.prefab");
+        currentRebornPos = GameObject.Find("PlayerPos").transform.position;
+        // 1. 生成玩家实例
+        GameObject newPlayerObj = GameObject.Instantiate(playerPrefab, currentRebornPos, Quaternion.identity);
 
+        // 2. 更新 LevelMgr 内部的 player 引用
+        player = newPlayerObj.GetComponent<PlayerController>();
+    }
 }

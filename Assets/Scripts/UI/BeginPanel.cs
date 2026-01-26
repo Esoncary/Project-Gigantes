@@ -15,11 +15,9 @@ public class BeginPanel : BasePanel
         {
             //进入选角界面
             UIManager.Instance.HidePanel<BeginPanel>();
-            //Camera.main.GetComponent<CameraAnimator>().TurnLeft(() =>
-            //{
-            //    //显示关卡选择面板
-            //    UIManager.Instance.ShowPanel<ScenePanel>();
-            //});
+            Debug.Log("开始游戏");
+
+            UIManager.Instance.ShowPanel<ScenePanel>();
         });
 
         // 设置按钮

@@ -10,8 +10,9 @@ public class ScenePanel : BasePanel
     public Button beginBtn;
     public Button bakcBtn;
     public Image image;
-    public Text name;
-    public Text describe;
+    public Text sceneName;
+    public Text levelId;
+    public Text collectNum;
     private int nowIndex = 0;
 
     public override void Init()
@@ -22,7 +23,8 @@ public class ScenePanel : BasePanel
              print("left");
              --nowIndex;
              if (nowIndex < 0)
-                 nowIndex = GameDataMgr.Instance.list_LevelData.Count;
+                 nowIndex = GameDataMgr.Instance.list_LevelData.Count - 1;
+             //  Debug.Log(GameDataMgr.Instance.list_LevelData.Count);
              GetCurrentSceneData();
          });
         rightBtn.onClick.AddListener(() =>
@@ -47,7 +49,9 @@ public class ScenePanel : BasePanel
     public void GetCurrentSceneData()
     {
         LevelData sceneInfo = SceneMgr.Instance.GetSceneData(nowIndex);
-        name.text = sceneInfo.SceneName;
+        sceneName.text = sceneInfo.SceneName;
+        levelId.text = "第" + sceneInfo.LevelId + "关";
+        collectNum.text = "一共" + sceneInfo.TotalCollectibles + "个物品";
         image.sprite = Resources.Load<Sprite>(sceneInfo.imgRes);
     }
 }

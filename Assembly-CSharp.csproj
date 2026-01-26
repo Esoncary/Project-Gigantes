@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\UI\TipPanel.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\PlayerAudioController.cs" />
     <Compile Include="Assets\Scripts\TestOnly\VelocityChecker.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\JsonException.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\JsonData.cs" />
@@ -79,12 +80,15 @@
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\ParserToken.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\BrakeState.cs" />
     <Compile Include="Assets\Scripts\UI\ScenePanel.cs" />
+    <Compile Include="Assets\Scripts\UI\ConfirmPanel.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\LevelEntranceDoor.cs" />
     <Compile Include="Assets\Scripts\DataClass\RoleData.cs" />
     <Compile Include="Assets\Scripts\UI\TowerBtn.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\LevelExitDoor.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\Pickups\Strengthener.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interface\IPlayerForce.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Cooler.cs" />
+    <Compile Include="Assets\Scripts\Singleton\UIManager\UIMain.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\PlayerState.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\JsonMockWrapper.cs" />
     <Compile Include="Assets\Scripts\UI\BasePanel.cs" />

@@ -8,6 +8,7 @@ public class MidAirState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        
         // 进入空中时，不需要重置重力，因为我们需要重力自然作用
     }
 
