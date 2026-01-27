@@ -146,10 +146,20 @@ public class ReleaseState : PlayerState
     private void ExecuteRelease()
     {
         player.releaseCoolingTimer = player.releaseCoolingLimit;
+
+        // 震屏效果：朝向释放方向震动
+        if (player.impulseSource != null)
+        {
+            Debug.Log("震屏");
+            float velocity = 0.4f;
+            Vector2 shakeDir = player.releaseDir.normalized * velocity;
+            player.impulseSource.GenerateImpulseWithVelocity(new Vector3(shakeDir.x, shakeDir.y, 0f));
+        }
+
         // 隐藏箭头
         if (player.arrowInstance != null)
             player.arrowInstance.SetActive(false);
-        
+
         stateMachine.ChangeState(player.LaunchedState);
     }
 }

@@ -1,3 +1,4 @@
+using Cinemachine;
 using GamePlay.Player.Interface;
 using UnityEngine;
 
@@ -22,6 +23,9 @@ public class PlayerController : MonoBehaviour
 
     public Animator Anim { get; private set; }
     public Collider2D col { get; private set; }
+
+    [Header("震屏组件引用")]
+    public CinemachineImpulseSource impulseSource;
 
     [Header("检测器引用")]
     // 对应报错里的 groundedCheckerManager
