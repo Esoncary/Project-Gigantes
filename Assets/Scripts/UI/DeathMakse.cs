@@ -13,12 +13,12 @@ public class DeathMask : BasePanel
     }
     public async Task BlackImageFadeIn(float duration)
     {
-        maskImage.enabled = true;
         if (maskImage == null) return;
+        maskImage.enabled = true;
         maskImage.fillMethod = Image.FillMethod.Horizontal;
         maskImage.fillOrigin = (int)Image.OriginHorizontal.Left;
         maskImage.fillAmount = 0;
-
+        await Task.Yield();
         float elapsed = 0;
         while (elapsed < duration)
         {

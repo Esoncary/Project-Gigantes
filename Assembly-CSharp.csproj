@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\Singleton\GameManager\GameDataMgr.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\CanClimbRightCheckerManager1.cs" />
     <Compile Include="Assets\Scripts\UI\DeathMakse.cs" />
+    <Compile Include="Assets\Scripts\UI\GameOverPanel.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\LaunchedState.cs" />
     <Compile Include="Assets\Scripts\UI\Main.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\JsonReader.cs" />

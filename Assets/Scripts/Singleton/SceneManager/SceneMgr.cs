@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.UI;
+using System.IO;
 
 public class SceneMgr
 {
@@ -104,25 +105,44 @@ public class SceneMgr
         if (isReloading) return; // 防止连续触发
         isReloading = true;
 
-        await ReloadCurrentLevelAsync();
+        await ReloadCurrentLevelAsync(SceneManager.GetActiveScene().buildIndex, () =>
+        {
+            InitScene(currentRebornPos);
+            return Task.CompletedTask;
+        });
 
         isReloading = false;
     }
+    // 根据场景名得到场景的id
+    public int GetSceneBuildIndex(string sceneName)
+    {
+        int count = SceneManager.sceneCountInBuildSettings;
 
-    private async Task ReloadCurrentLevelAsync()
+        for (int i = 0; i < count; i++)
+        {
+            string path = SceneUtility.GetScenePathByBuildIndex(i);
+            string name = Path.GetFileNameWithoutExtension(path);
+
+            if (name == sceneName)
+                return i;
+        }
+
+        return -1;
+    }
+    public async Task ReloadCurrentLevelAsync(int n, System.Func<Task> something = null)
     {
         // 淡入
+        UIManager.Instance.ShowPanel<DeathMask>();
         var deathMask = UIManager.Instance.GetPanel<DeathMask>();
-        Task fadeTask = Task.CompletedTask;
         if (deathMask != null)
         {
-            fadeTask = deathMask.BlackImageFadeIn(BlackImageFadeIn);
+            if (deathMask.maskImage != null) deathMask.maskImage.fillAmount = 0;
+            await deathMask.BlackImageFadeIn(BlackImageFadeIn);
         }
         // 加载场景
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(n);
         asyncLoad.allowSceneActivation = false;
 
-        await fadeTask;
         while (asyncLoad.progress < 0.9f)
         {
             await Task.Yield();
@@ -135,7 +155,11 @@ public class SceneMgr
             await Task.Yield();
         }
         // 初始化
-        InitScene(currentRebornPos);
+        // InitScene(currentRebornPos);
+        if (something != null)
+        {
+            await something();
+        }
         // 淡出
         deathMask = UIManager.Instance.GetPanel<DeathMask>();
         if (deathMask != null)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -68,7 +69,18 @@ public class UIManager
             return panelDic[name] as T;
         return null;
     }
+    public void HideAllPanel()
+    {
+        foreach (var panel in panelDic.Values)
+        {
+            if (panel != null)
+            {
+                GameObject.Destroy(panel.gameObject);
+            }
+        }
+        panelDic.Clear();
+    }
 
- 
+
 
 }
