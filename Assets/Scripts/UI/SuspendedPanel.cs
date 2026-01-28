@@ -10,18 +10,22 @@ public class SuspendedPanel : BasePanel
     public Button cancelBtn;
     public override void Init()
     {
+        // 继续中断按钮
         confirmBtn.onClick.AddListener(() =>
         {
-            PlayerSaveData data = GameDataMgr.Instance.currentSave;
-            int levelId = data.SuspendLevelId;
-            SceneMgr.Instance.LoadScene(levelId, data.HasSuspendedRecord);
-
+            // Ui处理
             UIManager.Instance.HidePanel<SuspendedPanel>();
             UIManager.Instance.HidePanel<ScenePanel>();
+            // 逻辑处理
+            int levelId = GameDataMgr.Instance.currentSave.suspendData.suspendLevelId;
+            SceneMgr.Instance.LoadGameScene(levelId);
         });
+        // 取消中断按钮
         cancelBtn.onClick.AddListener(() =>
         {
+            // Ui处理
             UIManager.Instance.HidePanel<SuspendedPanel>();
+            // 逻辑处理
             GameDataMgr.Instance.ClearSuspendData();
         });
 

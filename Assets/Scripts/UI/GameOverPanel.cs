@@ -13,34 +13,38 @@ public class GameOverPanel : BasePanel
     public Button mainMenuBtn;
     public override void Init()
     {
-        //初始时 得到存储的数据
-        MusicData musicData = GameDataMgr.Instance.musicDatas;
-        GameDataMgr.Instance.ClearSuspendData();
+        // 下一关按钮
         nextLevelBtn.onClick.AddListener(async () =>
         {
-            int levelId = SceneMgr.Instance.GetSceneBuildIndex("UIScene");
-            Debug.Log(levelId);
-            await SceneMgr.Instance.ReloadCurrentLevelAsync(levelId, () =>
-        {
-            UIManager.Instance.HidePanel<GamePanel>();
-            UIManager.Instance.HidePanel<BeginPanel>();
-            return Task.CompletedTask;
+            int levelId = SceneMgr.Instance.GetSceneIdByName("UIScene");
+            // Debug.Log(levelId);
+            SceneMgr.Instance.LoadSceneAsync(levelId, () =>
+            {
+                UIManager.Instance.HidePanel<GamePanel>();
+                UIManager.Instance.HidePanel<BeginPanel>();
+                UIManager.Instance.HidePanel<GameOverPanel>();
+                UIManager.Instance.ShowPanel<ScenePanel>();
+                UIManager.Instance.GetPanel<ScenePanel>().ShowNextSceneInfo();
+            });
         });
-        });
+        // 重新开始按钮
         restartBtn.onClick.AddListener(() =>
         {
-            SceneMgr.Instance.TriggerReload();
+            //UI处理
             UIManager.Instance.HidePanel<GameOverPanel>();
+            // 逻辑处理
+            SceneMgr.Instance.TriggerReload();
         });
+        // 主菜单按钮
         mainMenuBtn.onClick.AddListener(async () =>
         {
-            int levelId = SceneMgr.Instance.GetSceneBuildIndex("UIScene");
-            Debug.Log(levelId);
-            await SceneMgr.Instance.ReloadCurrentLevelAsync(levelId, () =>
+            int levelId = SceneMgr.Instance.GetSceneIdByName("UIScene");
+            // Debug.Log(levelId);
+            SceneMgr.Instance.LoadSceneAsync(levelId, () =>
         {
             UIManager.Instance.HidePanel<GamePanel>();
             UIManager.Instance.HidePanel<ScenePanel>();
-            return Task.CompletedTask;
+            UIManager.Instance.HidePanel<GameOverPanel>();
         });
 
         });
@@ -48,6 +52,7 @@ public class GameOverPanel : BasePanel
     public override void ShowMe()
     {
         base.ShowMe();
+        GameDataMgr.Instance.SaveLevelComplete(100, 0);
         Time.timeScale = 0;
     }
     public override void HideMe(UnityAction callBack)

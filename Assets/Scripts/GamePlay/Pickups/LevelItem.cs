@@ -20,7 +20,7 @@ public class LevelItem : MonoBehaviour
     private void CheckStatus()
     {
         var data = GameDataMgr.Instance.currentSave;
-        if (data.HasSuspendedRecord && data.SuspendInteractedItems.Contains(itemID))
+        if (data.suspendData.hasSuspendedRecord && data.suspendData.interactedItems.Contains(itemID))
         {
             HandleAlreadyInteracted();
         }
@@ -35,7 +35,7 @@ public class LevelItem : MonoBehaviour
     public void OnInteract()
     {
         // 通知 SceneMgr 记录我的 ID
-        SceneMgr.Instance.RecordItem(itemID);
+        GameDataMgr.Instance.RecordItem(itemID);
 
         // 执行原本的消失逻辑
         gameObject.SetActive(false);

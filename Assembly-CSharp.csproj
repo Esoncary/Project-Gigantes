@@ -63,7 +63,6 @@
     <Analyzer Include="D:\software\unity\Editor\2022.3.62f3c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\UI\TipPanel.cs" />
     <Compile Include="Assets\Scripts\TestOnly\VelocityChecker.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\JsonException.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\JsonData.cs" />
@@ -76,7 +75,6 @@
     <Compile Include="Assets\Scripts\GamePlay\Interface\IPickUps.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interface\IInteractable.cs" />
     <Compile Include="Assets\Scripts\UI\SuspendedPanel.cs" />
-    <Compile Include="Assets\Scripts\DataClass\MonsterInfo.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\IdleState.cs" />
     <Compile Include="Assets\Scripts\Singleton\UIManager\UIManager.cs" />
     <Compile Include="Assets\Scripts\DataClass\LevelProgressData.cs" />
@@ -86,7 +84,6 @@
     <Compile Include="Assets\Scripts\UI\ScenePanel.cs" />
     <Compile Include="Assets\Scripts\UI\ConfirmPanel.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\LevelEntranceDoor.cs" />
-    <Compile Include="Assets\Scripts\DataClass\RoleData.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\LevelExitDoor.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interface\IPlayerForce.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Cooler.cs" />
@@ -100,6 +97,7 @@
     <Compile Include="Assets\Scripts\Singleton\SceneManager\SceneMgr.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\RebornLandmark.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\CanClimbLeftCheckerManager.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\IA\SwitchRotator.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\DieState.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\Netstandard15Polyfill.cs" />
     <Compile Include="Assets\Scripts\DataClass\PlayerSaveData.cs" />
@@ -114,7 +112,6 @@
     <Compile Include="Assets\Scripts\GamePlay\IA\Base\Switchable.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\Lexer.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\RunState.cs" />
-    <Compile Include="Assets\Scripts\UI\ChoosePanel.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\JsonWriter.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Key.cs" />
     <Compile Include="Assets\Scripts\GamePlay\wasted\PlayerController.cs" />
@@ -125,6 +122,7 @@
     <Compile Include="Assets\Scripts\GamePlay\IA\Fan.cs" />
     <Compile Include="Assets\Scripts\Camera\VirtualCameraController.cs" />
     <Compile Include="Assets\Scripts\Singleton\1\UIMgr.cs" />
+    <Compile Include="Assets\Scripts\DataClass\SuspendData.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\ReleaseState.cs" />
     <Compile Include="Assets\Scripts\Singleton\BackgroundManager\BkgMusicMgr.cs" />
     <Compile Include="Assets\Scripts\DataClass\MusicData.cs" />

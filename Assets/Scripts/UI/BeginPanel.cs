@@ -13,11 +13,10 @@ public class BeginPanel : BasePanel
         // 开始按钮
         startBtn.onClick.AddListener(() =>
         {
-            //进入选角界面
+            // UI处理
             UIManager.Instance.HidePanel<BeginPanel>();
-            Debug.Log("开始游戏");
-
             UIManager.Instance.ShowPanel<ScenePanel>();
+
             // 默认选择存档1
             GameDataMgr.Instance.LoadChoosePlayerSaveData(0);
         });
@@ -25,7 +24,7 @@ public class BeginPanel : BasePanel
         // 设置按钮
         settingBtn.onClick.AddListener(() =>
         {
-            //进入设置界面
+            // UI处理
             UIManager.Instance.ShowPanel<SettingPanel>();
             UIManager.Instance.GetPanel<SettingPanel>().HideBtn();
         });
@@ -33,6 +32,7 @@ public class BeginPanel : BasePanel
         // 退出按钮
         quitBtn.onClick.AddListener(() =>
         {
+            GameDataMgr.Instance.SavePlayerSaveData();
             Application.Quit();
         });
     }

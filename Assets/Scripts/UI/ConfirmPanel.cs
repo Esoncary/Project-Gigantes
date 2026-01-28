@@ -10,17 +10,21 @@ public class ConfirmPanel : BasePanel
     public Button cancelBtn;
     public override void Init()
     {
+        // 确认退出游戏按钮
         confirmBtn.onClick.AddListener(() =>
         {
+            // UI处理
             UIManager.Instance.HidePanel<ConfirmPanel>();
             UIManager.Instance.HidePanel<GamePanel>();
             UIManager.Instance.HidePanel<SettingPanel>();
-            SceneManager.LoadScene("UIScene");
-
-            GameDataMgr.Instance.SaveSuspendData(SceneMgr.Instance.currentSceneId, SceneMgr.Instance.playerController.transform.position);
+            // 逻辑处理
+            SceneMgr.Instance.LoadSceneAsync(SceneMgr.Instance.GetSceneIdByName("UIScene"));
+            GameDataMgr.Instance.SaveSuspendData(SceneMgr.Instance.playerController.transform.position);
         });
+
         cancelBtn.onClick.AddListener(() =>
         {
+            // UI处理
             UIManager.Instance.HidePanel<ConfirmPanel>();
         });
 
