@@ -21,7 +21,7 @@ namespace GamePlay.IA
             var player = collision.GetComponent<PlayerController>();
             if (player != null)
             {
-                player.ApplyForce(this); // 每帧都在受力区时调用
+                player.ApplyForce(this, 0); // 每帧都在受力区时调用
             }
         }
 

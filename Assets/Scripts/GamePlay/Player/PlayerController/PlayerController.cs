@@ -1,3 +1,4 @@
+using Cinemachine;
 using GamePlay.Player.Interface;
 using UnityEngine;
 
@@ -22,6 +23,9 @@ public class PlayerController : MonoBehaviour
 
     public Animator Anim { get; private set; }
     public Collider2D col { get; private set; }
+
+    [Header("震屏组件引用")]
+    public CinemachineImpulseSource impulseSource;
 
     [Header("检测器引用")]
     // 对应报错里的 groundedCheckerManager
@@ -97,6 +101,7 @@ public class PlayerController : MonoBehaviour
     public IInteractable currentInteractable;
     public float postReleaseTimer;//后释放计时器
     public float strengthenerTimer;
+    public float forceLimitTimer;
 
     [Header("实时变量")]
     public float InputX;
@@ -193,6 +198,7 @@ public class PlayerController : MonoBehaviour
         if (strengthenerTimer > 0) strengthenerTimer -= Time.deltaTime;
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
         if (releaseCoolingTimer > 0) releaseCoolingTimer -= Time.deltaTime;
+        if (forceLimitTimer > 0) forceLimitTimer -= Time.deltaTime;
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！
         StateMachine.CurrentState.HandleInput();
@@ -309,11 +315,13 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region 地形函数
-    public void ApplyForce(IPlayerForce forceSource)
+    public void ApplyForce(IPlayerForce forceSource, float forceLimitTime)
     {
         Vector2 newVelocity = forceSource.CalculateVelocity(rb.velocity, transform.position);
 
         rb.velocity = newVelocity;
+        
+        forceLimitTimer = forceLimitTime;
     }
 
 

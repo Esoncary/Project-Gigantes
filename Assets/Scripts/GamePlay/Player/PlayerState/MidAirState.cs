@@ -83,6 +83,13 @@ public class MidAirState : PlayerState
             stateMachine.ChangeState(player.ReleaseState);
             return;
         }
+        
+        if (player.forceLimitTimer > 0)
+        {
+            // 处于力限制状态下，恢复正常重力
+            player.rb.gravityScale = player.defaultGravityScale * 4f;
+            return;
+        }
     }
 
     public override void PhysicsUpdate()
