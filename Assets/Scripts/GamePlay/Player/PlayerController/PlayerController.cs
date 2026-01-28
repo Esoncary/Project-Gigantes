@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     public CanClimbRightCheckerManager canClimbRightCheckerManager;
 
     [Header("移动参数")]
+    public bool isFacingRight = true; // 初始朝向（假设你的素材默认面朝右）
     public float moveSpeedAcc = 50f;
     public float maxMoveSpeed = 8f;
     public float minMoveSpeed = 0.1f;
@@ -162,6 +163,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
+
         //处理输入:横向输入,跳跃输入,释放输入,鼠标输入
         // InputX = Input.GetAxisRaw("Horizontal");
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
@@ -208,6 +210,7 @@ public class PlayerController : MonoBehaviour
         //if (isGrounded && canJump == false && varJumpTimer <= 0 && rb.velocity.y <= 0) canJump = true;//落地后可以再次跳跃
         if (!isGrounded && jumpCoyoteTimer <= 0) canJump = false;//离地且土狼时间结束后不能跳跃
         if (isGrounded) rb.gravityScale = defaultGravityScale;//落地后重置重力
+        CheckFlip();//检查转向
 
         //这里解释一下，为什么“调用状态机内部更新”必须要放在“处理其它状态”的上面：因为在RunState & IdleState的脚本里走离平台的逻辑中加入了“开启土狼时间计时器”后，如果后者在前者的下面，canJump会先被设置成false，然后土狼计时器才启动，所以后者在前者前面的根本目的是保证土狼计时器先启动。我不清楚这里有没有更加合理和漂亮的解决方案，总之，所有与在状态机中触发的计时器和状态的变量相关的脚本，必须放在“调用状态机内部更新”之后
 
@@ -268,6 +271,34 @@ public class PlayerController : MonoBehaviour
         //允许变量跳跃
         canVarJump = true;
 
+    }
+
+    //转向函数
+    private void CheckFlip()
+    {
+        // 只有当玩家有水平输入时才检测翻转
+        // 如果没有输入（InputX == 0），保留当前的朝向
+        if (InputX > 0.01f && !isFacingRight)
+        {
+            Flip();
+        }
+        else if (InputX < -0.01f && isFacingRight)
+        {
+            Flip();
+        }
+    }
+
+    private void Flip()
+    {
+        // 切换布尔值
+        isFacingRight = !isFacingRight;
+
+        // 获取当前的缩放值
+        Vector3 localScale = transform.localScale;
+        // 将 X 轴缩放取反
+        localScale.x *= -1;
+        // 重新赋值回物体的 transform
+        transform.localScale = localScale;
     }
 
     #endregion

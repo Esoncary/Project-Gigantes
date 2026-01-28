@@ -115,7 +115,7 @@ MonoBehaviour:
   maxMoveSpeedInMidAir: 10
   airDragWithoutInput: 0.3
   airResponsiveness: 30
-  airTurnBrakeForce: 40
+  airTurnBrakeForce: 200
   defaultGravityScale: 3
   jumpSpeedInitial: 20
   varJumpTime: 0.1
@@ -153,6 +153,7 @@ MonoBehaviour:
   Kin_gravityContractionScale: 1
   coolerTimer: 0
   postReleaseTimer: 0
+  strengthenerTimer: 0
   forceLimitTimer: 0
   InputX: 0
   JumpInputDown: 0

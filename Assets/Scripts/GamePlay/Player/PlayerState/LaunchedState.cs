@@ -61,7 +61,7 @@ public class LaunchedState : PlayerState
         //// 2. 碰撞判定：如果高速弹射中撞到了墙，通常应该提前结束锁定
         //if (player.isGrounded )
         //{
-            
+
         //    stateMachine.ChangeState(player.RunState);
         //    return;
         //}
@@ -70,6 +70,8 @@ public class LaunchedState : PlayerState
         //    stateMachine.ChangeState(player.MidAirState);
         //    return;
         //}
+
+        UpdateLaunchedDirInAnimation(launchDirection);
     }
 
     public override void PhysicsUpdate()
@@ -165,5 +167,20 @@ public class LaunchedState : PlayerState
     {
         base.Exit();
         
+    }
+
+    //这里处理播放动画的变量，根据方向决定播放哪个动画
+    public void UpdateLaunchedDirInAnimation(Vector2 launchDir)
+    {
+        // 1. 必须归一化，确保向量长度为 1，这样判定才准确
+        Vector2 dir = launchDir.normalized;
+
+        // 2. 根据面朝向转换坐标
+        float LaunchedX = player.isFacingRight ? dir.x : -dir.x;
+        float LaunchedY = dir.y;
+
+        // 3. 传给 Animator 里的参数
+        player.Anim.SetFloat("LaunchedX", LaunchedX);
+        player.Anim.SetFloat("LaunchedY", LaunchedY);
     }
 }

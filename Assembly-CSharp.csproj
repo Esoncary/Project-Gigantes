@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\GamePlay\Interface\IInteractable.cs" />
     <Compile Include="Assets\Scripts\DataClass\MonsterInfo.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\IdleState.cs" />
+    <Compile Include="Assets\Scripts\UI\Parallax.cs" />
     <Compile Include="Assets\Scripts\Singleton\UIManager\UIManager.cs" />
     <Compile Include="Assets\Scripts\DataClass\LevelProgressData.cs" />
     <Compile Include="Assets\Scripts\UI\GamePanel.cs" />
