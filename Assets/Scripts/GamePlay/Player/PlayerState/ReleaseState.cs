@@ -148,10 +148,17 @@ public class ReleaseState : PlayerState
         player.releaseCoolingTimer = player.releaseCoolingLimit;
 
         // 震屏效果：朝向释放方向震动
+        /**
+         * 摄像机绑定 CinemachineBrain、CinemachineVirtualCamera
+         * CinemachineVirtualCamera 添加 Cinemachine Impulse Listener 扩展，并勾选 use 2D distance
+         * 具体震动效果由 player 中的 Impulse source 中决定
+         * 通过在发射的一瞬间在冲刺方向上震动相机以实现顿挫感
+         * 具体的震动力大小需要根据发射参数进行调整
+         */
         if (player.impulseSource != null)
         {
             Debug.Log("震屏");
-            float velocity = 0.4f;
+            float velocity = 0.8f;
             Vector2 shakeDir = player.releaseDir.normalized * velocity;
             player.impulseSource.GenerateImpulseWithVelocity(new Vector3(shakeDir.x, shakeDir.y, 0f));
         }

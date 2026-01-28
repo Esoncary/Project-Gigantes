@@ -7,10 +7,21 @@ namespace GamePlay.IA
 
     public class Trampoline : Switchable, IPlayerForce
     {
-        [Header("蹦床设置")]
-        [Tooltip("蹦床弹力大小")]
-        [SerializeField] private float bounceForce = 50f;
-        [Tooltip("限制其他力的作用计时器，触碰后开始计时，应与实际效果时间一致")][SerializeField] private float forceLimitTime = 1f;
+        [Header("基础弹力")]
+        [Tooltip("基础弹力")]
+        [SerializeField] private float baseForce = 20f;
+
+        [Header("速度档位")]
+        [Tooltip("第一档速度阈值：玩家在蹦床方向上的速度小于此值时使用 baseForce")]
+        [SerializeField] private float lowSpeedThreshold = 25f;
+        [Tooltip("第二档速度阈值：用于计算额外弹力的参考速度")]
+        [SerializeField] private float highSpeedThreshold = 40f;
+        [Tooltip("额外弹力：第二档时的最大额外弹力，额外弹力在 baseForce 的基础上计算")]
+        [SerializeField] private float extraForce = 50f;
+
+        [Header("其他设置")]
+        [Tooltip("限制其他力的作用计时器，触碰后开始计时，应与实际效果时间一致")]
+        [SerializeField] private float forceLimitTime = 1f;
         
         // 玩家实体触碰蹦床
         private void OnTriggerEnter2D(Collider2D collision)
@@ -28,14 +39,42 @@ namespace GamePlay.IA
         // IPlayerForce 实现
         public Vector2 CalculateVelocity(Vector2 currentVelocity, Vector2 playerPosition)
         {
-            if (IsActive)
+            if (!IsActive)
             {
-                // 仅修改垂直速度，水平速度保持不变
-                return new Vector2(currentVelocity.x, bounceForce);
+                Debug.Log("蹦床未激活");
+                return currentVelocity;
             }
 
-            Debug.Log("蹦床未激活");
-            return currentVelocity;
+            // 获取弹射方向（基于 transform 上方）
+            Vector2 bounceDirection = transform.up.normalized;
+
+            // 计算玩家在弹射方向上的速度分量（投影）
+            float playerSpeedInBounceDir = -Vector2.Dot(currentVelocity, bounceDirection);
+            Debug.Log("力投影：" + playerSpeedInBounceDir);
+
+            // 分档计算弹力
+            float forceMagnitude;
+
+            if (playerSpeedInBounceDir < lowSpeedThreshold)
+            {
+                // 第一档：低速玩家，提供基础弹力
+                forceMagnitude = baseForce;
+            }
+            else if (playerSpeedInBounceDir < highSpeedThreshold)
+            {
+                // 第二档：中速玩家，根据速度提供额外弹力
+                // 速度越大，额外弹力越小
+                float speedRatio = (highSpeedThreshold - playerSpeedInBounceDir) / highSpeedThreshold;
+                forceMagnitude = baseForce + extraForce * speedRatio;
+            }
+            else
+            {
+                // 超高速玩家，提供最大
+                forceMagnitude = baseForce + extraForce;
+            }
+
+            // 应用弹力方向
+            return bounceDirection * forceMagnitude;
         }
 
         public void OnSwitchOn()
