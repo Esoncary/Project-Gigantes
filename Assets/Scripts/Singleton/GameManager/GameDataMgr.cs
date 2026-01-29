@@ -115,6 +115,8 @@ public class GameDataMgr
         suspendData.suspendPosX = 0;
         suspendData.suspendPosY = 0;
         suspendData.interactedItems.Clear();
+        currentSave.suspendData = suspendData;
+        ClearSessionData();
         SavePlayerSaveData();
     }
 
@@ -177,6 +179,21 @@ public class GameDataMgr
         if (!currentLevelCollectedIds.Contains(id))
         {
             currentLevelCollectedIds.Add(id);
+            Debug.Log(id);
         }
+    }
+    // 当玩家死亡重新加载（未到达检查点）时，清空临时列表
+    public void ClearSessionData()
+    {
+        currentLevelCollectedIds.Clear();
+    }
+    public void ShowData()
+    {
+        string str = "已收集物品：";
+        foreach (string id in currentLevelCollectedIds)
+        {
+            str += id + "\n";
+        }
+        Debug.Log(str);
     }
 }

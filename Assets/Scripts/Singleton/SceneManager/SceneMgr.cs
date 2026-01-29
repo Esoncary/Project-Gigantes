@@ -143,12 +143,13 @@ public class SceneMgr
         if (isReloading) return; // 防止连续触发
         isReloading = true;
 
-        await SceneTransitionAsync(() => InitScene(currentRebornPos));
+        // await SceneTransitionAsync(() => InitScene(currentRebornPos));
 
-        // LoadSceneAsync(GameDataMgr.Instance.currentLevelId, () =>
-        // {
-        //     InitScene(currentRebornPos);
-        // });
+        LoadSceneAsync(GameDataMgr.Instance.currentLevelId, async () =>
+        {
+            currentRebornPos = GameObject.Find("RebornPos").transform.position;
+            await InitScene(currentRebornPos);
+        });
 
 
         isReloading = false;
@@ -157,6 +158,7 @@ public class SceneMgr
     // 加载场景并且player复活在指定地点
     public void LoadGameScene(int sceneId)
     {
+        GameDataMgr.Instance.ShowData();
         int currentLevelId = sceneInfos[sceneId].LevelId;
         GameDataMgr.Instance.SetCurrentLevelId(currentLevelId);
         // Debug.Log("123");
@@ -218,13 +220,16 @@ public class SceneMgr
         var suspendData = GameDataMgr.Instance.currentSave.suspendData;
         suspendData.suspendPosX = pos.x;
         suspendData.suspendPosY = pos.y;
+        suspendData.suspendLevelId = GameDataMgr.Instance.currentLevelId;
         suspendData.hasSuspendedRecord = true; // 标记现在有存档记录了
 
         // 3. 记录当前关卡收集到的物品（防止死后重置，取决于你的设计）
-        suspendData.interactedItems.Clear();
         foreach (var id in GameDataMgr.Instance.currentLevelCollectedIds)
         {
-            suspendData.interactedItems.Add(id);
+            if (!suspendData.interactedItems.Contains(id))
+            {
+                suspendData.interactedItems.Add(id);
+            }
         }
 
         // 4. 立即保存到本地文件

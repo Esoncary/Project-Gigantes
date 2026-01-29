@@ -19,7 +19,7 @@ public class ScenePanel : BasePanel
 
     public override void Init()
     {
-        // CheckSuspendedRecord();
+        CheckSuspendedRecord();
         GetCurrentSceneData();
         // 左按钮
         leftBtn.onClick.AddListener(() =>

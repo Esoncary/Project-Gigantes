@@ -18,8 +18,9 @@ public class ConfirmPanel : BasePanel
             UIManager.Instance.HidePanel<GamePanel>();
             UIManager.Instance.HidePanel<SettingPanel>();
             // 逻辑处理
+            // SceneMgr.Instance.UpdateCheckpoint(SceneMgr.Instance.currentRebornPos);
             SceneMgr.Instance.LoadSceneAsync(SceneMgr.Instance.GetSceneIdByName("UIScene"));
-            GameDataMgr.Instance.SaveSuspendData(SceneMgr.Instance.playerController.transform.position);
+
         });
 
         cancelBtn.onClick.AddListener(() =>
