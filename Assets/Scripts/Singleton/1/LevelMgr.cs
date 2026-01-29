@@ -77,7 +77,7 @@ public class LevelMgr : MonoBehaviour
         AsyncOperation operation = SceneManager.LoadSceneAsync(levelName);
 
         //黑屏淡入（UIManager中）
-        UIManager.Instance.StartBlackImageFadeIn();
+        // UIManager.Instance.StartBlackImageFadeIn();
 
         // 只要没加载完，就一直等待
         while (!operation.isDone)
@@ -96,7 +96,7 @@ public class LevelMgr : MonoBehaviour
         //重新设定相机follow对象
         VirtualCameraController.Instance.ResetCameraTarget(player.transform);
         //黑屏淡出(使新场景显现)
-        UIManager.Instance.StartBlackImageFadeOut();
+        // UIManager.Instance.StartBlackImageFadeOut();
     }
 
     //重载当前关卡

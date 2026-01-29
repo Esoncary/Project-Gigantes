@@ -10,8 +10,8 @@ public class StorageUI : MonoBehaviour
 
     void Start()
     {
-        player = SceneMgr.Instance.player;
-        Debug.Log("123123" + player);
+        player = SceneMgr.Instance.playerController;
+        // Debug.Log("123123" + player);
     }
     void Update()
     {

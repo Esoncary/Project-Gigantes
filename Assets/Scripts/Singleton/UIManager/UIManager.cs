@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,9 +13,6 @@ public class UIManager
     //面板父对象
     Transform canvasTrans;
 
-    [Header("各种UI组件")]
-    public Image blackImage;//用来淡入和淡出的黑色图片
-    public float blackImageAlpha;//黑幕的alpha值
 
     //单例
     private static UIManager instance = new UIManager();
@@ -71,43 +69,18 @@ public class UIManager
             return panelDic[name] as T;
         return null;
     }
-
-    //黑屏淡入和淡出函数与协程
-    public void StartBlackImageFadeIn()
+    public void HideAllPanel()
     {
-        // StartCoroutine(BlackImageFadeIn());
-        BlackImageFadeIn();
-    }
-    public void StartBlackImageFadeOut()
-    {
-        // StartCoroutine(BlackImageFadeOut());
-        BlackImageFadeOut();
-    }
-
-    public async void BlackImageFadeOut()
-    {
-        blackImageAlpha = 1;
-        while (blackImageAlpha > 0)
+        foreach (var panel in panelDic.Values)
         {
-            blackImageAlpha -= Time.deltaTime;
-            blackImage.color = new Color(0, 0, 0, blackImageAlpha);
-            // yield return null;
-            await Task.Yield();
+            if (panel != null)
+            {
+                GameObject.Destroy(panel.gameObject);
+            }
         }
-        blackImage.enabled = false;
+        panelDic.Clear();
     }
 
-    public async void BlackImageFadeIn()
-    {
-        blackImage.enabled = true;
-        blackImageAlpha = 0;
-        while (blackImageAlpha < 1)
-        {
-            blackImageAlpha += Time.deltaTime;
-            blackImage.color = new Color(0, 0, 0, blackImageAlpha);
-            // yield return null;
-            await Task.Yield();
-        }
-    }
+
 
 }

@@ -3,73 +3,237 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 using UnityEngine;
+using System.Threading.Tasks;
+using UnityEngine.UI;
+using System.IO;
+using Unity.VisualScripting;
+using System;
 
 public class SceneMgr
 {
-    public List<LevelData> sceneInfos;
-    [Header("引用")]
-    public PlayerController player; // 玩家的引用
-    public GameObject playerPrefab;
+    // 所有场景的数据信息
+    public List<LevelData> sceneInfos => GameDataMgr.Instance?.list_LevelData;
 
-    [Header("重生点坐标设置")]
-    public Vector2 currentRebornPos;
+    // 出生点
+    public Vector2 currentRebornPos { get; set; }
+
+    // 角色控制器
+    public PlayerController playerController { get; private set; }
+    public GameObject playerObj { get; private set; }
+
+    // 防止重复触发死亡
+    private bool isReloading = false;
+
+    // 场景过渡时间
+    public float BlackImageFadeIn = 0.4f;
+    public float BlackImageFadeOut = 1f;
+
 
     private static SceneMgr instance = new SceneMgr();
     public static SceneMgr Instance => instance;
+
+
     private SceneMgr()
     {
-        sceneInfos = GameDataMgr.Instance.list_LevelData;
+        // 监听玩家死亡事件
+        GameEvents.PlayerDie += OnPlayerDie;
     }
-    // private PlayerObj playerObj;
-    public void InitInfo()
+    public void Dispose()
     {
+        GameEvents.PlayerDie -= OnPlayerDie;
+    }
+    // 监听玩家死亡（重命名更清晰）
+    private void OnPlayerDie()
+    {
+        TriggerReload();
+    }
+    // 加载场景数据
+    public LevelData GetSceneData(int index) => sceneInfos[index];
+
+    // 初始化场景
+    public async Task InitScene(Vector2 playerPos)
+    {
+        InstantiatePlayer(playerPos);
         // UI显示
         UIManager.Instance.ShowPanel<GamePanel>();
-        InstiatePlayer();
-
-        // 角色加载
-        // Transform playerPos = GameObject.Find("PlayerPos").transform;
-        // GameObject obj = GameObject.Instantiate(Resources.Load<GameObject>(roleInfo.res), playerPos.position, playerPos.rotation, playerPos);
-        // playerObj = obj.GetComponent<PlayerObj>();
-        // playerObj.InitPlayerInfo(roleInfo.atk, GameDataMgr.Instance.sceneDatas[GameDataMgr.Instance.nowSceneIndex].money);
+        UIManager.Instance.ShowPanel<DeathMask>();
+        await Task.CompletedTask;
     }
 
-    // 加载场景数据
-    public LevelData GetSceneData(int index)
+    // 初始化角色信息
+    public void InstantiatePlayer(Vector2 playerPos)
     {
-        LevelData sceneInfo = sceneInfos[index];
-        return sceneInfo;
+        if (playerObj == null)
+        {
+            playerObj = GameObject.FindWithTag("Player");
+        }
+        if (playerObj == null)
+        {
+            GameObject playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player.prefab");
+            if (playerPrefab == null)
+            {
+                Debug.LogError($"[SceneMgr] 找不到玩家预制体");
+                return;
+            }
+            playerObj = GameObject.Instantiate(playerPrefab, playerPos, Quaternion.identity);
+            playerController = playerObj.GetComponent<PlayerController>();
+        }
+        else
+        {
+            playerObj.transform.position = playerPos;
+            if (playerController == null) playerController = playerObj.GetComponent<PlayerController>();
+
+            playerController.StateMachine.ChangeState(playerController.IdleState);
+            playerController.currentStorage = 0;
+            playerController.targetStorage = 0;
+        }
+    }
+
+    // 场景过度
+    public async Task SceneTransitionAsync(System.Func<Task> something = null)
+    {
+        // 淡入
+        UIManager.Instance.ShowPanel<DeathMask>();
+        var deathMask = UIManager.Instance.GetPanel<DeathMask>();
+        if (deathMask != null)
+        {
+            if (deathMask.maskImage != null) deathMask.maskImage.fillAmount = 0;
+            await deathMask.BlackImageFadeIn(BlackImageFadeIn);
+        }
+        // 执行事件
+        if (something != null)
+        {
+            await something();
+        }
+        // 淡出
+        deathMask = UIManager.Instance.GetPanel<DeathMask>();
+        if (deathMask != null)
+        {
+            await deathMask.BlackImageFadeOut(BlackImageFadeOut);
+        }
     }
 
     // 加载场景
-    public void LoadScene(int index)
+    public async void LoadSceneAsync(int sceneId, Action callback = null)
     {
-        AsyncOperation ao = SceneManager.LoadSceneAsync(sceneInfos[index].LevelId);
-
-        ao.completed += (obj) =>
+        await SceneTransitionAsync(async () =>
         {
-            InitInfo();
+            GameDataMgr.Instance.SetCurrentLevelId(sceneId);
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneId);
+            asyncLoad.allowSceneActivation = false;
+            while (asyncLoad.progress < 0.9f)
+            {
+                await Task.Yield();
+            }
+
+            asyncLoad.allowSceneActivation = true;
+
+            while (!asyncLoad.isDone)
+            {
+                await Task.Yield();
+            }
+            // 执行事件
+            callback?.Invoke();
+        });
+    }
+
+    // 重新加载场景
+    public async void TriggerReload()
+    {
+        if (isReloading) return; // 防止连续触发
+        isReloading = true;
+
+        // await SceneTransitionAsync(() => InitScene(currentRebornPos));
+
+        LoadSceneAsync(GameDataMgr.Instance.currentLevelId, async () =>
+        {
+            currentRebornPos = GameObject.Find("RebornPos").transform.position;
+            await InitScene(currentRebornPos);
+        });
+
+
+        isReloading = false;
+    }
+
+    // 加载场景并且player复活在指定地点
+    public void LoadGameScene(int sceneId)
+    {
+        GameDataMgr.Instance.ShowData();
+        int currentLevelId = sceneInfos[sceneId].LevelId;
+        GameDataMgr.Instance.SetCurrentLevelId(currentLevelId);
+        // Debug.Log("123");
+        AsyncOperation ao = SceneManager.LoadSceneAsync(currentLevelId);
+        ao.completed += async (obj) =>
+        {
+
+            Vector2 finalPos;
+
+            SuspendData suspendData = GameDataMgr.Instance.currentSave.suspendData;
+            // 无中断
+            if (!suspendData.hasSuspendedRecord)
+            {
+                // 重生点
+                var rebornObj = GameObject.Find("RebornPos");
+                finalPos = rebornObj != null ? rebornObj.transform.position : Vector2.zero;
+
+                suspendData.interactedItems.Clear();
+                GameDataMgr.Instance.currentLevelCollectedIds.Clear();
+            }
+            else
+            {
+                finalPos = new Vector2(suspendData.suspendPosX, suspendData.suspendPosY);
+
+                GameDataMgr.Instance.currentLevelCollectedIds.Clear();
+                foreach (var id in suspendData.interactedItems)
+                {
+                    GameDataMgr.Instance.currentLevelCollectedIds.Add(id);
+                }
+            }
+            currentRebornPos = finalPos;
+            await InitScene(finalPos);
         };
     }
 
-    // 通关自动保存
-    public void PassAndAutoSave(int index)
+    // 根据场景名得到场景的id
+    public int GetSceneIdByName(string sceneName)
     {
-        GameDataMgr.Instance.currentSave.MaxUnlockedLevelId++;
+        int count = SceneManager.sceneCountInBuildSettings;
+
+        for (int i = 0; i < count; i++)
+        {
+            string path = SceneUtility.GetScenePathByBuildIndex(i);
+            string name = Path.GetFileNameWithoutExtension(path);
+
+            if (name == sceneName)
+                return i;
+        }
+
+        return -1;
+    }
+
+    public void UpdateCheckpoint(Vector2 pos)
+    {
+        // 1. 更新当前内存中的重生位置
+        currentRebornPos = pos;
+
+        // 2. 将数据同步到存档数据中
+        var suspendData = GameDataMgr.Instance.currentSave.suspendData;
+        suspendData.suspendPosX = pos.x;
+        suspendData.suspendPosY = pos.y;
+        suspendData.suspendLevelId = GameDataMgr.Instance.currentLevelId;
+        suspendData.hasSuspendedRecord = true; // 标记现在有存档记录了
+
+        // 3. 记录当前关卡收集到的物品（防止死后重置，取决于你的设计）
+        foreach (var id in GameDataMgr.Instance.currentLevelCollectedIds)
+        {
+            if (!suspendData.interactedItems.Contains(id))
+            {
+                suspendData.interactedItems.Add(id);
+            }
+        }
+
+        // 4. 立即保存到本地文件
         GameDataMgr.Instance.SavePlayerSaveData();
     }
-    void UpdateRebornPoint(Vector2 pos)
-    {
-        currentRebornPos = pos;
-    }
-    public void InstiatePlayer()
-    {
-        playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player.prefab");
-        currentRebornPos = GameObject.Find("PlayerPos").transform.position;
-        // 1. 生成玩家实例
-        GameObject newPlayerObj = GameObject.Instantiate(playerPrefab, currentRebornPos, Quaternion.identity);
 
-        // 2. 更新 LevelMgr 内部的 player 引用
-        player = newPlayerObj.GetComponent<PlayerController>();
-    }
 }

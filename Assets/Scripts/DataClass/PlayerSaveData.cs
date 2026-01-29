@@ -6,16 +6,17 @@ using UnityEngine;
 [Serializable]
 public class PlayerSaveData //存档
 {
-    public int MaxUnlockedLevelId;
-    public float TotalPlayTime;   // 总游玩时间（秒）
-    public Dictionary<int, LevelProgressData> LevelProgress;
-    public HashSet<string> CollectedGlobalItems;
 
+    public int maxUnlockedLevelId; // 最大的解锁的关卡ID
+    public float totalPlayTime;   // 总游玩时间（秒）
+    public List<LevelProgressData> listlevelProgress; // 关卡进程
+    // 中断信息
+    public SuspendData suspendData;
     public PlayerSaveData()
     {
-        MaxUnlockedLevelId = 1;
-        TotalPlayTime = 0;
-        LevelProgress = new Dictionary<int, LevelProgressData>();
-        CollectedGlobalItems = new HashSet<string>();
+        maxUnlockedLevelId = 0;
+        totalPlayTime = 0f;
+        listlevelProgress = new List<LevelProgressData>();
+        suspendData = new SuspendData();
     }
 }
