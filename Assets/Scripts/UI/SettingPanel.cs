@@ -37,11 +37,13 @@ public class SettingPanel : BasePanel
         // 音效控件
         effectToggle.onValueChanged.AddListener((v) =>
         {
+            SoundEffectMgr.Instance.SetIsOpen(v);
             musicData.effectOpen = v;
         });
 
         effectSlider.onValueChanged.AddListener((v) =>
         {
+            SoundEffectMgr.Instance.SetVolume(v);
             musicData.effectValue = v;
         });
         // 关闭按钮

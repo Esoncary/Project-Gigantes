@@ -59,7 +59,7 @@ public class DieState : PlayerState
         base.Exit();
         // 4. 重生时的清理：恢复物理模拟
         player.rb.simulated = true;
-        // player.GetComponentInChildren<SpriteRenderer>().enabled = true;
+        player.GetComponentInChildren<SpriteRenderer>().enabled = true;
     }
 
     public void Reborn(Vector2 rebornPos)

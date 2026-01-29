@@ -12,13 +12,14 @@ using System;
 public class SceneMgr
 {
     // 所有场景的数据信息
-    public List<LevelData> sceneInfos;
+    public List<LevelData> sceneInfos => GameDataMgr.Instance?.list_LevelData;
 
     // 出生点
-    public Vector2 currentRebornPos;
+    public Vector2 currentRebornPos { get; set; }
 
     // 角色控制器
-    public PlayerController playerController;
+    public PlayerController playerController { get; private set; }
+    public GameObject playerObj { get; private set; }
 
     // 防止重复触发死亡
     private bool isReloading = false;
@@ -27,16 +28,13 @@ public class SceneMgr
     public float BlackImageFadeIn = 0.4f;
     public float BlackImageFadeOut = 1f;
 
+
     private static SceneMgr instance = new SceneMgr();
     public static SceneMgr Instance => instance;
 
 
     private SceneMgr()
     {
-        if (GameDataMgr.Instance != null)
-        {
-            sceneInfos = GameDataMgr.Instance.list_LevelData;
-        }
         // 监听玩家死亡事件
         GameEvents.PlayerDie += OnPlayerDie;
     }
@@ -50,31 +48,45 @@ public class SceneMgr
         TriggerReload();
     }
     // 加载场景数据
-    public LevelData GetSceneData(int index)
-    {
-        return sceneInfos[index];
-    }
+    public LevelData GetSceneData(int index) => sceneInfos[index];
 
     // 初始化场景
-    public void InitScene(Vector2 playerPos)
+    public async Task InitScene(Vector2 playerPos)
     {
         InstantiatePlayer(playerPos);
         // UI显示
         UIManager.Instance.ShowPanel<GamePanel>();
         UIManager.Instance.ShowPanel<DeathMask>();
+        await Task.CompletedTask;
     }
 
     // 初始化角色信息
     public void InstantiatePlayer(Vector2 playerPos)
     {
-        GameObject playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player.prefab");
-        if (playerPrefab == null)
+        if (playerObj == null)
         {
-            Debug.LogError("Player Prefab not found in Resources folder!");
-            return;
+            playerObj = GameObject.FindWithTag("Player");
         }
-        GameObject obj = GameObject.Instantiate(playerPrefab, playerPos, Quaternion.identity);
-        playerController = obj.GetComponent<PlayerController>();
+        if (playerObj == null)
+        {
+            GameObject playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player.prefab");
+            if (playerPrefab == null)
+            {
+                Debug.LogError($"[SceneMgr] 找不到玩家预制体");
+                return;
+            }
+            playerObj = GameObject.Instantiate(playerPrefab, playerPos, Quaternion.identity);
+            playerController = playerObj.GetComponent<PlayerController>();
+        }
+        else
+        {
+            playerObj.transform.position = playerPos;
+            if (playerController == null) playerController = playerObj.GetComponent<PlayerController>();
+
+            playerController.StateMachine.ChangeState(playerController.IdleState);
+            playerController.currentStorage = 0;
+            playerController.targetStorage = 0;
+        }
     }
 
     // 场景过度
@@ -131,10 +143,12 @@ public class SceneMgr
         if (isReloading) return; // 防止连续触发
         isReloading = true;
 
-        LoadSceneAsync(GameDataMgr.Instance.currentLevelId, () =>
-        {
-            InitScene(currentRebornPos);
-        });
+        await SceneTransitionAsync(() => InitScene(currentRebornPos));
+
+        // LoadSceneAsync(GameDataMgr.Instance.currentLevelId, () =>
+        // {
+        //     InitScene(currentRebornPos);
+        // });
 
 
         isReloading = false;
@@ -145,28 +159,27 @@ public class SceneMgr
     {
         int currentLevelId = sceneInfos[sceneId].LevelId;
         GameDataMgr.Instance.SetCurrentLevelId(currentLevelId);
-        Debug.Log("123");
+        // Debug.Log("123");
         AsyncOperation ao = SceneManager.LoadSceneAsync(currentLevelId);
-        ao.completed += (obj) =>
+        ao.completed += async (obj) =>
         {
-            // 重生点
-            var rebornObj = GameObject.Find("RebornPos");
-            currentRebornPos = rebornObj != null ? rebornObj.transform.position : Vector2.zero;
+
             Vector2 finalPos;
 
             SuspendData suspendData = GameDataMgr.Instance.currentSave.suspendData;
             // 无中断
             if (!suspendData.hasSuspendedRecord)
             {
-                finalPos = currentRebornPos;
+                // 重生点
+                var rebornObj = GameObject.Find("RebornPos");
+                finalPos = rebornObj != null ? rebornObj.transform.position : Vector2.zero;
 
                 suspendData.interactedItems.Clear();
                 GameDataMgr.Instance.currentLevelCollectedIds.Clear();
             }
             else
             {
-                Vector2 playerPos = new Vector2(suspendData.suspendPosX, suspendData.suspendPosY);
-                finalPos = playerPos;
+                finalPos = new Vector2(suspendData.suspendPosX, suspendData.suspendPosY);
 
                 GameDataMgr.Instance.currentLevelCollectedIds.Clear();
                 foreach (var id in suspendData.interactedItems)
@@ -174,7 +187,8 @@ public class SceneMgr
                     GameDataMgr.Instance.currentLevelCollectedIds.Add(id);
                 }
             }
-            InitScene(finalPos);
+            currentRebornPos = finalPos;
+            await InitScene(finalPos);
         };
     }
 
@@ -195,6 +209,26 @@ public class SceneMgr
         return -1;
     }
 
+    public void UpdateCheckpoint(Vector2 pos)
+    {
+        // 1. 更新当前内存中的重生位置
+        currentRebornPos = pos;
 
+        // 2. 将数据同步到存档数据中
+        var suspendData = GameDataMgr.Instance.currentSave.suspendData;
+        suspendData.suspendPosX = pos.x;
+        suspendData.suspendPosY = pos.y;
+        suspendData.hasSuspendedRecord = true; // 标记现在有存档记录了
+
+        // 3. 记录当前关卡收集到的物品（防止死后重置，取决于你的设计）
+        suspendData.interactedItems.Clear();
+        foreach (var id in GameDataMgr.Instance.currentLevelCollectedIds)
+        {
+            suspendData.interactedItems.Add(id);
+        }
+
+        // 4. 立即保存到本地文件
+        GameDataMgr.Instance.SavePlayerSaveData();
+    }
 
 }
