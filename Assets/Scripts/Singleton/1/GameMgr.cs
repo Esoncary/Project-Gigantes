@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameMgr : MonoBehaviour
 {
-    public enum GameState { MainMenu, Playing, Paused, GameOver }
+    public enum GameState { MainMenu, Playing, Paused }
     // 1. 定义静态实例
     public static GameMgr Instance { get; private set; }
 

@@ -70,6 +70,7 @@ public class SettingPanel : BasePanel
             // 逻辑处理
             GameDataMgr.Instance.SaveMusicData();
             SceneMgr.Instance.TriggerReload();
+            GameDataMgr.Instance.ClearSuspendData();
         });
         // 主菜单按钮
         mainMenuBtn.onClick.AddListener(() =>

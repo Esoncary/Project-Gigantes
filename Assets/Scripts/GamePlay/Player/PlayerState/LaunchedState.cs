@@ -92,8 +92,8 @@ public class LaunchedState : PlayerState
      */
     private void UpdateLaunchingPhysics()
     {
-        // 应用线性阻力衰减
-        // 核心思想：每帧减少 releaseDir 方向的速度分量
+        // 应用指数阻力衰减（模拟真实空气阻力）
+        // 速度随时间呈指数衰减：初期快，后期慢
 
         Vector2 currentVelocity = player.rb.velocity;
 
@@ -112,9 +112,10 @@ public class LaunchedState : PlayerState
             return;
         }
 
-        // 应用线性阻力：速度 = 速度 - 阻力系数 * 时间增量
-        float dragAmount = player.releaseDragCoefficient * Time.fixedDeltaTime;
-        float newForwardSpeed = Mathf.Max(forwardSpeed - dragAmount, 0);
+        // 应用指数阻力：速度 = 速度 × (1 - 阻力系数 × 时间增量)
+        // e^(-player.releaseDragCoefficient * Time.fixedDeltaTime) [1, 0)
+        float dragFactor = Mathf.Exp(-player.releaseDragCoefficient * Time.fixedDeltaTime);
+        float newForwardSpeed = forwardSpeed * dragFactor;
         // 重建速度：保留原方向 + 新的大小
         player.rb.velocity = launchDirection * newForwardSpeed +
                              (currentVelocity - (launchDirection * Vector2.Dot(currentVelocity, launchDirection)));

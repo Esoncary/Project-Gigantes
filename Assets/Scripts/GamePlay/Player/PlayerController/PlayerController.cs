@@ -1,3 +1,4 @@
+using Cinemachine;
 using GamePlay.Player.Interface;
 using UnityEngine;
 
@@ -22,6 +23,9 @@ public class PlayerController : MonoBehaviour
 
     public Animator Anim { get; private set; }
     public Collider2D col { get; private set; }
+
+    [Header("震屏组件引用")]
+    public CinemachineImpulseSource impulseSource;
 
     [Header("检测器引用")]
     // 对应报错里的 groundedCheckerManager
@@ -66,12 +70,12 @@ public class PlayerController : MonoBehaviour
     // public float speedLimitOffTimer;
     // 初始速度越高，阻力系数越大，爆发感越强
     // 速度衰减低于阈值或衰减时间到达为两种直接的退出状态方式
-    [Tooltip("衰减停止的速度阈值，低于此值停止衰减 建议与空中启动速度匹配")] public float releaseMinSpeedThreshold = 10f;
-    [Tooltip("线性阻力系数（每秒衰减速度），越大停得越快")] public float releaseDragCoefficient = 50f;
-    [Tooltip("满能量时的衰减持续时间")] public float releaseDragTime = 0.2f;
-    [Tooltip("释放的最低能量限度，低于此将不会触发发射")] public float releaseThreshold = 0;
-    [Tooltip("基础发射速度")] public float baseSpeed = 25f;
-    [Tooltip("最大发射速度，能量满时初始速度最大")] public float maxSpeed = 35f;
+    [Tooltip("衰减停止的速度阈值，低于此值停止衰减 建议与空中启动速度匹配")] public float releaseMinSpeedThreshold = 1f;
+    [Tooltip("线性阻力系数（每秒衰减速度），越大停得越快")] public float releaseDragCoefficient = 6f;
+    [Tooltip("满能量时的衰减持续时间")]public float releaseDragTime = 0.5f;
+    [Tooltip("释放的最低能量限度，低于此将不会触发发射")]public float releaseThreshold = 0;
+    [Tooltip("基础发射速度")]public float baseSpeed = 50f;
+    [Tooltip("最大发射速度，能量满时初始速度最大")]public float maxSpeed = 60f;
 
     [Header("动力装置参数")]
     [Tooltip("释放冷却时间")] public float releaseCoolingLimit = 1f;
@@ -96,6 +100,8 @@ public class PlayerController : MonoBehaviour
     public float coolerTimer;
     public IInteractable currentInteractable;
     public float postReleaseTimer;//后释放计时器
+    public float strengthenerTimer;
+    public float forceLimitTimer;
 
     [Header("实时变量")]
     public float InputX;
@@ -184,14 +190,15 @@ public class PlayerController : MonoBehaviour
         //处理计时器
         if (varJumpTimer > 0) varJumpTimer -= Time.deltaTime;
         if (jumpBufferTimer > 0) jumpBufferTimer -= Time.deltaTime;
-        if (currentStorageFreezeTime > 0) currentStorageFreezeTimer -= Time.deltaTime;
+        if (currentStorageFreezeTimer > 0) currentStorageFreezeTimer -= Time.deltaTime;
         if (targetStorageFreezeTimer > 0) targetStorageFreezeTimer -= Time.deltaTime;
         if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
         if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
-        if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
+        if (strengthenerTimer > 0) strengthenerTimer -= Time.deltaTime;
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
         if (releaseCoolingTimer > 0) releaseCoolingTimer -= Time.deltaTime;
+        if (forceLimitTimer > 0) forceLimitTimer -= Time.deltaTime;
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！
         StateMachine.CurrentState.HandleInput();
@@ -308,11 +315,13 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region 地形函数
-    public void ApplyForce(IPlayerForce forceSource)
+    public void ApplyForce(IPlayerForce forceSource, float forceLimitTime)
     {
         Vector2 newVelocity = forceSource.CalculateVelocity(rb.velocity, transform.position);
 
         rb.velocity = newVelocity;
+        
+        forceLimitTimer = forceLimitTime;
     }
 
 

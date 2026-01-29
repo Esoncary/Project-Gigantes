@@ -20,7 +20,7 @@ public abstract class PlayerState
     // 进入状态：处理初始化、播动画、放特效
     public virtual void Enter()
     {
-        player.PlayAnimation(animName); // 调用控制器里的网关函数
+        //player.Anim.Play(animName);
         startTime = Time.time;
         // Debug.Log("进入状态: " + this.GetType().Name);
     }

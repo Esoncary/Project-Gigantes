@@ -8,6 +8,7 @@ public class MidAirState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        
         // 进入空中时，不需要重置重力，因为我们需要重力自然作用
     }
 
@@ -80,6 +81,13 @@ public class MidAirState : PlayerState
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             stateMachine.ChangeState(player.ReleaseState);
+            return;
+        }
+        
+        if (player.forceLimitTimer > 0)
+        {
+            // 处于力限制状态下，恢复正常重力
+            player.rb.gravityScale = player.defaultGravityScale * 4f;
             return;
         }
     }

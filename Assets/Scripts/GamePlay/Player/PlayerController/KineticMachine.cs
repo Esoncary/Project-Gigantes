@@ -36,6 +36,13 @@ public class KineticMachine : MonoBehaviour
             KineticMachineOperate();
         }
 
+        if (player.strengthenerTimer <= 0 && player.strengthenerTimer != -1)
+        {
+            player.maxStorage /= 1.2f;//恢复最大储量
+            player.explosionStorageThrehold /= 1.2f;//恢复爆炸储量阈值
+            player.strengthenerTimer = -1;//关闭强化计时器
+        }
+
 
 
     }
