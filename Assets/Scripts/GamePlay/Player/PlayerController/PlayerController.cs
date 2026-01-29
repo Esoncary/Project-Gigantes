@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
     public Animator Anim { get; private set; }
     public Collider2D col { get; private set; }
+    public PlayerVFXController playerVFXController;
 
     [Header("震屏组件引用")]
     public CinemachineImpulseSource impulseSource;
@@ -134,6 +135,7 @@ public class PlayerController : MonoBehaviour
         defaultGravityScale = rb.gravityScale;
         Anim = GetComponent<Animator>();
         col = GetComponent<Collider2D>();
+        playerVFXController = GetComponent<PlayerVFXController>();
 
         StateMachine = new PlayerStateMachine();
 

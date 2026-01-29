@@ -6,6 +6,7 @@ public class GroundedCheckerManager : MonoBehaviour
 {
     public bool isGrounded;
     public LayerMask Ground;
+    public PlayerVFXController PlayerVFXController;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +25,7 @@ public class GroundedCheckerManager : MonoBehaviour
         if (((1 << collision.gameObject.layer) & Ground) != 0)
         {
             isGrounded = true;
+            PlayerVFXController.PlayLand();
         }
             
     }
