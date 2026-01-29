@@ -46,10 +46,10 @@ public class LevelMgr : MonoBehaviour
     {
         //收听玩家死亡事件，执行PlayerReborn，ReloadCurrentLevel函数
         //GameEvents.PlayerDie += PlayerReborn;暂时似乎不需要了，这种重生方式不适合游戏方式
-        GameEvents.PlayerDie += StartReloadCurrentLevel;
+        // GameEvents.PlayerDie += StartReloadCurrentLevel;
 
         //收听重生点更新事件，执行UpdateRebornPoint函数
-        GameEvents.UpdateRebornPoint += UpdateRebornPoint;
+        // GameEvents.UpdateRebornPoint += UpdateRebornPoint;
     }
 
     private void OnDisable()

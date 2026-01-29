@@ -24,7 +24,7 @@ public class VirtualCameraController : MonoBehaviour
     }
     #endregion
 
-    Cinemachine.CinemachineVirtualCamera vcam;
+    CinemachineVirtualCamera vcam;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +40,7 @@ public class VirtualCameraController : MonoBehaviour
 
     public void ResetCameraTarget(Transform playerTransform)
     {
+        Debug.Log("state: ");
         if (vcam != null)
         {
             vcam.Follow = playerTransform;

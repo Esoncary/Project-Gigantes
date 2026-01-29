@@ -87,6 +87,12 @@ public class SceneMgr
             playerController.currentStorage = 0;
             playerController.targetStorage = 0;
         }
+
+        // 绑定新角色实例到相机上
+        if (VirtualCameraController.Instance != null && playerObj != null)
+        {
+            VirtualCameraController.Instance.ResetCameraTarget(playerObj.transform);
+        }
     }
 
     // 场景过度
