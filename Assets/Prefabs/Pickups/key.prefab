@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3220905574237723688}
   - component: {fileID: 7028374043144958405}
   - component: {fileID: -8534389465703203774}
-  - component: {fileID: 6996001525147242949}
   m_Layer: 0
   m_Name: key
   m_TagString: Untagged
@@ -30,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.79, y: -1.21, z: -0.0007555671}
-  m_LocalScale: {x: 6.5375, y: 2.3125, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -73,10 +72,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_SortingLayerID: 1210811031
+  m_SortingLayer: 3
+  m_SortingOrder: 3
+  m_Sprite: {fileID: 21300000, guid: c486d589108be50478252d83b44ac6be, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8be658010b539ec4c876fec9496bd0f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemID: af0a5ecb-fe2c-40df-ae8b-8ee38b87f1b5
   initialIsOn: 0
 --- !u!58 &-8534389465703203774
 CircleCollider2D:
@@ -134,17 +134,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.1
---- !u!114 &6996001525147242949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1186817739677577212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92642cef385ba1647a69fe637496941d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemID: 
+  m_Radius: 2

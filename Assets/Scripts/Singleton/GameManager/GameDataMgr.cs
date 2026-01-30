@@ -44,9 +44,12 @@ public class GameDataMgr
     {
         // 初始化游戏数据
         list_PlayerSaveData = JsonMgr.Instance.LoadData<List<PlayerSaveData>>("PlayerSaveData") ?? new List<PlayerSaveData>();
+        Debug.Log(list_PlayerSaveData.Count);
         if (list_PlayerSaveData.Count == 0)
         {
             list_PlayerSaveData.Add(new PlayerSaveData());
+            Debug.Log(list_PlayerSaveData.Count);
+            Debug.Log(list_PlayerSaveData[0].suspendData);
             // Debug.Log("list_PlayerSaveData.Count :" + list_PlayerSaveData.Count);
         }
 
@@ -86,6 +89,7 @@ public class GameDataMgr
         }
         currentSaveIndex = index;
         currentSave = list_PlayerSaveData[currentSaveIndex];
+        Debug.Log(currentSave.suspendData);
     }
 
     // 保存中断存档

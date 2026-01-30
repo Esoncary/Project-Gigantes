@@ -69,7 +69,7 @@ public class SceneMgr
         }
         if (playerObj == null)
         {
-            GameObject playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player.prefab");
+            GameObject playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player_hmp.prefab");
             if (playerPrefab == null)
             {
                 Debug.LogError($"[SceneMgr] 找不到玩家预制体");

@@ -196,9 +196,16 @@ public class PlayerController : MonoBehaviour
         if (jumpBufferTimer > 0) jumpBufferTimer -= Time.deltaTime;
         if (currentStorageFreezeTimer > 0) currentStorageFreezeTimer -= Time.deltaTime;
         if (targetStorageFreezeTimer > 0) targetStorageFreezeTimer -= Time.deltaTime;
-        if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
         if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
+        if (coolerTimer > 0)//当玩家吃了冷冻剂之后，重置爆炸的冷却时间
+        {
+            if (explosionTimer > 0) explosionTimer = explosionTime;
+        }
+        else if (coolerTimer <= 0)//当冷冻剂结束或者正常状态，运作爆炸计时器
+        {
+            if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
+        }
         if (strengthenerTimer > 0) strengthenerTimer -= Time.deltaTime;
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
         if (releaseCoolingTimer > 0) releaseCoolingTimer -= Time.deltaTime;

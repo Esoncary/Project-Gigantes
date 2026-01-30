@@ -19,4 +19,8 @@ public class PlayerSaveData //存档
         listlevelProgress = new List<LevelProgressData>();
         suspendData = new SuspendData();
     }
+    public void ToString()
+    {
+        suspendData.ToString();
+    }
 }

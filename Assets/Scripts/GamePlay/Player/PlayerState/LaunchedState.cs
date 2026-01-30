@@ -32,7 +32,11 @@ public class LaunchedState : PlayerState
 
         // 计算持续时间：基于能量百分比
         float energyRatio = player.currentStorage / player.maxStorage;
-        float finalSpeed = player.baseSpeed + (player.maxSpeed - player.baseSpeed) * energyRatio;
+
+        //260130：此处我做了修改：因为要引入增强剂（短时间增加最大储量），所以要让最大储量的值本身也参与到finalspeed的计算中，我多乘了一个系数（当前最大储量/默认最大储量）
+        float finalSpeed = player.baseSpeed + (player.maxSpeed - player.baseSpeed) * energyRatio * (player.maxStorage / 60);//60是我在inspector中设置的值
+
+
         totalLaunchTime = player.releaseDragTime * energyRatio;
         launchTimer = 0f;
 
@@ -41,6 +45,9 @@ public class LaunchedState : PlayerState
 
         // 清空能量
         player.currentStorage = 0;
+
+        //目标值和当前值进入一个极短的冷却时间
+        player.coolerTimer = 0.5f;
     }
 
     public override void HandleInput()
@@ -167,6 +174,10 @@ public class LaunchedState : PlayerState
     public override void Exit()
     {
         base.Exit();
+
+        //避免释放时的速率立马影响到装置
+        player.targetStorage = 0;
+        player.currentStorage = 0;
         
     }
 

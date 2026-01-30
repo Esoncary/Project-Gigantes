@@ -5,7 +5,7 @@ public class LevelItem : MonoBehaviour
     [Header("存档设置")]
     public string itemID;
 
-    // ... GenerateID 保持不变 ...
+     //... GenerateID 保持不变...
 
     protected virtual void Start()
     {

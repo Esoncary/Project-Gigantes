@@ -92,7 +92,7 @@ public class ScenePanel : BasePanel
             beginBtn.interactable = true;
         }
     }
-    // 检查是否有中断记录
+    //检查是否有中断记录
     public void CheckSuspendedRecord()
     {
         if (GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord)
