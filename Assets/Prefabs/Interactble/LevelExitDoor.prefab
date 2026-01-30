@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3488871936713841820}
   - component: {fileID: 653623780189557353}
-  - component: {fileID: 1534359800490743442}
   - component: {fileID: 7598429333764603237}
+  - component: {fileID: 6645743975527981662}
   m_Layer: 0
   m_Name: LevelExitDoor
   m_TagString: Untagged
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1210811031
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -86,19 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1534359800490743442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2190489303099114493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf09df77496357047ba6b5e5d3a6e616, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelName: Level01
 --- !u!61 &7598429333764603237
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -144,3 +131,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &6645743975527981662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2190489303099114493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd938a61e327409ab0dd23e0072d5b03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boundSwitches: []
+  defaultIsOn: 1
+  requiredKeys: 3

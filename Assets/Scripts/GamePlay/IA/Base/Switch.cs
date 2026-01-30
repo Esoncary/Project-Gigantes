@@ -2,70 +2,88 @@ using System.Collections.Generic;
 using GamePlay.Player.Interface;
 using UnityEngine;
 
-namespace GamePlay.IA.Base
+public class Switch : LevelItem
 {
-    public class Switch : MonoBehaviour
+    [Header("开关行为")]
+    [SerializeField] private bool initialIsOn;
+
+    public bool IsOn { get; protected set; }
+    protected HashSet<ISwitchable> SwitchableObjects { get; set; }
+    private bool _isLeave = true;
+
+    protected override void Start()
     {
-        [Header("开关行为")] [SerializeField] private bool initialIsOn;
+        // 1. 初始化基础状态
+        IsOn = initialIsOn;
 
-        public bool IsOn { get; set; }
-        protected HashSet<ISwitchable> SwitchableObjects { get; set; }
-        private bool _isLeave = true; // 玩家是否在在开关区域外
-        
-        private void Awake()
-        {
-            // 初始化开关状态
-            IsOn = initialIsOn;
-        }
+        // 2. 调用基类的 CheckStatus，它会根据存档决定是否执行 HandleAlreadyInteracted
+        base.Start();
 
-        private void Start()
+        // 3. 如果初始就是开启的，或者被 CheckStatus 设为开启的，通知关联物体
+        if (IsOn)
         {
-            // 通知所有注册的对象当前状态
             Notify();
         }
-        
-        private void OnTriggerEnter2D(Collider2D collision)
+    }
+
+    // --- 核心合并点：重写存档处理逻辑 ---
+    protected override void HandleAlreadyInteracted()
+    {
+        // 如果存档显示这个开关已经触发过了
+        // 我们不销毁物体，而是直接把它设为开启状态
+        IsOn = true;
+        // 注意：这里不需要手动调 Notify，Start 里的逻辑会统一处理
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 排除 Key 类型的特殊处理逻辑（根据你原代码保留）
+        if (_isLeave && !GetComponent<GamePlay.Pickups.Key>())
         {
-            if (_isLeave)
-            {
-                Debug.Log("开关被触发");
-                _isLeave = false;
-                Toggle();
-            }
+            _isLeave = false;
+            Toggle();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        _isLeave = true;
+    }
+
+    public void RegisterSwitchable(ISwitchable switchable)
+    {
+        SwitchableObjects ??= new HashSet<ISwitchable>();
+        SwitchableObjects.Add(switchable);
+    }
+
+    public void Toggle()
+    {
+        SetState(!IsOn);
+    }
+
+    public void SetState(bool state)
+    {
+        IsOn = state;
+
+        // 如果开关被激活了
+        if (IsOn)
+        {
+            OnInteract(); // 调用 LevelItem 的记录逻辑
         }
 
-        private void OnTriggerExit2D(Collider2D collision)
-        {
-            _isLeave = true;
-        }
-        
-        // 将可切换对象注册到自身
-        public void RegisterSwitchable(ISwitchable switchable)
-        {
-            SwitchableObjects ??= new HashSet<ISwitchable>();
-            SwitchableObjects.Add(switchable);
-        }
+        Notify();
+    }
 
-        // 切换开关状态
-        void Toggle()
-        {
-            IsOn = !IsOn;
-            Notify();
-        }
+    protected void Notify()
+    {
+        if (SwitchableObjects == null) return;
 
-        private void Notify()
+        foreach (var obj in new List<ISwitchable>(SwitchableObjects))
         {
-            foreach (var obj in SwitchableObjects)
-            {
-                if (IsOn)
-                {
-                    obj.OnSwitchOn();
-                }
-                else
-                {
-                    obj.OnSwitchOff();
-                }
-            }
+            if (obj == null) continue;
+
+            if (IsOn) obj.OnSwitchOn();
+            else obj.OnSwitchOff();
         }
     }
 }

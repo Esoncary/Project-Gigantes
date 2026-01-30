@@ -6,19 +6,16 @@ using UnityEngine.UI;
 public class GamePanel : BasePanel
 {
 
-    public Button backBtn;
+    // public Button backBtn;
     public Button settingBtn;
     public override void Init()
     {
-
-        backBtn.onClick.AddListener(() =>
-        {
-            UIManager.Instance.ShowPanel<ConfirmPanel>();
-        });
+        // 设置按钮
         settingBtn.onClick.AddListener(() =>
         {
-            // UIManager.Instance.HidePanel<GamePanel>();
+            // UI逻辑
             UIManager.Instance.ShowPanel<SettingPanel>();
+            UIManager.Instance.GetPanel<SettingPanel>().ShowBtn();
         });
 
     }

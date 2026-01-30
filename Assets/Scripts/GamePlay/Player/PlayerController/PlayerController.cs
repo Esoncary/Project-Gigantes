@@ -312,7 +312,7 @@ public class PlayerController : MonoBehaviour
         IPickUp thisPickUp = collision.GetComponent<IPickUp>();
         if (thisPickUp != null)
         {
-            Debug.Log("触发道具函数");
+            // Debug.Log("触发道具函数");
             thisPickUp.PickUpEffect(this);
         }
 

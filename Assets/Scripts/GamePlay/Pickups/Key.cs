@@ -1,47 +1,56 @@
-using GamePlay.IA;
-using GamePlay.IA.Base;
 using UnityEngine;
 
 namespace GamePlay.Pickups
 {
-    /**
-     * 钥匙，用于开门
-     */
     public class Key : Switch, IPickUp
     {
-        bool _isPickUp;
+        private bool _isPickUp;
+
+        protected override void Start()
+        {
+            // 【重要修复】必须调用父类的 Start 以便执行 CheckStatus
+            base.Start();
+            if (!gameObject.activeSelf)
+            {
+                PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+                transform.SetParent(player.transform);
+                transform.localPosition = Vector2.zero;
+            }
+        }
+
+        // 处理“已经捡过”的情况
+        protected override void HandleAlreadyInteracted()
+        {
+            // 如果存档已经记录捡过了，直接把物体关掉
+            _isPickUp = true;
+            gameObject.SetActive(false);
+        }
 
         public void PickUpEffect(PlayerController player)
         {
-            // 将钥匙附加到玩家身上
             transform.SetParent(player.transform);
             transform.localPosition = Vector2.zero;
+            GameDataMgr.Instance.RecordItem(itemID);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            // 玩家捡起钥匙
-            if (!_isPickUp && collision.TryGetComponent<PlayerController>(out var player) && player)
+            if (!_isPickUp && collision.TryGetComponent<PlayerController>(out var player))
             {
-                Debug.Log("玩家捡起钥匙");
                 _isPickUp = true;
+
+                OnInteract();
+
                 PickUpEffect(player);
-                
-                GetComponent<SpriteRenderer>().enabled = false; // 关闭渲染
+                GetComponent<SpriteRenderer>().enabled = false;
+                var col = GetComponent<Collider2D>();
+                if (col) col.enabled = false;
             }
-            // 钥匙打开门
-            else if (_isPickUp && collision.TryGetComponent<Door>(out var door) && door)
-            {
-                Debug.Log("钥匙与门触碰");
-                Debug.Log(SwitchableObjects);
-                Debug.Log(door);
-                // 匹配钥匙与门
-                if (SwitchableObjects.Contains(door))
-                {
-                    door.OnSwitchOn();
-                    Debug.Log("钥匙打开了门");
-                }
-            }
+        }
+
+        public void OnKeyUsed()
+        {
+            gameObject.SetActive(false);
         }
     }
 }
