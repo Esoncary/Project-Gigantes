@@ -83,9 +83,15 @@ public class SceneMgr
             playerObj.transform.position = playerPos;
             if (playerController == null) playerController = playerObj.GetComponent<PlayerController>();
 
-            playerController.StateMachine.ChangeState(playerController.IdleState);
+            playerController.StateMachine.Initialize(playerController.IdleState);
             playerController.currentStorage = 0;
             playerController.targetStorage = 0;
+        }
+
+        // 绑定新角色实例到相机上
+        if (VirtualCameraController.Instance != null && playerObj != null)
+        {
+            VirtualCameraController.Instance.ResetCameraTarget(playerObj.transform);
         }
     }
 

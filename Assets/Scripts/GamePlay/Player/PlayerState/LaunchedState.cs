@@ -178,7 +178,6 @@ public class LaunchedState : PlayerState
         //避免释放时的速率立马影响到装置
         player.targetStorage = 0;
         player.currentStorage = 0;
-        
     }
 
     //这里处理播放动画的变量，根据方向决定播放哪个动画

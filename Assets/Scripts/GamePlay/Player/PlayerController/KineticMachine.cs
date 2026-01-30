@@ -15,7 +15,7 @@ public class KineticMachine : MonoBehaviour
     private void Update()
     {
 
-        if (player.coolerTimer <= 0)
+        if (player.coolerTimer <= 0 && player.releaseCoolingTimer <= 0)//前者是冷却剂，后者意味着整个装置在释放后也会冷却不运作
         {
             KineticMachineOperate();
         }
@@ -140,7 +140,7 @@ public class KineticMachine : MonoBehaviour
     //当前储量下降函数
     void currentStorageDecrease()
     {
-        Debug.Log("当前储量开始下降");
+
         player.currentStorage = Mathf.MoveTowards(player.currentStorage, player.targetStorage, player.currentStorageDecreaseSpeed * Time.deltaTime);
     }
 
@@ -151,11 +151,10 @@ public class KineticMachine : MonoBehaviour
     {
         //过载时没有特殊行为，但是如果玩家在过载时release，动力会更强，这条逻辑会写在release中
         //处理爆炸计时器
-        if (player.explosionTimer <= 0)//如果计时器结束
+        if (player.explosionTimer <= 0 && player.explosionTimer != -1 && player.StateMachine.CurrentState != player.DieState)//如果计时器结束且不已经处于死亡状态
         {
-            player.StateMachine.ChangeState(player.DieState);// 切换到死亡状态，但是死亡状态还没写
-
-            Debug.LogError("能量过载爆炸！");
+            player.StateMachine.ChangeState(player.DieState);
+            player.explosionTimer = -1;//关闭计时器
         }
     }
 }

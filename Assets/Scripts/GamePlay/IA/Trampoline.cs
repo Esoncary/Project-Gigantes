@@ -52,6 +52,8 @@ namespace GamePlay.IA
             float playerSpeedInBounceDir = -Vector2.Dot(currentVelocity, bounceDirection);
             Debug.Log("力投影：" + playerSpeedInBounceDir);
 
+            Debug.Log("玩家速度是" + playerSpeedInBounceDir);
+
             // 分档计算弹力
             float forceMagnitude;
 

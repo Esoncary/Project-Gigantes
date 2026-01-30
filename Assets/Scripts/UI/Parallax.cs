@@ -9,6 +9,8 @@ public class Parallax : MonoBehaviour
 
     void Start()
     {
+        cam = GameObject.FindWithTag("MainCamera");
+
         startPos = transform.position.x;
         // 如果背景需要循环，记录图片的宽度
         length = GetComponent<SpriteRenderer>().bounds.size.x;

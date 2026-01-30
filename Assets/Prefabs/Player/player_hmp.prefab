@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 1104098552296382066}
   m_Layer: 0
   m_Name: player_hmp
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
   airResponsiveness: 30
   airTurnBrakeForce: 200
   defaultGravityScale: 3
-  jumpSpeedInitial: 20
+  jumpSpeedInitial: 15
   varJumpTime: 0.1
   canVarJump: 0
   gravityContractionThreshold: 0.3
@@ -139,7 +139,7 @@ MonoBehaviour:
   releaseDragCoefficient: 2.5
   releaseDragTime: 0.2
   releaseThreshold: 0
-  baseSpeed: 15
+  baseSpeed: 20
   maxSpeed: 50
   releaseCoolingLimit: 1
   explosionStorageThrehold: 40
@@ -607,8 +607,8 @@ Transform:
   m_GameObject: {fileID: 8615217278733548665}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.02, y: -1.09, z: 0}
-  m_LocalScale: {x: 0.74, y: -0.03, z: 1}
+  m_LocalPosition: {x: -0.02, y: -1.11, z: 0}
+  m_LocalScale: {x: 0.74, y: -0.0369, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3141424749767237886}
