@@ -21,9 +21,6 @@ public class StorageUI : MonoBehaviour
         //引用两个条儿
         targetFillImage = transform.Find("TargetStorage").GetComponent<Image>();
         currentFillImage = transform.Find("CurrentStorage").GetComponent<Image>();
-
-
-        if (targetFillImage == null) Debug.Log("没找到！");
         
     }
     void Update()

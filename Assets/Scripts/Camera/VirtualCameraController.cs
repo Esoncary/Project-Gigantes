@@ -41,6 +41,7 @@ public class VirtualCameraController : MonoBehaviour
         {
             ResetCameraBound();//绑定相机边界
         }
+       
     }
 
     public void ResetCameraTarget(Transform playerTransform)

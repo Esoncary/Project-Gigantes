@@ -205,8 +205,10 @@ public class PlayerController : MonoBehaviour
         else if (coolerTimer <= 0)//当冷冻剂结束或者正常状态，运作爆炸计时器
         {
             if (explosionTimer > 0) explosionTimer -= Time.deltaTime;
+            playerVFXController.StopCooled();//关闭冷冻特效
         }
         if (strengthenerTimer > 0) strengthenerTimer -= Time.deltaTime;
+        if (strengthenerTimer <= 0) playerVFXController.StopStrengthened();
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
         if (releaseCoolingTimer > 0) releaseCoolingTimer -= Time.deltaTime;
         if (forceLimitTimer > 0) forceLimitTimer -= Time.deltaTime;
@@ -280,6 +282,8 @@ public class PlayerController : MonoBehaviour
         //允许变量跳跃
         canVarJump = true;
 
+        //开启VFX
+        playerVFXController.PlayJumpDust(transform);
     }
 
     //转向函数

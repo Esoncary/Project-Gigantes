@@ -25,7 +25,7 @@ public class GroundedCheckerManager : MonoBehaviour
         if (((1 << collision.gameObject.layer) & Ground) != 0)
         {
             isGrounded = true;
-            PlayerVFXController.PlayLand();
+            PlayerVFXController.PlayLandDust(this.transform);
         }
             
     }

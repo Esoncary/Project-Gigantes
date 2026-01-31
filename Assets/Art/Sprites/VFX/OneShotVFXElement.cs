@@ -1,18 +1,11 @@
 using UnityEngine;
-
-public class OneShotVFXElement : MonoBehaviour
+public class AutoDestroy : MonoBehaviour
 {
-    private SpriteRenderer sr;
-
-    private void Awake()
+    
+    //此脚本挂在那些一次性特效上，用于销毁它们
+    
+    public void DestoryVFX()
     {
-        sr = GetComponent<SpriteRenderer>();
-    }
-
-    // 这个函数将作为动画事件(Animation Event)放在动画的最后一帧
-    public void FinishVFX()
-    {
-        sr.enabled = false;
-        // Debug.Log(gameObject.name + " 特效播放完毕，已隐藏");
+        Destroy(gameObject);
     }
 }

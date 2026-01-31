@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class ReleaseState : PlayerState
 {
@@ -85,6 +86,17 @@ public class ReleaseState : PlayerState
 
         //开启装置冷却
         player.releaseCoolingTimer = player.releaseCoolingLimit;
+
+        //关闭过载特效（如果有的话）这一步是打补丁，角色飞行中也会积攒能量，导致特效关不掉
+        player.playerVFXController.StopOverload();
+
+        //开启释放特效
+        float angle = Mathf.Atan2(player.releaseDir.y, player.releaseDir.x) * Mathf.Rad2Deg;//计算特效角度
+        if (player.transform.localScale.x < 0)
+        {
+            angle += 180f;
+        }
+        player.playerVFXController.PlayRelease(angle);
     }
 
     /**
