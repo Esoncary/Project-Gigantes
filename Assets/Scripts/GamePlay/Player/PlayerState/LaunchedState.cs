@@ -48,6 +48,14 @@ public class LaunchedState : PlayerState
 
         //目标值和当前值进入一个极短的冷却时间
         player.coolerTimer = 0.5f;
+
+        //开启释放特效
+        float angle = Mathf.Atan2(player.releaseDir.y, player.releaseDir.x) * Mathf.Rad2Deg;//计算特效角度
+        if (player.transform.localScale.x < 0)
+        {
+            angle += 180f;
+        }
+        player.playerVFXController.PlayRelease(angle);
     }
 
     public override void HandleInput()

@@ -347,7 +347,7 @@ MonoBehaviour:
   VFXCooledRenderer: {fileID: 659312718561183461}
   VFXStrengthened: {fileID: 4663482592592609948}
   VFXStrengthenedRenderer: {fileID: 5905355502385607230}
-  VFXRelease: {fileID: 8350236494942772504}
+  VFXReleaseAnimator: {fileID: 8350236494942772504}
   VFXReleaseRenderer: {fileID: 3880650982626558610}
   VFXDie: {fileID: 1476078911169425509, guid: 0416cfbc899e99240a7ac6ecca53bafe, type: 3}
   VFXLandDust: {fileID: 628086370755387574, guid: 548dac30c086d1e40919a457ca7e96cd, type: 3}
@@ -912,7 +912,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432417681798325833, guid: 91c01d829d6fb9c45a45c1bb494f9958, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2
+      value: -0.17
       objectReference: {fileID: 0}
     - target: {fileID: 7432417681798325833, guid: 91c01d829d6fb9c45a45c1bb494f9958, type: 3}
       propertyPath: m_LocalPosition.y
