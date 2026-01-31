@@ -5,6 +5,14 @@ public class RunState : PlayerState
     public RunState(PlayerController _player, PlayerStateMachine _stateMachine, string _animName)
         : base(_player, _stateMachine, _animName) { }
 
+
+    public override void Enter()
+    {
+        base.Enter();
+        // 播跑步特效
+        player.playerVFXController.PlayRunDust();
+    }
+
     public override void LogicUpdate()
     {
         base.LogicUpdate();
@@ -71,5 +79,12 @@ public class RunState : PlayerState
         {
             player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeed * Mathf.Sign(player.rb.velocity.x), player.turnRoundBrakeDec * Time.fixedDeltaTime), player.rb.velocity.y);
         }
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        // 关跑步特效
+        player.playerVFXController.StopRunDust();
     }
 }

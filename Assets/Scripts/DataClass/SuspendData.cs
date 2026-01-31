@@ -20,4 +20,8 @@ public class SuspendData // 中断信息
         suspendPosY = 0f;
 
     }
+    public void ToString()
+    {
+        Debug.Log("hasSuspendedRecord" + hasSuspendedRecord);
+    }
 }

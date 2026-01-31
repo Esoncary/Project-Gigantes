@@ -14,24 +14,8 @@ public class KineticMachine : MonoBehaviour
 
     private void Update()
     {
-        //每帧同步currentVelocityMag
-        Vector2 rawVelocity = player.rb.velocity;
 
-        if (rawVelocity.y < -0.1f)
-        {
-            float simulatedVy = rawVelocity.y * player.Kin_gravityContractionScale;
-            player.currentVelocityMag = new Vector2(rawVelocity.x, simulatedVy).magnitude;
-        }
-        else
-        {
-            player.currentVelocityMag = rawVelocity.magnitude;
-        }
-
-
-        // if (player.currentVelocityMag != 0)
-        //     Debug.Log(player.currentVelocityMag);
-
-        if (player.coolerTimer <= 0)
+        if (player.coolerTimer <= 0 && player.releaseCoolingTimer <= 0)//前者是冷却剂，后者意味着整个装置在释放后也会冷却不运作
         {
             KineticMachineOperate();
         }
@@ -48,16 +32,14 @@ public class KineticMachine : MonoBehaviour
     }
     void KineticMachineOperate()//动力装置的所有运作逻辑
     {
+        player.currentVelocityMag = player.rb.velocity.magnitude;
+
         //先来处理目标储量
         //如果速度模大于等于目标储量，则将速度模赋值给目标储量
-
         if (player.targetStorage <= player.currentVelocityMag)
         {
             // if (player.targetStorage != 0)
             // Debug.Log("targetStorage:" + player.targetStorage);
-
-
-
             player.targetStorageFreezeTimer = -1;//如果有冻结目标储量计时器正在运作，关掉它
             SetTargetStorage();//这是一个赋值函数
             // Debug.Log("A");
@@ -97,7 +79,7 @@ public class KineticMachine : MonoBehaviour
             }
             else if (player.currentStorageFreezeTimer <= 0 && player.currentStorageFreezeTimer != -1)//如果计时器跑完了，且它还没有被关掉 
             {
-                player.currentStorageFreezeTimer = -1;//关掉计时器
+                
                 currentStorageDecrease();//当前储量下降函数
             }
         }
@@ -105,18 +87,21 @@ public class KineticMachine : MonoBehaviour
         //如果当前储量冻结计时器小于等于0且当前储量冻结计时器不处于-1状态，则允许当前储量下降
         if (player.currentStorageFreezeTimer <= 0 && player.currentStorageFreezeTimer != -1)
         {
-            player.currentStorageFreezeTimer = -1;//关闭当前储量冻结计时器
+            
             currentStorageDecrease();//当前储量下降函数
         }
 
         //现在来处理过载状态
-        if (player.currentStorage >= player.maxStorage)
+        if (player.currentStorage >= player.explosionStorageThrehold )
         {
-            player.isOverloaded = true;//将过载状态设为真
-            player.explosionTimer = player.explosionTime;//启动过载计时器
+            if (player.explosionTimer == -1)//如果此时计时器还没有启动
+            {
+                player.isOverloaded = true;//将过载状态设为真
+                player.explosionTimer = player.explosionTime;//启动过载计时器
+            }
             Overloaded();//过载行为函数
         }
-        else if (player.currentStorage < player.maxStorage)
+        else if (player.currentStorage < player.explosionStorageThrehold)
         {
             player.isOverloaded = false;//将过载状态设为假
             player.explosionTimer = -1;//关闭过载计时器
@@ -127,7 +112,14 @@ public class KineticMachine : MonoBehaviour
     // 目标储量设定函数
     public void SetTargetStorage()
     {
-        player.targetStorage = player.currentVelocityMag;
+        if (player.rb.velocity.y < -0.1f)
+        {
+            player.targetStorage = player.currentVelocityMag * player.Kin_gravityContractionScale;
+        }
+        else
+        {
+            player.targetStorage = player.currentVelocityMag * 1.1f;//在数值调试中有些问题，加了个1.1f来弥补
+        }    
     }
     // public void SetTargetStorage(float n)
     // {
@@ -143,13 +135,13 @@ public class KineticMachine : MonoBehaviour
     //当前储量上升函数
     void CurrentStorageIncrease()
     {
-        player.currentStorage = Mathf.MoveTowards(player.currentStorage, player.targetStorage, player.currentStorageIncreaseSpeed * Time.deltaTime * 2);
+        player.currentStorage = Mathf.MoveTowards(player.currentStorage, player.targetStorage, player.currentStorageIncreaseSpeed * Time.deltaTime);
     }
-
     //当前储量下降函数
     void currentStorageDecrease()
     {
-        player.currentStorage = Mathf.MoveTowards(player.currentStorage, player.targetStorage, player.currentStorageDecreaseSpeed * Time.deltaTime * 100);
+
+        player.currentStorage = Mathf.MoveTowards(player.currentStorage, player.targetStorage, player.currentStorageDecreaseSpeed * Time.deltaTime);
     }
 
 
@@ -158,15 +150,11 @@ public class KineticMachine : MonoBehaviour
     private void Overloaded()
     {
         //过载时没有特殊行为，但是如果玩家在过载时release，动力会更强，这条逻辑会写在release中
-
         //处理爆炸计时器
-        if (player.explosionTimer <= 0)//如果计时器结束
+        if (player.explosionTimer <= 0 && player.explosionTimer != -1 && player.StateMachine.CurrentState != player.DieState)//如果计时器结束且不已经处于死亡状态
         {
-            player.StateMachine.ChangeState(player.DieState);// 切换到死亡状态，但是死亡状态还没写
-
-            Debug.LogError("能量过载爆炸！");
+            //player.StateMachine.ChangeState(player.DieState);
+            player.explosionTimer = -1;//关闭计时器
         }
-
-
     }
 }

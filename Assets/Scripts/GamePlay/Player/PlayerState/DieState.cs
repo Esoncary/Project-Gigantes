@@ -33,7 +33,7 @@ public class DieState : PlayerState
         player.GetComponentInChildren<SpriteRenderer>().enabled = false;
 
         // 触发死亡动画
-        //player.PlayAnimation("Die");
+        player.playerVFXController.PlayDie();
 
         // 3. 广播信号：告诉所有人玩家死了
         GameEvents.PlayerDie?.Invoke();

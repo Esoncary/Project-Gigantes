@@ -82,6 +82,9 @@ public class ReleaseState : PlayerState
         // 恢复重力
         if (player.rb.gravityScale == 0)
             player.rb.gravityScale = player.defaultGravityScale;
+
+        //开启装置冷却
+        player.releaseCoolingTimer = player.releaseCoolingLimit;
     }
 
     /**
@@ -145,7 +148,7 @@ public class ReleaseState : PlayerState
      */
     private void ExecuteRelease()
     {
-        player.releaseCoolingTimer = player.releaseCoolingLimit;
+        
 
         // 震屏效果：朝向释放方向震动
         /**
@@ -158,7 +161,7 @@ public class ReleaseState : PlayerState
         if (player.impulseSource != null)
         {
             Debug.Log("震屏");
-            float velocity = 0.8f;
+            float velocity = 0.2f;
             Vector2 shakeDir = player.releaseDir.normalized * velocity;
             player.impulseSource.GenerateImpulseWithVelocity(new Vector3(shakeDir.x, shakeDir.y, 0f));
         }

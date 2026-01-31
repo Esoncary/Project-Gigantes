@@ -44,9 +44,12 @@ public class GameDataMgr
     {
         // 初始化游戏数据
         list_PlayerSaveData = JsonMgr.Instance.LoadData<List<PlayerSaveData>>("PlayerSaveData") ?? new List<PlayerSaveData>();
+        // Debug.Log(list_PlayerSaveData.Count);
         if (list_PlayerSaveData.Count == 0)
         {
             list_PlayerSaveData.Add(new PlayerSaveData());
+            Debug.Log(list_PlayerSaveData.Count);
+            Debug.Log(list_PlayerSaveData[0].suspendData);
             // Debug.Log("list_PlayerSaveData.Count :" + list_PlayerSaveData.Count);
         }
 
@@ -55,7 +58,7 @@ public class GameDataMgr
         list_LevelData = JsonMgr.Instance.LoadData<List<LevelData>>("LevelData") ?? new List<LevelData>();
 
         // 死亡事件
-        GameEvents.PlayerDie += ClearSuspendData;
+        // GameEvents.PlayerDie += ClearSuspendData;
     }
 
     // 存储音乐数据
@@ -86,6 +89,7 @@ public class GameDataMgr
         }
         currentSaveIndex = index;
         currentSave = list_PlayerSaveData[currentSaveIndex];
+        // Debug.Log(currentSave.suspendData);
     }
 
     // 保存中断存档
@@ -169,7 +173,7 @@ public class GameDataMgr
     // 设置当前关卡id
     public void SetCurrentLevelId(int id)
     {
-        Debug.Log("levelid:" + id);
+        // Debug.Log("levelid:" + id);
         currentLevelId = id;
     }
 
@@ -179,7 +183,7 @@ public class GameDataMgr
         if (!currentLevelCollectedIds.Contains(id))
         {
             currentLevelCollectedIds.Add(id);
-            Debug.Log(id);
+            // Debug.Log(id);
         }
     }
     // 当玩家死亡重新加载（未到达检查点）时，清空临时列表

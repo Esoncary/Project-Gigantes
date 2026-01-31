@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4283255391166909319
 Transform:
   m_ObjectHideFlags: 0
@@ -233,6 +233,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4283255391166909319}
     m_Modifications:
+    - target: {fileID: 2830439328540009140, guid: 624114b904353bd48b1c67d7c5c71ca3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -716
+      objectReference: {fileID: 0}
+    - target: {fileID: 2830439328540009140, guid: 624114b904353bd48b1c67d7c5c71ca3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -266
+      objectReference: {fileID: 0}
     - target: {fileID: 6281863744432472590, guid: 624114b904353bd48b1c67d7c5c71ca3, type: 3}
       propertyPath: m_Pivot.x
       value: 0

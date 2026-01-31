@@ -14,6 +14,9 @@ public class MidAirState : PlayerState
 
     public override void LogicUpdate()
     {
+        //这里先处理动画和音效
+        player.Anim.SetFloat("VelocityY", player.rb.velocity.y);
+
         //这里处理计时器
         //关掉变量跳跃计时器
         if ((Input.GetKeyUp(KeyCode.Space) && player.varJumpTimer >= 0) || player.varJumpTimer <= 0) 
