@@ -153,7 +153,7 @@ public class KineticMachine : MonoBehaviour
         //处理爆炸计时器
         if (player.explosionTimer <= 0 && player.explosionTimer != -1 && player.StateMachine.CurrentState != player.DieState)//如果计时器结束且不已经处于死亡状态
         {
-            player.StateMachine.ChangeState(player.DieState);
+            //player.StateMachine.ChangeState(player.DieState);
             player.explosionTimer = -1;//关闭计时器
         }
     }
