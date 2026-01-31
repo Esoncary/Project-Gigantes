@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 6739062875613254122}
   m_Layer: 0
   m_Name: player
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -312,6 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef02a2b6d2759fa42b55ada2269eb763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  impulseSource: {fileID: 0}
   groundedCheckerManager: {fileID: 2533499300835881844}
   canClimbLeftCheckerManager: {fileID: 0}
   canClimbRightCheckerManager: {fileID: 0}
@@ -362,6 +363,7 @@ MonoBehaviour:
   coolerTimer: 0
   postReleaseTimer: 0
   strengthenerTimer: 0
+  forceLimitTimer: 0
   InputX: 0
   JumpInputDown: 0
   ReleaseInputDown: 0

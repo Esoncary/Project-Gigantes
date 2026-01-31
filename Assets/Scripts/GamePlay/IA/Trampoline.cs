@@ -73,8 +73,25 @@ namespace GamePlay.IA
                 forceMagnitude = baseForce + extraForce;
             }
 
-            // 应用弹力方向
-            return bounceDirection * forceMagnitude;
+            // 1. 计算玩家当前速度在蹦床方向上的分量（平行）
+            float parallelComponent = Vector2.Dot(currentVelocity, bounceDirection);
+
+            // 2. 计算垂直于蹦床方向的速度分量
+            Vector2 perpendicularVelocity = currentVelocity - bounceDirection * parallelComponent;
+
+            // 3. 新速度 = 弹射方向力 + 垂直方向保留的原有速度
+            return bounceDirection * forceMagnitude + perpendicularVelocity;
+        }
+        
+        /// <summary>
+        /// 计算 x 轴分速度占总速度（向量长度）的比例
+        /// </summary>
+        private float GetXSpeedRatio(Vector2 velocity)
+        {
+            float totalSpeed = velocity.magnitude;
+            if (totalSpeed < 0.01f)
+                return 0f;
+            return Mathf.Clamp01(Mathf.Abs(velocity.x) / totalSpeed);
         }
 
         public void OnSwitchOn()

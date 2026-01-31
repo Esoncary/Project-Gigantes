@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 997180916685013997}
   m_Layer: 0
   m_Name: player_hmp
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -153,6 +153,7 @@ MonoBehaviour:
   Kin_gravityContractionScale: 1
   coolerTimer: 0
   postReleaseTimer: 0
+  strengthenerTimer: 0
   forceLimitTimer: 0
   InputX: 0
   JumpInputDown: 0

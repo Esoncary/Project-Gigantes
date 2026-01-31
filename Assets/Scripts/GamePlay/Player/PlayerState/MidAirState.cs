@@ -112,6 +112,13 @@ public class MidAirState : PlayerState
 
     private void AirMovement()
     {
+        // 是否处于力限制状态
+        bool isInForceLimit = player.forceLimitTimer > 0;
+        // 根据当前 x 轴分速度/总速度的比例计算机动性削弱系数：x 轴占比越大，操控越弱
+        float mobilityScale = isInForceLimit
+            ? Mathf.Lerp(0.2f, 1f, 1f - GetXSpeedRatio())
+            : 1f;
+
         //我们这里有两种情况，一种是正常情况，一种是后释放情况。这里通过一个函数来实现，用currentMoveSpeedAccScale这个变量来控制两种情况。如果是正常情况，这个变量就是1；如果是后释放情况，这个变量会小于1然后逐渐恢复到1。
         // 转向处理
         // if (Mathf.Abs(player.rb.velocity.x) > 0.1f && Mathf.Sign(player.rb.velocity.x) != player.InputX)
@@ -132,7 +139,7 @@ public class MidAirState : PlayerState
         //     player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.moveSpeedAccInMidAir *  Time.fixedDeltaTime), player.rb.velocity.y);
         // }
         // else
-        
+
         // 如果超过最大跑动速度，则限速
         if (Mathf.Abs(player.rb.velocity.x) > player.maxMoveSpeedInMidAir)
         {
@@ -152,27 +159,27 @@ public class MidAirState : PlayerState
         }
         else
         {
-            // 有输入：提供操控感
+            // 有输入：提供操控感（力限制期间操控性降低）
 
             // 1. 转向刹车：速度方向与输入相反时快速减速
             if (Mathf.Abs(player.rb.velocity.x) > 0.1f &&
                 Mathf.Sign(player.rb.velocity.x) != player.InputX)
             {
-                player.TurnRoundBrake(player.airTurnBrakeForce);
+                player.TurnRoundBrake(player.airTurnBrakeForce * mobilityScale);
             }
-            // 2. 正常加速：向输入方向响应
+            // 2. 正常加速：向输入方向响应（力限制期间响应度降低）
             else
             {
                 float targetSpeed = player.maxMoveSpeedInMidAir * player.InputX;
                 float newX = Mathf.MoveTowards(
                     player.rb.velocity.x,
                     targetSpeed,
-                    player.airResponsiveness * Time.fixedDeltaTime
+                    player.airResponsiveness * mobilityScale * Time.fixedDeltaTime
                 );
                 player.rb.velocity = new Vector2(newX, player.rb.velocity.y);
             }
         }
-        
+
     }
 
     private void VarJump()
@@ -201,5 +208,17 @@ public class MidAirState : PlayerState
         base.Exit();
         // 离开空中状态时，务必恢复重力常数，防止影响其他状态
         player.rb.gravityScale =  player.defaultGravityScale;
+    }
+
+    /// <summary>
+    /// 计算 x 轴分速度占总速度（向量长度）的比例
+    /// </summary>
+    private float GetXSpeedRatio()
+    {
+        Vector2 velocity = player.rb.velocity;
+        float totalSpeed = velocity.magnitude;
+        if (totalSpeed < 0.01f)
+            return 0f;
+        return Mathf.Clamp01(Mathf.Abs(velocity.x) / totalSpeed);
     }
 }

@@ -318,7 +318,7 @@ public class PlayerController : MonoBehaviour
     public void ApplyForce(IPlayerForce forceSource, float forceLimitTime)
     {
         Vector2 newVelocity = forceSource.CalculateVelocity(rb.velocity, transform.position);
-
+        Debug.Log(newVelocity);
         rb.velocity = newVelocity;
         
         forceLimitTimer = forceLimitTime;
