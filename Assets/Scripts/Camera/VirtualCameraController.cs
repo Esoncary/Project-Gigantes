@@ -45,7 +45,7 @@ public class VirtualCameraController : MonoBehaviour
 
     public void ResetCameraTarget(Transform playerTransform)
     {
-        Debug.Log("state: ");
+        // Debug.Log("state: ");
         if (vcam != null)
         {
             vcam.Follow = playerTransform;

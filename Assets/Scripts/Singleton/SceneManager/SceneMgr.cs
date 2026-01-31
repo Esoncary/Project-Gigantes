@@ -153,7 +153,12 @@ public class SceneMgr
 
         LoadSceneAsync(GameDataMgr.Instance.currentLevelId, async () =>
         {
-            currentRebornPos = GameObject.Find("RebornPos").transform.position;
+            // Debug.Log("GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord" + GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord);
+            if (!GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord)
+                currentRebornPos = GameObject.Find("RebornPos").transform.position;
+            else
+                currentRebornPos = new Vector2(GameDataMgr.Instance.currentSave.suspendData.suspendPosX, GameDataMgr.Instance.currentSave.suspendData.suspendPosY);
+            Debug.Log("位置" + currentRebornPos);
             await InitScene(currentRebornPos);
         });
 
@@ -195,6 +200,7 @@ public class SceneMgr
                     GameDataMgr.Instance.currentLevelCollectedIds.Add(id);
                 }
             }
+            GameDataMgr.Instance.currentSave.suspendData = suspendData;
             currentRebornPos = finalPos;
             await InitScene(finalPos);
         };
@@ -228,7 +234,8 @@ public class SceneMgr
         suspendData.suspendPosY = pos.y;
         suspendData.suspendLevelId = GameDataMgr.Instance.currentLevelId;
         suspendData.hasSuspendedRecord = true; // 标记现在有存档记录了
-
+        GameDataMgr.Instance.currentSave.suspendData = suspendData;
+        Debug.Log("存档数据" + GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord);
         // 3. 记录当前关卡收集到的物品（防止死后重置，取决于你的设计）
         foreach (var id in GameDataMgr.Instance.currentLevelCollectedIds)
         {

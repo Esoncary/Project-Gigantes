@@ -18,9 +18,9 @@ public class BeginPanel : BasePanel
             UIManager.Instance.ShowPanel<ScenePanel>();
 
             // 默认选择存档1
-            
+
             GameDataMgr.Instance.LoadChoosePlayerSaveData(0);
-            GameDataMgr.Instance.currentSave.ToString();
+            // GameDataMgr.Instance.currentSave.ToString();
         });
 
         // 设置按钮

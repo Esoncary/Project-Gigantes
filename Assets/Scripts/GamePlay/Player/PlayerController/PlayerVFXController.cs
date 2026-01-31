@@ -36,8 +36,8 @@ public class PlayerVFXController : MonoBehaviour
     // 启动跑步灰尘
     public void PlayRunDust()
     {
-        Debug.Log("成功播放");
-        
+        // Debug.Log("成功播放");
+
         // 1. 开启渲染器显示
         if (VFXRunDustRenderer != null) VFXRunDustRenderer.enabled = true;
 
@@ -48,7 +48,7 @@ public class PlayerVFXController : MonoBehaviour
     public void StopRunDust()
     {
         if (VFXRunDustRenderer != null) VFXRunDustRenderer.enabled = false;
-        
+
     }
 
     //启动死亡特效
@@ -61,7 +61,7 @@ public class PlayerVFXController : MonoBehaviour
         VFXDieAnimator.Play("VFXDie", 0, 0f); // 最后一个参数 0f 表示从第一帧开始重头播
     }
     //结束播放在它自身的脚本上
-    
+
 
     //落地特效
     public void PlayLand()
