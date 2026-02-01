@@ -26,6 +26,7 @@ namespace GamePlay.IA
         // 玩家实体触碰蹦床
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            Debug.Log("蹦床触发 time: " + Time.timeAsDouble);
             var playerController = collision.GetComponent<PlayerController>();
             if (playerController != null)
             {
