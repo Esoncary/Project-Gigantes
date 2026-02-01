@@ -25,7 +25,7 @@ public class PlayerControllerWasted : MonoBehaviour
     CanClimbLeftCheckerManager canClimbLeftCheckerManager;
     CanClimbRightCheckerManager canClimbRightCheckerManager;
     GroundedCheckerManager groundedCheckerManager;
-    
+
     #endregion
 
     #region const
@@ -131,10 +131,10 @@ public class PlayerControllerWasted : MonoBehaviour
         currentPlayerState = PlayerState.idle;
 
         //初始化角色位置，等有了prefab再说
-        
+
 
         //获取组件
-        rb = GetComponent< Rigidbody2D > ();
+        rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         canClimbLeftCheckerManager = GetComponentInChildren<CanClimbLeftCheckerManager>();
         canClimbRightCheckerManager = GetComponentInChildren<CanClimbRightCheckerManager>();
@@ -156,7 +156,7 @@ public class PlayerControllerWasted : MonoBehaviour
 
         //状态变量监测和状态转换
         isGrounded = groundedCheckerManager.isGrounded;
-        if(canClimbLeftCheckerManager.canClimb == true)
+        if (canClimbLeftCheckerManager.canClimb == true)
         {
             isOnLeftWall = true;
             canClimb = true;
@@ -164,11 +164,11 @@ public class PlayerControllerWasted : MonoBehaviour
         else if (canClimbRightCheckerManager.canClimb == true)
         {
             isOnRightWall = true;
-            canClimb = true ;
+            canClimb = true;
         }
         else
         {
-            isOnLeftWall = false; 
+            isOnLeftWall = false;
             isOnRightWall = false;
             canClimb = false;
         }
@@ -183,13 +183,13 @@ public class PlayerControllerWasted : MonoBehaviour
         {
             isClimbBuffered = true;
             climbBufferTimer = climbBufferTime;//启动/重置攀爬缓冲计时器
-            
+
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-                isJumpBuffered = true;
-                jumpBufferTimer = jumpBufferTime;//启动/重置跳跃缓冲计时器
-                jumpPressedTime = Time.time;//标记按下时间
+            isJumpBuffered = true;
+            jumpBufferTimer = jumpBufferTime;//启动/重置跳跃缓冲计时器
+            jumpPressedTime = Time.time;//标记按下时间
 
         }
         //SwitchCurrentPlayerStateInUpdate();
@@ -273,11 +273,11 @@ public class PlayerControllerWasted : MonoBehaviour
             decreaseTimer = decreaseTime;
 
         }
-        
+
 
         if (willDecrease)//将要减少开始计时
         {
-                decreaseTimer -= Time.deltaTime;
+            decreaseTimer -= Time.deltaTime;
             if (decreaseTimer <= 0)
             {
                 willDecrease = false;
@@ -287,7 +287,7 @@ public class PlayerControllerWasted : MonoBehaviour
 
         if (canDecrease)
         {
-       
+
             currentStorage = Mathf.MoveTowards(currentStorage, targetStorage, decreaseSpeed * Time.deltaTime);
 
             if (currentStorage <= targetStorage)
@@ -377,16 +377,16 @@ public class PlayerControllerWasted : MonoBehaviour
                     SetCurrentPlayerState(PlayerState.midair);
                 }
 
-                
+
                 break;
             case PlayerState.midair:
                 if (Input.GetAxisRaw("Horizontal") != 0)
                 {
                     MoveInMidAir();
                 }
-                
 
-                
+
+
                 //跳跃后续加速和重力缩减
                 if (Input.GetKey(KeyCode.Space) && varJumpTimer > 0)
                 {
@@ -402,8 +402,8 @@ public class PlayerControllerWasted : MonoBehaviour
                 }
 
                 //攀爬输入
-               if (isClimbBuffered && canClimb)
-               {
+                if (isClimbBuffered && canClimb)
+                {
                     climbTimer = climbTime;
                     canClimb = false;
                     climbBufferTimer = -1f;
@@ -412,8 +412,8 @@ public class PlayerControllerWasted : MonoBehaviour
                     SnapToWall();
                     Climb();
                     SetCurrentPlayerState(PlayerState.climb);
-               }
-                    break;
+                }
+                break;
             case PlayerState.climb:
                 rb.velocity = Vector2.zero;
                 rb.angularVelocity = 0; // 同时也清空角速度
@@ -433,10 +433,10 @@ public class PlayerControllerWasted : MonoBehaviour
                 }
                 break;
             case PlayerState.release:
-                
+
                 break;
             case PlayerState.die:
-                
+
                 break;
             default:
                 break;
@@ -457,12 +457,12 @@ public class PlayerControllerWasted : MonoBehaviour
     #region 状态切换函数
     private void SwitchCurrentPlayerStateInUpdate()//只包括idle和midair的转换，run,die，climb和release在它们各自的触发函数里
     {
-        
+
         if (isGrounded && rb.velocity.magnitude == 0)
         {
             SetCurrentPlayerState(PlayerState.idle);
         }
-        else if (!isGrounded && currentPlayerState !=PlayerState.climb && currentPlayerState != PlayerState.die && currentPlayerState != PlayerState.release)//这里有什么简便写法
+        else if (!isGrounded && currentPlayerState != PlayerState.climb && currentPlayerState != PlayerState.die && currentPlayerState != PlayerState.release)//这里有什么简便写法
         {
             SetCurrentPlayerState(PlayerState.midair);
         }
@@ -476,7 +476,7 @@ public class PlayerControllerWasted : MonoBehaviour
 
     #region 基础移动函数
 
-        #region run或者idle状态下函数
+    #region run或者idle状态下函数
     //有输入时的跑动函数
     void Run()
     {
@@ -488,7 +488,7 @@ public class PlayerControllerWasted : MonoBehaviour
         {
             Brake();
         }
-        if (Mathf.Abs(rb.velocity.x)< maxMoveSpeed)
+        if (Mathf.Abs(rb.velocity.x) < maxMoveSpeed)
         {
             if (Mathf.Abs(rb.velocity.x) < minMoveSpeed)
             {
@@ -520,7 +520,7 @@ public class PlayerControllerWasted : MonoBehaviour
 
     #endregion
 
-        #region midair状态下(或run中的跳跃)函数
+    #region midair状态下(或run中的跳跃)函数
     void MoveInMidAir()
     {
         if (inputLockTimer > 0) return;
@@ -536,7 +536,7 @@ public class PlayerControllerWasted : MonoBehaviour
         {
             if (rb.velocity.x < minMoveSpeed)
             {
-                rb.velocity = new Vector2( moveDirection.x * minMoveSpeedInMidAir, rb.velocity.x);
+                rb.velocity = new Vector2(moveDirection.x * minMoveSpeedInMidAir, rb.velocity.x);
             }
             rb.AddForce(new Vector2(moveDirection.x * moveSpeedAccInMidAir, 0));
 
@@ -552,11 +552,11 @@ public class PlayerControllerWasted : MonoBehaviour
         //rb.AddForce(Vector2.up * jumpSpeedInitial, ForceMode2D.Impulse);
         rb.velocity = new Vector2(rb.velocity.x, jumpSpeedInitial);
     }
-    
+
     void Jump()
     {
         //基本跳跃逻辑
-        if ( varJumpTimer > 0)
+        if (varJumpTimer > 0)
         {
             if (rb.velocity.y < maxJumpSpeed)
             {
@@ -567,7 +567,7 @@ public class PlayerControllerWasted : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, maxJumpSpeed);
             }
         }
-        
+
     }
     void EnableGravityContraction()
     {
@@ -575,13 +575,13 @@ public class PlayerControllerWasted : MonoBehaviour
     }
     void DisableGravityContraction()
     {
-            rb.gravityScale = 1;
+        rb.gravityScale = 1;
     }
 
 
     #endregion
 
-        #region climb状态下的函数
+    #region climb状态下的函数
     void Climb()
     {
         rb.velocity = Vector2.zero;
@@ -639,7 +639,7 @@ public class PlayerControllerWasted : MonoBehaviour
         {
             rb.velocity = new Vector2(1, 1).normalized * wallJumpSpeed;
         }
-        
+
     }
     #endregion
     #endregion
@@ -706,6 +706,8 @@ public class PlayerControllerWasted : MonoBehaviour
         // 5. 设置冷却
         // canRelease = false;
         // StartCoroutine(ReleaseCooldownRoutine());
+
+
     }
 
 

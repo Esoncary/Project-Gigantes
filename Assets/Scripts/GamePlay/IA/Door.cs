@@ -48,6 +48,7 @@ namespace GamePlay.IA
                 Debug.Log("【门】条件满足，开门！");
                 IsActive = true;
                 // 这里播放动画等
+                SoundEffectMgr.Instance.PlaySound("door/door-open");
             }
         }
 
@@ -82,7 +83,7 @@ namespace GamePlay.IA
                 if (IsActive)
                 {
                     Debug.Log("门是开的，请进");
-                    UIManager.Instance.ShowPanel<GameOverPanel>();
+                    // UIManager.Instance.ShowPanel<GameOverPanel>();
                 }
                 else
                 {

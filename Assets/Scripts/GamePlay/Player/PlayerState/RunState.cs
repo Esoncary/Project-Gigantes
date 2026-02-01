@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class RunState : PlayerState
 {
+
+    private float stepTimer;
+    private float stepInterval = 0.4f; // 调整这个数值来匹配你动画的脚步节奏
     public RunState(PlayerController _player, PlayerStateMachine _stateMachine, string _animName)
         : base(_player, _stateMachine, _animName) { }
 
@@ -11,6 +14,8 @@ public class RunState : PlayerState
         base.Enter();
         // 播跑步特效
         player.playerVFXController.PlayRunDust();
+        // 刚开始跑时，计时器设为0，确保第一步立即发出声音
+        stepTimer = 0;
     }
 
     public override void LogicUpdate()
@@ -27,7 +32,7 @@ public class RunState : PlayerState
         // 2. 状态切换：跳跃
         if (player.jumpBufferTimer > 0 && player.canJump)
         {
-            player.InitialJump(); 
+            player.InitialJump();
             player.canJump = false; //落地前只能跳一次
             stateMachine.ChangeState(player.MidAirState);
             return;
@@ -48,13 +53,17 @@ public class RunState : PlayerState
             stateMachine.ChangeState(player.ReleaseState);
             return;
         }
+        if (player.groundedCheckerManager.isGrounded) // 只有在地面时才处理
+        {
+            HandleFootstepSound();
+        }
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
         RunMovement();
-        
+
     }
 
     void RunMovement()
@@ -80,11 +89,32 @@ public class RunState : PlayerState
             player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeed * Mathf.Sign(player.rb.velocity.x), player.turnRoundBrakeDec * Time.fixedDeltaTime), player.rb.velocity.y);
         }
     }
+    private void HandleFootstepSound()
+    {
+        stepTimer -= Time.deltaTime;
 
+        if (stepTimer <= 0)
+        {
+            // 核心：使用你 GroundedCheckerManager 里的 Ground LayerMask
+            // 射线从脚下位置稍微往上一点发射，向下探测
+            RaycastHit2D hit = Physics2D.Raycast(player.transform.position, Vector2.down, 1.2f, player.groundedCheckerManager.Ground);
+            Debug.Log("hit:" + hit);
+            Debug.Log("hit:" + hit.collider.tag);
+            if (hit.collider != null)
+            {
+                SoundEffectMgr.Instance.PlayFootstep(hit.collider.tag);
+            }
+
+            // 重置计时器
+            stepTimer = stepInterval;
+        }
+    }
     public override void Exit()
     {
         base.Exit();
         // 关跑步特效
         player.playerVFXController.StopRunDust();
+        // 重点：当停下来或者跳起来（离开RunState）时，重置音效索引
+        SoundEffectMgr.Instance.ResetFootsteps();
     }
 }
