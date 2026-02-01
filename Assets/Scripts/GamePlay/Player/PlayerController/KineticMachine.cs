@@ -15,15 +15,15 @@ public class KineticMachine : MonoBehaviour
     private void Update()
     {
 
-        if (player.coolerTimer <= 0 && player.releaseCoolingTimer <= 0)//前者是冷却剂，后者意味着整个装置在释放后也会冷却不运作
+        if (player.coolerTimer <= 0 && player.kineticMachineRecoverFromReleaseTimer <= 0)//前者是冷却剂，后者是装置冷却时间，整个装置在释放后也会冷却不运作
         {
             KineticMachineOperate();
         }
 
         if (player.strengthenerTimer <= 0 && player.strengthenerTimer != -1)
         {
-            player.maxStorage /= 1.2f;//恢复最大储量
-            player.explosionStorageThrehold /= 1.2f;//恢复爆炸储量阈值
+            player.maxStorage  = 60;//恢复最大储量
+            player.explosionStorageThrehold = 40;//恢复爆炸储量阈值
             player.strengthenerTimer = -1;//关闭强化计时器
         }
 
@@ -78,8 +78,7 @@ public class KineticMachine : MonoBehaviour
                 player.currentStorageFreezeTimer = player.currentStorageFreezeTime;//启动冻结当前储量计时器
             }
             else if (player.currentStorageFreezeTimer <= 0 && player.currentStorageFreezeTimer != -1)//如果计时器跑完了，且它还没有被关掉 
-            {
-                
+            {  
                 currentStorageDecrease();//当前储量下降函数
             }
         }
@@ -142,7 +141,6 @@ public class KineticMachine : MonoBehaviour
     //当前储量下降函数
     void currentStorageDecrease()
     {
-
         player.currentStorage = Mathf.MoveTowards(player.currentStorage, player.targetStorage, player.currentStorageDecreaseSpeed * Time.deltaTime);
     }
 
@@ -155,7 +153,9 @@ public class KineticMachine : MonoBehaviour
         //处理爆炸计时器
         if (player.explosionTimer <= 0 && player.explosionTimer != -1 && player.StateMachine.CurrentState != player.DieState)//如果计时器结束且不已经处于死亡状态
         {
+
             //player.StateMachine.ChangeState(player.DieState);
+            Debug.Log("玩家死了");
             player.explosionTimer = -1;//关闭计时器
         }
     }

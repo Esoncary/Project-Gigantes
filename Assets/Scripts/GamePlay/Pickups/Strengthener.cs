@@ -24,8 +24,9 @@ public class Strengthener : MonoBehaviour, IPickUp
     void IPickUp.PickUpEffect(PlayerController player)
     {
         player.strengthenerTimer = strenthenerTime;//启动强化计时器
-        player.maxStorage *= 1.2f;//提高最大储量
-        player.explosionStorageThrehold *= 1.2f;//提高爆炸储量阈值
+        player.maxStorage += 35;//提高最大储量
+        player.explosionStorageThrehold += 35;//提高爆炸储量阈值
+        player.rb.velocity *= 1.5f;//拾取增强剂时瞬间提高50%的速度
         player.playerVFXController.PlayStrengthened();//播放增强剂特效
         Destroy(this.gameObject);//销毁自身
     }

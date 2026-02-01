@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("动力装置参数")]
     [Tooltip("释放冷却时间")] public float releaseCoolingLimit = 1f;
+    public float kineticMachineRecoverFromReleaseTime;//释放后动力装置停止运作的恢复时间
     public float explosionStorageThrehold; //储量爆炸阈值,比最大储量值小一点
     public float maxStorage; //最大储量值.允许玩家在过载状态多装一点能量，以便于卡住过载状态释放
     public float minReleaseThrehold = 5f;
@@ -120,6 +121,7 @@ public class PlayerController : MonoBehaviour
     public float explosionTimer;//爆炸计时器
     public float releaseCoolingTimer; // 释放冷却
     public float launchedStagnationTimer; // 释放后滞空计时器
+    public float kineticMachineRecoverFromReleaseTimer;//动力装置恢复计时器
     public bool canJump; // 与isGrounded相关
     public Vector2 releaseDir;
     public GameObject arrowInstance;
@@ -213,6 +215,7 @@ public class PlayerController : MonoBehaviour
         if (strengthenerTimer <= 0) playerVFXController.StopStrengthened();
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
         if (releaseCoolingTimer > 0) releaseCoolingTimer -= Time.deltaTime;
+        if (kineticMachineRecoverFromReleaseTimer > 0) kineticMachineRecoverFromReleaseTimer -= Time.deltaTime;
         if (launchedStagnationTimer > 0) launchedStagnationTimer -= Time.deltaTime;
         if (forceLimitTimer > 0) forceLimitTimer -= Time.deltaTime;
 

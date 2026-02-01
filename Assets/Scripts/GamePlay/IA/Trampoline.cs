@@ -64,7 +64,7 @@ namespace GamePlay.IA
             {
                 // 第二档：中速玩家，根据速度提供额外弹力
                 // 速度越大，额外弹力越小
-                float speedRatio = (highSpeedThreshold - playerSpeedInBounceDir) / highSpeedThreshold;
+                float speedRatio = (highSpeedThreshold - playerSpeedInBounceDir) / highSpeedThreshold ;
                 forceMagnitude = baseForce + extraForce * speedRatio;
             }
             else
