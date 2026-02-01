@@ -106,36 +106,35 @@ public class LaunchedState : PlayerState
     
     /**
      * 按帧计算角色速度
+     * 分 X/Y 轴分别处理
      */
     private void UpdateLaunchingPhysics()
     {
-        // 应用指数阻力衰减（模拟真实空气阻力）
-        // 速度随时间呈指数衰减：初期快，后期慢
-
         Vector2 currentVelocity = player.rb.velocity;
+        float dragFactor = Mathf.Exp(-player.releaseDragCoefficient * Time.fixedDeltaTime);
 
-        // 计算当前在发射方向上的速度分量
-        float forwardSpeed = Vector2.Dot(currentVelocity, launchDirection);
-
-        // 如果速度已经很小或反向，停止衰减
-        if (forwardSpeed <= player.releaseMinSpeedThreshold)
+        // === X轴 ===
+        float newX = currentVelocity.x * dragFactor;
+        // 若当前速度 >= 阈值，且衰减后 < 阈值
+        if (Mathf.Abs(currentVelocity.x) >= player.launchXMinSpeed &&
+            Mathf.Abs(newX) < player.launchXMinSpeed)
         {
-            // 移除发射方向的速度，保留垂直于发射方向的速度（如重力下落）
-            Vector2 perpendicularVelocity = currentVelocity - (launchDirection * Vector2.Dot(currentVelocity, launchDirection));
-            player.rb.velocity = perpendicularVelocity;
+            // 判断玩家输入是否与发射方向同向
+            float launchDirX = Mathf.Sign(launchDirection.x);
+            bool isInputSameDirection = Mathf.Sign(player.InputX) == launchDirX && Mathf.Abs(player.InputX) > 0.01f;
 
-            // 标记时间结束，触发状态切换
-            launchTimer = totalLaunchTime;
-            return;
+            if (isInputSameDirection)
+            {
+                // 玩家需要向当前喷射的方向运动，速度不应该低于正常位移的速度
+                newX = player.launchXMinSpeed * launchDirX;
+            }
         }
 
-        // 应用指数阻力：速度 = 速度 × (1 - 阻力系数 × 时间增量)
-        // e^(-player.releaseDragCoefficient * Time.fixedDeltaTime) [1, 0)
-        float dragFactor = Mathf.Exp(-player.releaseDragCoefficient * Time.fixedDeltaTime);
-        float newForwardSpeed = forwardSpeed * dragFactor;
-        // 重建速度：保留原方向 + 新的大小
-        player.rb.velocity = launchDirection * newForwardSpeed +
-                             (currentVelocity - (launchDirection * Vector2.Dot(currentVelocity, launchDirection)));
+        // === Y轴 ===
+        float newY;
+        newY = currentVelocity.y * dragFactor;
+
+        player.rb.velocity = new Vector2(newX, newY);
     }
     
     /**
@@ -143,16 +142,12 @@ public class LaunchedState : PlayerState
      */
     private bool ShouldExitLaunchingPhase()
     {
-        // 条件1：时间结束
+        // 时间结束
         if (launchTimer >= totalLaunchTime)
             return true;
+        
 
-        // 条件2：速度已经衰减到接近0
-        float forwardSpeed = Vector2.Dot(player.rb.velocity, launchDirection);
-        if (forwardSpeed <= player.releaseMinSpeedThreshold)
-            return true;
-
-        // 条件3（可选）：落地
+        // 落地
         if (player.isGrounded)
             return true;
 
@@ -182,7 +177,10 @@ public class LaunchedState : PlayerState
     public override void Exit()
     {
         base.Exit();
-
+        if (launchDirection.y >= 0)
+        {
+            player.launchedStagnationTimer = player.launchedStagnationTime;
+        }
         //避免释放时的速率立马影响到装置
         player.targetStorage = 0;
         player.currentStorage = 0;

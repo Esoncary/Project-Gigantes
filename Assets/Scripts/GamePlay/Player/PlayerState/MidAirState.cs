@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MidAirState : PlayerState
@@ -111,6 +112,10 @@ public class MidAirState : PlayerState
 
         // --- 7. 到达顶峰时的滞空效果
         HangInMidAir();
+        
+        // 最大下落速度限制
+        if (player.rb.velocity.y < player.maxYVelocity)
+            player.rb.velocity = new Vector2(player.rb.velocity.x, player.maxYVelocity);
     }
 
     private void AirMovement()
@@ -121,27 +126,6 @@ public class MidAirState : PlayerState
         float mobilityScale = isInForceLimit
             ? Mathf.Lerp(0.2f, 1f, 1f - GetXSpeedRatio())
             : 1f;
-
-        //我们这里有两种情况，一种是正常情况，一种是后释放情况。这里通过一个函数来实现，用currentMoveSpeedAccScale这个变量来控制两种情况。如果是正常情况，这个变量就是1；如果是后释放情况，这个变量会小于1然后逐渐恢复到1。
-        // 转向处理
-        // if (Mathf.Abs(player.rb.velocity.x) > 0.1f && Mathf.Sign(player.rb.velocity.x) != player.InputX)
-        // {
-        //     player.TurnRoundBrake(player.turnRoundBrakeDec);
-        // }
-        // Debug.Log("0");
-        // // 加速与限速逻辑,Launched状态之后的限速还没写
-        // if (Mathf.Abs(player.rb.velocity.x) < player.minMoveSpeedInMidAir)//如果小于最小移动速度，直接设置为最小移动速度，确保起步流畅
-        // {
-        //     Debug.Log("1");
-        //     // player.rb.velocity = new Vector2(player.InputX * player.minMoveSpeedInMidAir, player.rb.velocity.y);
-        // }
-        // else if (Mathf.Abs(player.rb.velocity.x) >= player.minMoveSpeedInMidAir && Mathf.Abs(player.rb.velocity.x) < player.maxMoveSpeedInMidAir)//如果未达到最大移动速度，加速
-        // {
-        //     Debug.Log("2");
-        //     //player.rb.AddForce(new Vector2(inputX * player.moveSpeedAcc, 0));
-        //     player.rb.velocity = new Vector2(Mathf.MoveTowards(player.rb.velocity.x, player.maxMoveSpeedInMidAir * Mathf.Sign(player.rb.velocity.x), player.moveSpeedAccInMidAir *  Time.fixedDeltaTime), player.rb.velocity.y);
-        // }
-        // else
 
         // 如果超过最大跑动速度，则限速
         if (Mathf.Abs(player.rb.velocity.x) > player.maxMoveSpeedInMidAir)
@@ -199,6 +183,10 @@ public class MidAirState : PlayerState
         if (Mathf.Abs(player.rb.velocity.y) < player.gravityContractionThreshold)
         {
             player.rb.gravityScale = player.gravityContractionScale * player.defaultGravityScale;
+        } else if (player.launchedStagnationTimer > 0)
+        {
+            // 发射后滞空
+            player.rb.gravityScale = 0;
         }
         //else
         //{

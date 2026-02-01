@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     [Tooltip("无输入时的空气阻力（越小惯性越大）")] public float airDragWithoutInput = 0.3f;
     [Tooltip("有输入时的响应加速度")] public float airResponsiveness = 30f;
     [Tooltip("空中转向时的刹车力度")] public float airTurnBrakeForce = 200f;
-
+    [Tooltip("Y轴最大下落速度上限（负值）")]public float maxYVelocity = -20f;
 
     [Header("跳跃参数")]
     public float defaultGravityScale;//默认重力数值，在inspector中设置为3
@@ -72,12 +72,13 @@ public class PlayerController : MonoBehaviour
     // public float speedLimitOffTimer;
     // 初始速度越高，阻力系数越大，爆发感越强
     // 速度衰减低于阈值或衰减时间到达为两种直接的退出状态方式
-    [Tooltip("衰减停止的速度阈值，低于此值停止衰减 建议与空中启动速度匹配")] public float releaseMinSpeedThreshold = 1f;
+    [Tooltip("玩家输入与释放同向时的最大衰减速度，应与 midair 中 x 移速相同")] public float launchXMinSpeed = 10f;
     [Tooltip("线性阻力系数（每秒衰减速度），越大停得越快")] public float releaseDragCoefficient = 6f;
     [Tooltip("满能量时的衰减持续时间")]public float releaseDragTime = 0.5f;
     [Tooltip("释放的最低能量限度，低于此将不会触发发射")]public float releaseThreshold = 0;
     [Tooltip("基础发射速度")]public float baseSpeed = 50f;
     [Tooltip("最大发射速度，能量满时初始速度最大")]public float maxSpeed = 60f;
+    [Tooltip("释放结束后的滞空时间")]public float launchedStagnationTime = 0.18f;
 
     [Header("动力装置参数")]
     [Tooltip("释放冷却时间")] public float releaseCoolingLimit = 1f;
@@ -118,6 +119,7 @@ public class PlayerController : MonoBehaviour
     public float currentStorageFreezeTimer;//currentStorage停留计时器
     public float explosionTimer;//爆炸计时器
     public float releaseCoolingTimer; // 释放冷却
+    public float launchedStagnationTimer; // 释放后滞空计时器
     public bool canJump; // 与isGrounded相关
     public Vector2 releaseDir;
     public GameObject arrowInstance;
@@ -211,6 +213,7 @@ public class PlayerController : MonoBehaviour
         if (strengthenerTimer <= 0) playerVFXController.StopStrengthened();
         if (postReleaseTimer > 0) postReleaseTimer -= Time.deltaTime;
         if (releaseCoolingTimer > 0) releaseCoolingTimer -= Time.deltaTime;
+        if (launchedStagnationTimer > 0) launchedStagnationTimer -= Time.deltaTime;
         if (forceLimitTimer > 0) forceLimitTimer -= Time.deltaTime;
 
         //调用状态机内部更新：必须放在“处理其他状态之前”！

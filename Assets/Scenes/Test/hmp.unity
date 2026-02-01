@@ -404,11 +404,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 997180916685013997, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
       propertyPath: m_DefaultVelocity.x
-      value: 1
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 997180916685013997, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
       propertyPath: m_DefaultVelocity.y
-      value: 1
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2338480524274196357, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
       propertyPath: maxSpeed
@@ -431,8 +431,16 @@ PrefabInstance:
       value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2338480524274196357, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
+      propertyPath: launchedStagnationTime
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2338480524274196357, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
       propertyPath: releaseDragCoefficient
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2338480524274196357, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
+      propertyPath: gravityContractionScale
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3141424749767237886, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
       propertyPath: m_LocalPosition.x
