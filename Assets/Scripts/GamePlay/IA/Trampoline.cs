@@ -49,10 +49,8 @@ namespace GamePlay.IA
             Vector2 bounceDirection = transform.up.normalized;
 
             // 计算玩家在弹射方向上的速度分量（投影）
-            float playerSpeedInBounceDir = -Vector2.Dot(currentVelocity, bounceDirection);
+            float playerSpeedInBounceDir = Mathf.Abs(Vector2.Dot(currentVelocity, bounceDirection));
             Debug.Log("力投影：" + playerSpeedInBounceDir);
-
-            Debug.Log("玩家速度是" + playerSpeedInBounceDir);
 
             // 分档计算弹力
             float forceMagnitude;

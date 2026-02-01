@@ -91,6 +91,7 @@
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Strengthener.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interface\IPlayerForce.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Cooler.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\PlayerSFXController.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\PlayerVFXController.cs" />
     <Compile Include="Assets\Scripts\Singleton\UIManager\UIMain.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\PlayerState.cs" />
