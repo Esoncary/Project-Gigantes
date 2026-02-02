@@ -26,7 +26,19 @@ public class Strengthener : MonoBehaviour, IPickUp
         player.strengthenerTimer = strenthenerTime;//启动强化计时器
         player.maxStorage += 35;//提高最大储量
         player.explosionStorageThrehold += 35;//提高爆炸储量阈值
-        player.rb.velocity *= 1.5f;//拾取增强剂时瞬间提高50%的速度
+
+        if (player.rb.velocity.magnitude > 0.001f) //拾取增强剂时瞬间提高速度
+        {
+            // 1. 获取当前运动方向 (长度为1的单位向量)
+            Vector2 direction = player.rb.velocity.normalized;
+
+            // 2. 获取当前的模长 (速度值)
+            float currentSpeed = player.rb.velocity.magnitude;
+
+            // 3. 重新赋值：方向 * (旧模长 + 增加值)
+            player.rb.velocity = direction * (currentSpeed + 20f);//15是提升的速度值
+        }
+
         player.playerVFXController.PlayStrengthened();//播放增强剂特效
         Destroy(this.gameObject);//销毁自身
     }
