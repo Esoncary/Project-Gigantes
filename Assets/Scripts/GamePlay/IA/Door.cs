@@ -10,10 +10,17 @@ namespace GamePlay.IA
         [Header("Door Settings")]
         public int manualRequiredKeys = 0;
         private int _currentActiveCount = 0;
+        private Animator _animator;
+        private static readonly int DoorOpenTrigger = Animator.StringToHash("Open");
 
         protected override void Awake()
         {
             base.Awake();
+            _animator = GetComponent<Animator>();
+            if (_animator == null)
+            {
+                Debug.LogError("[TrampolineAnim] 未找到Animator组件！", this);
+            }
         }
 
         public override void OnSwitchOn() => CheckAllSwitches();
@@ -49,6 +56,7 @@ namespace GamePlay.IA
                 Debug.Log("【门】条件满足，开门！");
                 IsActive = true;
                 // 这里播放动画等
+                _animator.SetTrigger(DoorOpenTrigger);
                 SoundEffectMgr.Instance.PlaySound("door/door-open");
             }
         }
