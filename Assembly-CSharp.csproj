@@ -85,6 +85,7 @@
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\BrakeState.cs" />
     <Compile Include="Assets\Scripts\UI\ScenePanel.cs" />
     <Compile Include="Assets\Scripts\UI\ConfirmPanel.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\IA\Animation\TrampolineAnim.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\LevelEntranceDoor.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\LevelExitDoor.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Level\Checkpoint.cs" />

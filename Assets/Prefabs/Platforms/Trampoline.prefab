@@ -146,7 +146,7 @@ MonoBehaviour:
   boundSwitches: []
   defaultIsOn: 1
   baseForce: 40
-  lowSpeedThreshold: 40
-  highSpeedThreshold: 40
-  extraForce: 15
+  lowSpeedThreshold: 42
+  highSpeedThreshold: 55
+  extraForce: 10
   forceLimitTime: 1

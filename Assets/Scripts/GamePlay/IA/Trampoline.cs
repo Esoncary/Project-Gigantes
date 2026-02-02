@@ -16,6 +16,8 @@ namespace GamePlay.IA
         [SerializeField] private float lowSpeedThreshold = 25f;
         [Tooltip("第二档速度阈值：用于计算额外弹力的参考速度")]
         [SerializeField] private float highSpeedThreshold = 40f;
+        [Tooltip("第三档速度阈值")]
+        [SerializeField] private float moreHighSpeedThreshold = 60f;//为了关卡需要，我又增加了一档，增加速度直接使用extraforce的倍数
         [Tooltip("额外弹力：第二档时的最大额外弹力，额外弹力在 baseForce 的基础上计算")]
         [SerializeField] private float extraForce = 50f;
 
@@ -68,14 +70,18 @@ namespace GamePlay.IA
                 float speedRatio = (highSpeedThreshold - playerSpeedInBounceDir) / highSpeedThreshold ;
                 forceMagnitude = baseForce + extraForce * speedRatio;
             }
-            else
+            else if (playerSpeedInBounceDir < moreHighSpeedThreshold )
             {
                 // 超高速玩家，提供最大
                 forceMagnitude = baseForce + extraForce;
             }
+            else
+            {
+                forceMagnitude = baseForce + extraForce * 2f;
+            }
 
-            // 1. 计算玩家当前速度在蹦床方向上的分量（平行）
-            float parallelComponent = Vector2.Dot(currentVelocity, bounceDirection);
+                // 1. 计算玩家当前速度在蹦床方向上的分量（平行）
+                float parallelComponent = Vector2.Dot(currentVelocity, bounceDirection);
 
             // 2. 计算垂直于蹦床方向的速度分量
             Vector2 perpendicularVelocity = currentVelocity - bounceDirection * parallelComponent;
