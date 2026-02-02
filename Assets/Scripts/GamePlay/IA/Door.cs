@@ -1,3 +1,4 @@
+using System.Collections;
 using GamePlay.IA.Base;
 using GamePlay.Pickups; // 引用 Key 所在的命名空间
 using UnityEngine;
@@ -48,6 +49,7 @@ namespace GamePlay.IA
                 Debug.Log("【门】条件满足，开门！");
                 IsActive = true;
                 // 这里播放动画等
+                SoundEffectMgr.Instance.PlaySound("door/door-open");
             }
         }
 
@@ -82,7 +84,8 @@ namespace GamePlay.IA
                 if (IsActive)
                 {
                     Debug.Log("门是开的，请进");
-                    UIManager.Instance.ShowPanel<GameOverPanel>();
+                    // UIManager.Instance.ShowPanel<GameOverPanel>();
+                    StartCoroutine(ShowGameOverPanelAfterDelay(1f));
                 }
                 else
                 {
@@ -90,6 +93,13 @@ namespace GamePlay.IA
                     Debug.Log($"门锁着 (进度: {_currentActiveCount} / {total})");
                 }
             }
+        }
+        private IEnumerator ShowGameOverPanelAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+
+            // 显示游戏结束面板
+            UIManager.Instance.ShowPanel<GameOverPanel>();
         }
     }
 }

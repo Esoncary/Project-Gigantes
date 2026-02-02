@@ -24,7 +24,7 @@ namespace GamePlay.IA
         [Header("其他设置")]
         [Tooltip("限制其他力的作用计时器，触碰后开始计时，应与实际效果时间一致")]
         [SerializeField] private float forceLimitTime = 1f;
-        
+
         // 玩家实体触碰蹦床
         private void OnTriggerEnter2D(Collider2D collision)
         {
@@ -36,9 +36,10 @@ namespace GamePlay.IA
                 playerController.ApplyForce(this, forceLimitTime);
                 //打开后释放计时器
                 // playerController.postReleaseTimer = playerController.postReleaseTime;
+                SoundEffectMgr.Instance.PlaySound("trampoline/trampoline");
             }
         }
-        
+
         // IPlayerForce 实现
         public Vector2 CalculateVelocity(Vector2 currentVelocity, Vector2 playerPosition)
         {
@@ -67,7 +68,7 @@ namespace GamePlay.IA
             {
                 // 第二档：中速玩家，根据速度提供额外弹力
                 // 速度越大，额外弹力越小
-                float speedRatio = (highSpeedThreshold - playerSpeedInBounceDir) / highSpeedThreshold ;
+                float speedRatio = (highSpeedThreshold - playerSpeedInBounceDir) / highSpeedThreshold;
                 forceMagnitude = baseForce + extraForce * speedRatio;
             }
             else if (playerSpeedInBounceDir < moreHighSpeedThreshold )
@@ -89,7 +90,7 @@ namespace GamePlay.IA
             // 3. 新速度 = 弹射方向力 + 垂直方向保留的原有速度
             return bounceDirection * forceMagnitude + perpendicularVelocity;
         }
-        
+
         /// <summary>
         /// 计算 x 轴分速度占总速度（向量长度）的比例
         /// </summary>

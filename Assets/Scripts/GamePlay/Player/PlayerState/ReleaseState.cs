@@ -16,7 +16,7 @@ public class ReleaseState : PlayerState
             TransitionToNextState();
             return;
         }
-        
+
         // 1. 开启子弹时间
         Time.timeScale = player.timeScaleReleasing;
         Time.fixedDeltaTime = 0.02f * Time.timeScale; // 必须同步修改物理步长，防止卡顿
@@ -47,7 +47,7 @@ public class ReleaseState : PlayerState
         {
             Aim();
         }
-        
+
         // 释放
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
@@ -79,7 +79,7 @@ public class ReleaseState : PlayerState
         // 关闭箭头
         if (player.arrowInstance != null)
             player.arrowInstance.SetActive(false);
-        
+
         // 恢复重力
         if (player.rb.gravityScale == 0)
             player.rb.gravityScale = player.defaultGravityScale;
@@ -93,7 +93,15 @@ public class ReleaseState : PlayerState
         //关闭过载特效（如果有的话）这一步是打补丁，角色飞行中也会积攒能量，导致特效关不掉
         player.playerVFXController.StopOverload();
 
-        
+        Debug.Log("释放中...");
+        float currentRatio = player.currentStorage / player.maxStorage;
+        if (currentRatio <= 0.3)
+            SoundEffectMgr.Instance.PlaySound("release/penqi1");
+        else if (currentRatio <= 0.8)
+            SoundEffectMgr.Instance.PlaySound("release/penqi2");
+        else
+            SoundEffectMgr.Instance.PlaySound("release/penqi3");
+
     }
 
     /**
@@ -151,13 +159,13 @@ public class ReleaseState : PlayerState
             player.arrowInstance.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
         }
     }
-    
+
     /**
      * 进入发射状态
      */
     private void ExecuteRelease()
     {
-        
+
 
         // 震屏效果：朝向释放方向震动
         /**

@@ -11,13 +11,13 @@ public class GroundedCheckerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -26,8 +26,9 @@ public class GroundedCheckerManager : MonoBehaviour
         {
             isGrounded = true;
             PlayerVFXController.PlayLandDust(this.transform);
+            // SoundEffectMgr.Instance.PlayFootstep(collision.gameObject.tag);
         }
-            
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -36,6 +37,6 @@ public class GroundedCheckerManager : MonoBehaviour
         {
             isGrounded = false;
         }
-            
+
     }
 }
