@@ -27,6 +27,7 @@ public class SettingPanel : BasePanel
         {
             BkgMusicMgr.Instance.SetIsOpen(v);
             musicData.musicOpen = v;
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
 
         musicSlider.onValueChanged.AddListener((v) =>
@@ -39,6 +40,7 @@ public class SettingPanel : BasePanel
         {
             SoundEffectMgr.Instance.SetIsOpen(v);
             musicData.effectOpen = v;
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
 
         effectSlider.onValueChanged.AddListener((v) =>
@@ -53,6 +55,7 @@ public class SettingPanel : BasePanel
             UIManager.Instance.HidePanel<SettingPanel>();
             // 逻辑处理
             GameDataMgr.Instance.SaveMusicData();
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
         // 继续游戏按钮
         continueGameBtn.onClick.AddListener(() =>
@@ -61,6 +64,7 @@ public class SettingPanel : BasePanel
             UIManager.Instance.HidePanel<SettingPanel>();
             // 逻辑处理
             GameDataMgr.Instance.SaveMusicData();
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
         // 重新开始按钮
         restartBtn.onClick.AddListener(() =>
@@ -71,6 +75,7 @@ public class SettingPanel : BasePanel
             GameDataMgr.Instance.SaveMusicData();
             SceneMgr.Instance.TriggerReload();
             GameDataMgr.Instance.ClearSuspendData();
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
         // 主菜单按钮
         mainMenuBtn.onClick.AddListener(() =>
@@ -79,6 +84,7 @@ public class SettingPanel : BasePanel
             UIManager.Instance.ShowPanel<ConfirmPanel>();
             // 逻辑处理
             GameDataMgr.Instance.SaveMusicData();
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
     }
     public override void ShowMe()

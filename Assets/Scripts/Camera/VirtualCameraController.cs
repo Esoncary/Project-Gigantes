@@ -37,11 +37,12 @@ public class VirtualCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (confiner.m_BoundingShape2D == null)
+        // Debug.Log(confiner.m_BoundingShape2D);
+        if (confiner != null && confiner.m_BoundingShape2D == null)
         {
             ResetCameraBound();//绑定相机边界
         }
-       
+
     }
 
     public void ResetCameraTarget(Transform playerTransform)
@@ -73,6 +74,6 @@ public class VirtualCameraController : MonoBehaviour
                 confiner.InvalidateCache();
             }
         }
-        
+
     }
 }

@@ -1,7 +1,7 @@
 [
     {
         "LevelId": 0,
-        "imgRes": "imgs/1",
+        "imgRes": "Assets/Art/Sprites/UI/关卡卡片1.png",
         "SceneName": "关卡1",
         "WorldId": 1,
         "OrderInWorld": 1,
@@ -9,7 +9,7 @@
     },
     {
         "LevelId": 1,
-        "imgRes": "imgs/2",
+        "imgRes": "Assets/Art/Sprites/UI/关卡卡片2.png",
         "SceneName": "关卡2",
         "WorldId": 1,
         "OrderInWorld": 2,
@@ -17,7 +17,47 @@
     },
     {
         "LevelId": 2,
-        "imgRes": "imgs/3",
+        "imgRes": "Assets/Art/Sprites/UI/关卡卡片3.png",
+        "SceneName": "关卡3",
+        "WorldId": 1,
+        "OrderInWorld": 3,
+        "TotalCollectibles": 5
+    },
+    {
+        "LevelId": 3,
+        "imgRes": "Assets/Art/Sprites/UI/关卡卡片4.png",
+        "SceneName": "关卡3",
+        "WorldId": 1,
+        "OrderInWorld": 3,
+        "TotalCollectibles": 5
+    },
+    {
+        "LevelId": 4,
+        "imgRes": "Assets/Art/Sprites/UI/关卡卡片5.png",
+        "SceneName": "关卡3",
+        "WorldId": 1,
+        "OrderInWorld": 3,
+        "TotalCollectibles": 5
+    },
+    {
+        "LevelId": 5,
+        "imgRes": "Assets/Art/Sprites/UI/关卡卡片6.png",
+        "SceneName": "关卡3",
+        "WorldId": 1,
+        "OrderInWorld": 3,
+        "TotalCollectibles": 5
+    },
+    {
+        "LevelId": 6,
+        "imgRes": "Assets/Art/Sprites/UI/关卡卡片7.png",
+        "SceneName": "关卡3",
+        "WorldId": 1,
+        "OrderInWorld": 3,
+        "TotalCollectibles": 5
+    },
+    {
+        "LevelId": 7,
+        "imgRes": "Assets/Art/Sprites/UI/关卡卡片8.png",
         "SceneName": "关卡3",
         "WorldId": 1,
         "OrderInWorld": 3,

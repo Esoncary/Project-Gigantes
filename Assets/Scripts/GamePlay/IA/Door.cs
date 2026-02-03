@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using GamePlay.IA.Base;
 using GamePlay.Pickups; // 引用 Key 所在的命名空间
 using UnityEngine;
@@ -53,7 +54,7 @@ namespace GamePlay.IA
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        private async Task OnTriggerEnter2D(Collider2D collision)
         {
             // 检测是否是玩家
             if (collision.TryGetComponent<PlayerController>(out var player))
@@ -84,8 +85,7 @@ namespace GamePlay.IA
                 if (IsActive)
                 {
                     Debug.Log("门是开的，请进");
-                    // UIManager.Instance.ShowPanel<GameOverPanel>();
-                    StartCoroutine(ShowGameOverPanelAfterDelay(1f));
+                    await ShowGameOverPanelAfterDelay(1f);
                 }
                 else
                 {
@@ -94,12 +94,18 @@ namespace GamePlay.IA
                 }
             }
         }
-        private IEnumerator ShowGameOverPanelAfterDelay(float delay)
+        private async Task ShowGameOverPanelAfterDelay(float delay)
         {
-            yield return new WaitForSeconds(delay);
+            await Task.Delay((int)(delay * 1000));
 
-            // 显示游戏结束面板
-            UIManager.Instance.ShowPanel<GameOverPanel>();
+            await SceneMgr.Instance.SceneTransitionAsync(async () =>
+            {
+                GameDataMgr.Instance.ClearSuspendData();
+                UIManager.Instance.ShowPanel<ScenePanel>();
+                UIManager.Instance.HidePanel<GamePanel>();
+                UIManager.Instance.GetPanel<ScenePanel>().SelectNextLevel();
+            });
+
         }
     }
 }

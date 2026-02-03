@@ -20,13 +20,14 @@ public class ConfirmPanel : BasePanel
             // 逻辑处理
             // SceneMgr.Instance.UpdateCheckpoint(SceneMgr.Instance.currentRebornPos);
             SceneMgr.Instance.LoadSceneAsync(SceneMgr.Instance.GetSceneIdByName("UIScene"));
-
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
 
         cancelBtn.onClick.AddListener(() =>
         {
             // UI处理
             UIManager.Instance.HidePanel<ConfirmPanel>();
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
 
     }

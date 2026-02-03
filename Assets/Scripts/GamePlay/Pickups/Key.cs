@@ -110,6 +110,7 @@ namespace GamePlay.Pickups
                 GameDataMgr.Instance.currentSave.suspendData.interactedItems.Add(itemID);
                 GameDataMgr.Instance.SavePlayerSaveData();
             }
+            UIManager.Instance.GetPanel<GamePanel>().RefreshKeyUI();
         }
 
         // 触发拾取的逻辑（保持不变）

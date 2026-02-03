@@ -19,6 +19,7 @@ public class SuspendedPanel : BasePanel
             // 逻辑处理
             int levelId = GameDataMgr.Instance.currentSave.suspendData.suspendLevelId;
             SceneMgr.Instance.LoadGameScene(levelId);
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
         // 取消中断按钮
         cancelBtn.onClick.AddListener(() =>
@@ -27,6 +28,7 @@ public class SuspendedPanel : BasePanel
             UIManager.Instance.HidePanel<SuspendedPanel>();
             // 逻辑处理
             GameDataMgr.Instance.ClearSuspendData();
+            SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
 
     }
