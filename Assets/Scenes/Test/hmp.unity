@@ -475,6 +475,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1799486811}
     - target: {fileID: 7025086649547862276, guid: e114a18af65d43d4db7e3639b7727572, type: 3}
+      propertyPath: positionOffset.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7025086649547862276, guid: e114a18af65d43d4db7e3639b7727572, type: 3}
+      propertyPath: enablePositionMove
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7025086649547862276, guid: e114a18af65d43d4db7e3639b7727572, type: 3}
       propertyPath: enableCameraMovement
       value: 1
       objectReference: {fileID: 0}
