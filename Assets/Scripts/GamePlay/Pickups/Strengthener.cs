@@ -36,7 +36,7 @@ public class Strengthener : MonoBehaviour, IPickUp
             float currentSpeed = player.rb.velocity.magnitude;
 
             // 3. 重新赋值：方向 * (旧模长 + 增加值)
-            player.rb.velocity = direction * (currentSpeed + 20f);//15是提升的速度值
+            player.rb.velocity = direction * (currentSpeed + 15f);//15是提升的速度值
         }
 
         player.playerVFXController.PlayStrengthened();//播放增强剂特效

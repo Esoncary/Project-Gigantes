@@ -142,6 +142,7 @@
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\StorageUI.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interface\ILandmark.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Pickups\LevelItem.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\Pickups\Fresher.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\Trampoline.cs" />
     <Compile Include="Assets\Scripts\UI\BeginPanel.cs" />
     <Compile Include="Assets\Art\Sprites\VFX\Player\Release\StopRelease.cs" />
