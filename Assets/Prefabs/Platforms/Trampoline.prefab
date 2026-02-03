@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9187058090277703203}
   - component: {fileID: 7989221526688574785}
   - component: {fileID: 5926175330847104482}
+  - component: {fileID: 6256915483659975111}
   - component: {fileID: 4236999823376039385}
   m_Layer: 0
   m_Name: Trampoline
@@ -131,6 +132,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4.52, y: 2.14}
   m_EdgeRadius: 0
+--- !u!95 &6256915483659975111
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5618904031031397552}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d1fcaaf0f8d6e4b8e84ecac4691e8239, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &4236999823376039385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,7 +168,8 @@ MonoBehaviour:
   boundSwitches: []
   defaultIsOn: 1
   baseForce: 40
-  lowSpeedThreshold: 40
-  highSpeedThreshold: 40
-  extraForce: 15
+  lowSpeedThreshold: 42
+  highSpeedThreshold: 55
+  moreHighSpeedThreshold: 60
+  extraForce: 10
   forceLimitTime: 1

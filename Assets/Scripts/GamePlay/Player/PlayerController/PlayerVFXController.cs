@@ -88,7 +88,7 @@ public class PlayerVFXController : MonoBehaviour
     //跳跃灰尘特效（和上面位置不一样）
     public void PlayJumpDust(Transform playerPos)
     {
-        Vector3 spawnPos = new Vector3 (playerPos.position.x, playerPos.position.y - 1f, playerPos.position.z);
+        Vector3 spawnPos = new Vector3 (playerPos.position.x, playerPos.position.y, playerPos.position.z);
         
         Instantiate(VFXLandDust, spawnPos, Quaternion.identity);
     }

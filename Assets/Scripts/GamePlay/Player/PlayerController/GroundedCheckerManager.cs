@@ -25,7 +25,7 @@ public class GroundedCheckerManager : MonoBehaviour
         if (((1 << collision.gameObject.layer) & Ground) != 0)
         {
             isGrounded = true;
-            PlayerVFXController.PlayLandDust(this.transform);
+            //PlayerVFXController.PlayLandDust(this.transform);//不播放落地特效了，不然会非常杂乱
             // SoundEffectMgr.Instance.PlayFootstep(collision.gameObject.tag);
         }
 
