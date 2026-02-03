@@ -7,21 +7,14 @@ namespace GamePlay.IA.Animation
     /// </summary>
     public class TrampolineAnim : MonoBehaviour
     {
-        [Header("动画设置")]
-        [Tooltip("压缩动画持续时间（秒），从第一帧到压缩到底部的时间")]
-        [SerializeField] private float compressionDuration = 0.5f;
-
-        [Tooltip("常规动画播放速度倍率")]
-        [SerializeField] private float animSpeed = 1f;
-
         [Header("调试")]
         [SerializeField] private bool debugMode = false;
         
         private Animator _animator;
         private PlayerController player;
-        private static readonly int CompressionTrigger = Animator.StringToHash("Compression");
+        private static readonly int CompressionTrigger = Animator.StringToHash("Bounce");
         private bool _isPlayingCompression = false;
-        private bool _isPaused = false;
+        
 
         public TrampolineAnim(PlayerController _player)
         {
@@ -39,10 +32,6 @@ namespace GamePlay.IA.Animation
 
         private void Start()
         {
-            if (_animator != null)
-            {
-                _animator.speed = animSpeed;
-            }
         }
         
         // 玩家实体触碰蹦床
@@ -57,69 +46,17 @@ namespace GamePlay.IA.Animation
         /// </summary>
         private void PlayCompression()
         {
-            if (_animator != null)
+            // 获取当前动画状态信息
+            AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+
+            // 如果正在播放 compression 动画，或正在过渡到 compression，则忽略
+            if (stateInfo.IsName("compression") || _animator.IsInTransition(0))
             {
-                _isPlayingCompression = true;
-                _isPaused = false;
-                // 原始动画时长为1秒，通过调整speed实现目标时长
-                // speed = 原始时长 / 目标时长
-                _animator.speed = 1f / compressionDuration;
-                _animator.SetTrigger(CompressionTrigger);
                 if (debugMode)
-                    Debug.Log($"[TrampolineAnim] 播放压缩动画，时长: {compressionDuration}秒");
+                    Debug.Log("[TrampolineAnim] 动画播放中，忽略触发");
+                return;
             }
-        }
-
-        /// <summary>
-        /// 暂停动画播放
-        /// </summary>
-        public void Pause()
-        {
-            if (_animator != null && !_isPaused)
-            {
-                _isPaused = true;
-                _animator.speed = 0f;
-                if (debugMode)
-                    Debug.Log("[TrampolineAnim] 动画已暂停");
-            }
-        }
-
-        /// <summary>
-        /// 恢复动画播放
-        /// </summary>
-        public void Resume()
-        {
-            if (_animator != null && _isPaused)
-            {
-                _isPaused = false;
-                // 根据当前状态恢复速度
-                _animator.speed = _isPlayingCompression ? 1f / compressionDuration : animSpeed;
-                if (debugMode)
-                    Debug.Log("[TrampolineAnim] 动画已恢复");
-            }
-        }
-
-        /// <summary>
-        /// 设置动画播放速度
-        /// </summary>
-        public void SetAnimSpeed(float speed)
-        {
-            if (_animator != null)
-            {
-                _animator.speed = speed;
-            }
-        }
-
-        /// <summary>
-        /// 重置动画状态
-        /// </summary>
-        public void ResetAnim()
-        {
-            if (_animator != null)
-            {
-                _animator.ResetTrigger(CompressionTrigger);
-                _animator.Play("Idle", 0, 0f);
-            }
+            _animator.SetTrigger(CompressionTrigger);
         }
     }
 }

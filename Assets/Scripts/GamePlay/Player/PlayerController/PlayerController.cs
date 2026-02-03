@@ -107,6 +107,8 @@ public class PlayerController : MonoBehaviour
     public float strengthenerTimer;
     public float forceLimitTimer;
 
+    public bool IsInputLocked { get; set; } = false;
+    
     [Header("实时变量")]
     public float InputX;
     public bool JumpInputDown;
@@ -161,6 +163,9 @@ public class PlayerController : MonoBehaviour
     float lastDir;
     private void Update()
     {
+        // 输入锁定检查：如果被锁定，跳过所有输入处理
+        if (IsInputLocked) return;
+
         //交互物函数，暂时不知道放在哪里先放这儿
         if (currentInteractable != null & Input.GetKeyDown(KeyCode.E))
         {
