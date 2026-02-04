@@ -43,6 +43,13 @@ public class ReleaseState : PlayerState
     {
         base.LogicUpdate();
 
+        // 状态切换：死亡（自杀键）- 瞄准时也能自杀
+        if (player.DieInputDown)
+        {
+            stateMachine.ChangeState(player.DieState);
+            return;
+        }
+
         if (Input.GetKey(player.releaseKey))
         {
             Aim();

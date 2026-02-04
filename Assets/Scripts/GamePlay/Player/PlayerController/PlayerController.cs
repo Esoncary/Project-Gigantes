@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("动力装置参数")]
     [Tooltip("释放按键")] public KeyCode releaseKey = KeyCode.Mouse0;
+    [Tooltip("死亡按键（自杀）")] public KeyCode dieKey = KeyCode.R;
     [Tooltip("释放冷却时间")] public float releaseCoolingLimit = 1f;
     [Tooltip("释放输入缓冲时间")] public float releaseBufferTime = 0.5f;
     public float kineticMachineRecoverFromReleaseTime;//释放后动力装置停止运作的恢复时间
@@ -115,6 +116,7 @@ public class PlayerController : MonoBehaviour
     public float InputX;
     public bool JumpInputDown;
     public bool ReleaseInputDown;
+    public bool DieInputDown;
     public Vector2 MouseWorldPos;
     public Vector2 MouseDir;
     public float varJumpTimer;
@@ -194,6 +196,7 @@ public class PlayerController : MonoBehaviour
 
         JumpInputDown = Input.GetKeyDown(KeyCode.Space);
         ReleaseInputDown = Input.GetKeyDown(releaseKey);
+        DieInputDown = Input.GetKeyDown(dieKey);
         MouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         MouseDir = ((Vector2)MouseWorldPos - (Vector2)this.transform.position).normalized;
 

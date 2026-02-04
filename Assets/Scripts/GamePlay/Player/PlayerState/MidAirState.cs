@@ -88,7 +88,14 @@ public class MidAirState : PlayerState
             stateMachine.ChangeState(player.ReleaseState);
             return;
         }
-        
+
+        // --- 5. 状态切换：死亡（自杀键）---
+        if (player.DieInputDown)
+        {
+            stateMachine.ChangeState(player.DieState);
+            return;
+        }
+
         if (player.forceLimitTimer > 0)
         {
             // 处于力限制状态下，恢复正常重力

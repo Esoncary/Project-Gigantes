@@ -52,6 +52,13 @@ public class IdleState : PlayerState
             stateMachine.ChangeState(player.ReleaseState);
             return;
         }
+
+        // 5. 状态切换：死亡（自杀键）
+        if (player.DieInputDown)
+        {
+            stateMachine.ChangeState(player.DieState);
+            return;
+        }
     }
 
     public override void PhysicsUpdate()

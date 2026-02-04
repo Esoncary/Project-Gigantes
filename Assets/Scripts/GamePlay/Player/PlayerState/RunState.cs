@@ -54,6 +54,14 @@ public class RunState : PlayerState
             stateMachine.ChangeState(player.ReleaseState);
             return;
         }
+
+        // 5. 状态切换：死亡（自杀键）
+        if (player.DieInputDown)
+        {
+            stateMachine.ChangeState(player.DieState);
+            return;
+        }
+
         if (player.groundedCheckerManager.isGrounded) // 只有在地面时才处理
         {
             HandleFootstepSound();
