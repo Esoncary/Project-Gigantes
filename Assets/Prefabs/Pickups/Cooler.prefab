@@ -98,6 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696a89b17fae85448a09bc58adb4d141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  respawnTime: 3
+  floatRange: 0.2
+  floatSpeed: 2
+  VFXPickup: {fileID: 2814588277364261748, guid: b0fb7c58dac6c974596a89544babbd72, type: 3}
   coolTime: 1
 --- !u!58 &6575665652495380778
 CircleCollider2D:

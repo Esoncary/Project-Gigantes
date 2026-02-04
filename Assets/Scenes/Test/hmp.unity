@@ -646,6 +646,10 @@ PrefabInstance:
       value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2338480524274196357, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
+      propertyPath: releaseKey
+      value: 323
+      objectReference: {fileID: 0}
+    - target: {fileID: 2338480524274196357, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
       propertyPath: jumpCoyoteTime
       value: 0.5
       objectReference: {fileID: 0}
@@ -949,7 +953,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1547379013}
   m_Lens:
     FieldOfView: 40
-    OrthographicSize: 10
+    OrthographicSize: 8
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0
@@ -1043,7 +1047,7 @@ Camera:
   far clip plane: 5000
   field of view: 40
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

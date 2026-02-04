@@ -48,11 +48,20 @@ public class RunState : PlayerState
 
         // 4. 状态切换：释放 (由外部输入触发，但切入 ReleaseState)
         // 注意：这里只需判断是否要进入释放状态，具体的数值由 KineticDevice 处理
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (player.CanTriggerRelease())
         {
+            player.ConsumeReleaseBuffer();
             stateMachine.ChangeState(player.ReleaseState);
             return;
         }
+
+        // 5. 状态切换：死亡（自杀键）
+        if (player.DieInputDown)
+        {
+            stateMachine.ChangeState(player.DieState);
+            return;
+        }
+
         if (player.groundedCheckerManager.isGrounded) // 只有在地面时才处理
         {
             HandleFootstepSound();

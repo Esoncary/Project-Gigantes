@@ -82,12 +82,20 @@ public class MidAirState : PlayerState
         }
 
         // --- 4. 状态切换：向量释放 ---
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (player.CanTriggerRelease())
         {
+            player.ConsumeReleaseBuffer();
             stateMachine.ChangeState(player.ReleaseState);
             return;
         }
-        
+
+        // --- 5. 状态切换：死亡（自杀键）---
+        if (player.DieInputDown)
+        {
+            stateMachine.ChangeState(player.DieState);
+            return;
+        }
+
         if (player.forceLimitTimer > 0)
         {
             // 处于力限制状态下，恢复正常重力

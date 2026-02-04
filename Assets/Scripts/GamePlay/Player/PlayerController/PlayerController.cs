@@ -81,7 +81,10 @@ public class PlayerController : MonoBehaviour
     [Tooltip("释放结束后的滞空时间")] public float launchedStagnationTime = 0.18f;
 
     [Header("动力装置参数")]
+    [Tooltip("释放按键")] public KeyCode releaseKey = KeyCode.Mouse0;
+    [Tooltip("死亡按键（自杀）")] public KeyCode dieKey = KeyCode.R;
     [Tooltip("释放冷却时间")] public float releaseCoolingLimit = 1f;
+    [Tooltip("释放输入缓冲时间")] public float releaseBufferTime = 0.5f;
     public float kineticMachineRecoverFromReleaseTime;//释放后动力装置停止运作的恢复时间
     public float explosionStorageThrehold; //储量爆炸阈值,比最大储量值小一点
     public float maxStorage; //最大储量值.允许玩家在过载状态多装一点能量，以便于卡住过载状态释放
@@ -113,10 +116,12 @@ public class PlayerController : MonoBehaviour
     public float InputX;
     public bool JumpInputDown;
     public bool ReleaseInputDown;
+    public bool DieInputDown;
     public Vector2 MouseWorldPos;
     public Vector2 MouseDir;
     public float varJumpTimer;
     public float jumpBufferTimer;//跳跃缓冲计时器
+    public float releaseBufferTimer;//释放缓冲计时器
     public float climbTimer;
     public float targetStorageFreezeTimer;//targetStorage停留计时器
     public float currentStorageFreezeTimer;//currentStorage停留计时器
@@ -190,21 +195,27 @@ public class PlayerController : MonoBehaviour
             InputX = moveA + moveD;//单向或无向，直接求和
 
         JumpInputDown = Input.GetKeyDown(KeyCode.Space);
-        ReleaseInputDown = Input.GetKeyDown(KeyCode.LeftControl);
+        ReleaseInputDown = Input.GetKeyDown(releaseKey);
+        DieInputDown = Input.GetKeyDown(dieKey);
         MouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         MouseDir = ((Vector2)MouseWorldPos - (Vector2)this.transform.position).normalized;
 
-        //启动输入缓冲(目前只有跳跃)
+        //启动输入缓冲
         if (JumpInputDown)
         {
             jumpBufferTimer = jumpBufferTime;
             SoundEffectMgr.Instance.PlaySound("player/jump");
             // Debug.Log("JumpJumpJumpJumpJumpJumpJumpJumpJumpJumpJumpJumpJumpJump");
         }
+        if (ReleaseInputDown)
+        {
+            releaseBufferTimer = releaseBufferTime;
+        }
 
         //处理计时器
         if (varJumpTimer > 0) varJumpTimer -= Time.deltaTime;
         if (jumpBufferTimer > 0) jumpBufferTimer -= Time.deltaTime;
+        if (releaseBufferTimer > 0) releaseBufferTimer -= Time.deltaTime;
         if (currentStorageFreezeTimer > 0) currentStorageFreezeTimer -= Time.deltaTime;
         if (targetStorageFreezeTimer > 0) targetStorageFreezeTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
@@ -389,6 +400,26 @@ public class PlayerController : MonoBehaviour
     public void PlayAnimation(string name)
     {
         //if (Anim != null && !string.IsNullOrEmpty(name)) Anim.Play(name);
+    }
+    #endregion
+
+    #region 释放输入缓冲
+    /// <summary>
+    /// 检查是否可以触发释放（考虑冷却和输入缓冲）
+    /// </summary>
+    public bool CanTriggerRelease()
+    {
+        if (releaseCoolingTimer > 0) return false;
+        if (ReleaseInputDown || releaseBufferTimer > 0) return true;
+        return false;
+    }
+
+    /// <summary>
+    /// 消耗释放输入缓冲（进入释放状态时调用）
+    /// </summary>
+    public void ConsumeReleaseBuffer()
+    {
+        releaseBufferTimer = -1;
     }
     #endregion
 }

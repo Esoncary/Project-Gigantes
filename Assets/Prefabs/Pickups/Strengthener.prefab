@@ -133,4 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5037f53debbfaf4286dccc86c11b469, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  respawnTime: 3
+  floatRange: 0.2
+  floatSpeed: 2
+  VFXPickup: {fileID: 4261614745612260058, guid: f60d8b2ef893ad04fb85d4e01360ae5b, type: 3}
   strenthenerTime: 2

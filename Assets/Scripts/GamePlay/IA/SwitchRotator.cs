@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -67,11 +68,25 @@ public class SwitchRotator2D : MonoBehaviour
     [Tooltip("显示调试日志")]
     [SerializeField] private bool debugMode = false;
 
+
+    private Animator _animator;
+    private static readonly int LeftOPTrigger = Animator.StringToHash("leftOperate");
+    private static readonly int RightOPTrigger = Animator.StringToHash("rightOperate");
+
     // 状态变量
     private bool isPlayerNearby = false;
     private bool isMoving = false;
     private bool hasTriggered = false;
     private PlayerController playerController;
+
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
+        if (_animator == null)
+        {
+            Debug.LogError("[TrampolineAnim] 未找到_animator组件！", this);
+        }
+    }
 
     private void Update()
     {
@@ -89,6 +104,24 @@ public class SwitchRotator2D : MonoBehaviour
     {
         isMoving = true;
         hasTriggered = true;
+
+        // 根据玩家位置触发拉杆动画
+        if (_animator != null)
+        {
+            float playerX = playerController != null ? playerController.transform.position.x : 0f;
+            float switchX = transform.position.x;
+
+            if (playerX < switchX)
+            {
+                _animator.SetTrigger(LeftOPTrigger);
+                if (debugMode) Debug.Log("[SwitchRotator2D] 触发 leftOP 动画（玩家在左侧）");
+            }
+            else
+            {
+                _animator.SetTrigger(RightOPTrigger);
+                if (debugMode) Debug.Log("[SwitchRotator2D] 触发 rightOP 动画（玩家在右侧）");
+            }
+        }
 
         if (debugMode) Debug.Log("[SwitchRotator2D] 触发序列开始");
 
@@ -209,6 +242,9 @@ public class SwitchRotator2D : MonoBehaviour
 
         targetObject.position = endPos;
         if (debugMode) Debug.Log("[SwitchRotator2D] 移动完成");
+
+
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)

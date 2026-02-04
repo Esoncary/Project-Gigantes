@@ -22,7 +22,7 @@ public class Parallax : MonoBehaviour
         float distance = (cam.transform.position.x * parallaxEffect);
 
         // 更新背景位置
-        transform.position = new Vector3(startPos + distance, transform.position.y, transform.position.z);
+        //transform.position = new Vector3(startPos + distance, transform.position.y, transform.position.z);
 
         // --- 循环背景逻辑（如果你需要背景无限循环） ---
         float temp = (cam.transform.position.x * (1 - parallaxEffect));
