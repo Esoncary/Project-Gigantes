@@ -5,6 +5,13 @@ namespace GamePlay.Pickups
 {
     public class Key : Switch, IPickUp
     {
+        [Header("道具共有参数设置")]//用于钥匙浮动效果
+        public float floatRange = 0.2f;
+        public float floatSpeed = 2.0f;
+        protected Vector3 startPos;
+
+
+
         private bool _isPickUp;
         private PlayerController _cachedPlayer; // 缓存Player引用
         private bool _isBindingToPlayer; // 防止重复协程
@@ -14,6 +21,7 @@ namespace GamePlay.Pickups
         {
             base.Awake(); // 调用LevelItem的Awake生成唯一itemID
             StartCoroutine(WaitForPlayerThenBindKey()); // 协程等待Player加载
+            startPos = transform.position;
         }
 
         protected override void Start()
@@ -25,6 +33,13 @@ namespace GamePlay.Pickups
             {
                 DisableKeyVisualAndCollider();
             }
+        }
+
+        private void Update()
+        {
+            //钥匙浮动逻辑
+            float newY = startPos.y + Mathf.Sin(Time.time * floatSpeed) * floatRange;
+            transform.position = new Vector3(startPos.x, newY, startPos.z);
         }
 
         // 核心逻辑：协程等待Player加载完成，再处理存档钥匙的挂载

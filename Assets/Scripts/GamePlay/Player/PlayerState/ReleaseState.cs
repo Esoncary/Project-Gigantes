@@ -58,6 +58,11 @@ public class ReleaseState : PlayerState
             else
             {
                 ExecuteRelease();
+                //开启释放冷却
+                player.releaseCoolingTimer = player.releaseCoolingLimit;
+
+                //开启装置冷却
+                player.kineticMachineRecoverFromReleaseTimer = player.kineticMachineRecoverFromReleaseTime;
             }
         }
     }
@@ -84,11 +89,7 @@ public class ReleaseState : PlayerState
         if (player.rb.gravityScale == 0)
             player.rb.gravityScale = player.defaultGravityScale;
 
-        //开启释放冷却
-        player.releaseCoolingTimer = player.releaseCoolingLimit;
-
-        //开启装置冷却
-        player.kineticMachineRecoverFromReleaseTimer = player.kineticMachineRecoverFromReleaseTime;
+        
 
         //关闭过载特效（如果有的话）这一步是打补丁，角色飞行中也会积攒能量，导致特效关不掉
         player.playerVFXController.StopOverload();
