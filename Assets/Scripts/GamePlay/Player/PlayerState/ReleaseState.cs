@@ -43,13 +43,20 @@ public class ReleaseState : PlayerState
     {
         base.LogicUpdate();
 
-        if (Input.GetKey(KeyCode.LeftControl))
+        // 状态切换：死亡（自杀键）- 瞄准时也能自杀
+        if (player.DieInputDown)
+        {
+            stateMachine.ChangeState(player.DieState);
+            return;
+        }
+
+        if (Input.GetKey(player.releaseKey))
         {
             Aim();
         }
 
         // 释放
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (Input.GetKeyUp(player.releaseKey))
         {
             if (player.currentStorage < player.releaseThreshold)
             {
@@ -90,6 +97,9 @@ public class ReleaseState : PlayerState
             player.rb.gravityScale = player.defaultGravityScale;
 
         
+
+        //关闭释放缓冲
+        player.releaseBufferTimer = -1;
 
         //关闭过载特效（如果有的话）这一步是打补丁，角色飞行中也会积攒能量，导致特效关不掉
         player.playerVFXController.StopOverload();
