@@ -646,6 +646,10 @@ PrefabInstance:
       value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2338480524274196357, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
+      propertyPath: releaseKey
+      value: 323
+      objectReference: {fileID: 0}
+    - target: {fileID: 2338480524274196357, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
       propertyPath: jumpCoyoteTime
       value: 0.5
       objectReference: {fileID: 0}

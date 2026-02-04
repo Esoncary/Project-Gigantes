@@ -43,13 +43,13 @@ public class ReleaseState : PlayerState
     {
         base.LogicUpdate();
 
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKey(player.releaseKey))
         {
             Aim();
         }
 
         // 释放
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (Input.GetKeyUp(player.releaseKey))
         {
             if (player.currentStorage < player.releaseThreshold)
             {
@@ -89,6 +89,9 @@ public class ReleaseState : PlayerState
 
         //开启装置冷却
         player.kineticMachineRecoverFromReleaseTimer = player.kineticMachineRecoverFromReleaseTime;
+
+        //关闭释放缓冲
+        player.releaseBufferTimer = -1;
 
         //关闭过载特效（如果有的话）这一步是打补丁，角色飞行中也会积攒能量，导致特效关不掉
         player.playerVFXController.StopOverload();

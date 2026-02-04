@@ -38,6 +38,14 @@ public class BrakeState : PlayerState
             return;
         }
 
+        // --- 3.5. 状态切换：释放 ---
+        if (player.CanTriggerRelease())
+        {
+            player.ConsumeReleaseBuffer();
+            stateMachine.ChangeState(player.ReleaseState);
+            return;
+        }
+
         // --- 4. 状态切换：速度足够慢了，正式进入 Idle ---
         // 使用 Mathf.Abs 确保向左向右滑动都能正确检测
         if (Mathf.Abs(player.rb.velocity.x) < 0.01)

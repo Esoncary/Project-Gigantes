@@ -82,8 +82,9 @@ public class MidAirState : PlayerState
         }
 
         // --- 4. 状态切换：向量释放 ---
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (player.CanTriggerRelease())
         {
+            player.ConsumeReleaseBuffer();
             stateMachine.ChangeState(player.ReleaseState);
             return;
         }
