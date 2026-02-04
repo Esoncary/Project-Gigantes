@@ -45,6 +45,8 @@ public class SceneMgr
     // 监听玩家死亡（重命名更清晰）
     private void OnPlayerDie()
     {
+        GameDataMgr.Instance.ClearSessionData();
+        UIManager.Instance.GetPanel<GamePanel>().RefreshKeyUI();
         TriggerReload();
     }
     // 加载场景数据
@@ -150,12 +152,15 @@ public class SceneMgr
         isReloading = true;
 
         // await SceneTransitionAsync(() => InitScene(currentRebornPos));
-
+        await Task.Delay(500);
         LoadSceneAsync(GameDataMgr.Instance.currentLevelId, async () =>
         {
             // Debug.Log("GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord" + GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord);
             if (!GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord)
+            {
                 currentRebornPos = GameObject.Find("RebornPos").transform.position;
+
+            }
             else
                 currentRebornPos = new Vector2(GameDataMgr.Instance.currentSave.suspendData.suspendPosX, GameDataMgr.Instance.currentSave.suspendData.suspendPosY);
             Debug.Log("位置" + currentRebornPos);

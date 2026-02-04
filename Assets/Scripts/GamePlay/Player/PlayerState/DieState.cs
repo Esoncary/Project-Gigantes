@@ -34,7 +34,7 @@ public class DieState : PlayerState
 
         // 触发死亡动画
         player.playerVFXController.PlayDie(player.transform);
-
+        SoundEffectMgr.Instance.PlaySound("player/deadExplosion");
         // 3. 广播信号：告诉所有人玩家死了
         GameEvents.PlayerDie?.Invoke();
     }

@@ -45,6 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ff1f24936ba3448a117b5def30b2af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  footstepGroups:
+  - materialName: sand
+    clips:
+    - {fileID: 8300000, guid: 58ca819e8eecb2b40bc2691572128eff, type: 3}
+    - {fileID: 8300000, guid: 41b22ef9afd936f49965f38b04311b0b, type: 3}
+    - {fileID: 8300000, guid: e8c4a94ce35b49a428c3c9c15e21114b, type: 3}
+    - {fileID: 8300000, guid: d7fba19fef779d54c81289a8d5515a60, type: 3}
+  - materialName: metal
+    clips:
+    - {fileID: 8300000, guid: 04ce56e20b92d754883789b01701830a, type: 3}
+    - {fileID: 8300000, guid: 0447670ef42f2344baf2aa72dd75339b, type: 3}
+    - {fileID: 8300000, guid: ee507f7a42a7e944aa341a06e57287b7, type: 3}
+    - {fileID: 8300000, guid: 33e092525cf2ac6408a640bc18470d9d, type: 3}
 --- !u!82 &1866134810143453427
 AudioSource:
   m_ObjectHideFlags: 0

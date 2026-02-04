@@ -72,10 +72,12 @@ public class SettingPanel : BasePanel
             // UI处理
             UIManager.Instance.HidePanel<SettingPanel>();
             // 逻辑处理
+            GameDataMgr.Instance.ClearSuspendData();
             GameDataMgr.Instance.SaveMusicData();
             SceneMgr.Instance.TriggerReload();
-            GameDataMgr.Instance.ClearSuspendData();
+
             SoundEffectMgr.Instance.PlaySound("UI/button_click");
+            UIManager.Instance.GetPanel<GamePanel>().RefreshKeyUI();
         });
         // 主菜单按钮
         mainMenuBtn.onClick.AddListener(() =>

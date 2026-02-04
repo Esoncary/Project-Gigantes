@@ -14,15 +14,16 @@ public class KineticMachine : MonoBehaviour
 
     private void Update()
     {
-
+        // Debug.Log("k is working");
         if (player.coolerTimer <= 0 && player.kineticMachineRecoverFromReleaseTimer <= 0)//前者是冷却剂，后者是装置冷却时间，整个装置在释放后也会冷却不运作
         {
             KineticMachineOperate();
+            UIManager.Instance.GetPanel<GamePanel>()?.ChangeStorageUI(true);
         }
 
         if (player.strengthenerTimer <= 0 && player.strengthenerTimer != -1)
         {
-            player.maxStorage  = 60;//恢复最大储量
+            player.maxStorage = 60;//恢复最大储量
             player.explosionStorageThrehold = 40;//恢复爆炸储量阈值
             player.strengthenerTimer = -1;//关闭强化计时器
         }
@@ -78,7 +79,7 @@ public class KineticMachine : MonoBehaviour
                 player.currentStorageFreezeTimer = player.currentStorageFreezeTime;//启动冻结当前储量计时器
             }
             else if (player.currentStorageFreezeTimer <= 0 && player.currentStorageFreezeTimer != -1)//如果计时器跑完了，且它还没有被关掉 
-            {  
+            {
                 currentStorageDecrease();//当前储量下降函数
             }
         }
@@ -86,12 +87,12 @@ public class KineticMachine : MonoBehaviour
         //如果当前储量冻结计时器小于等于0且当前储量冻结计时器不处于-1状态，则允许当前储量下降
         if (player.currentStorageFreezeTimer <= 0 && player.currentStorageFreezeTimer != -1)
         {
-            
+
             currentStorageDecrease();//当前储量下降函数
         }
 
         //现在来处理过载状态
-        if (player.currentStorage >= player.explosionStorageThrehold )
+        if (player.currentStorage >= player.explosionStorageThrehold)
         {
             if (player.explosionTimer == -1)//如果此时计时器还没有启动
             {
@@ -120,7 +121,7 @@ public class KineticMachine : MonoBehaviour
         else
         {
             player.targetStorage = player.currentVelocityMag * 1.1f;//在数值调试中有些问题，加了个1.1f来弥补
-        }    
+        }
     }
     // public void SetTargetStorage(float n)
     // {

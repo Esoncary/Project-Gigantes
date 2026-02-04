@@ -190,7 +190,7 @@ public class PlayerControllerWasted : MonoBehaviour
             isJumpBuffered = true;
             jumpBufferTimer = jumpBufferTime;//启动/重置跳跃缓冲计时器
             jumpPressedTime = Time.time;//标记按下时间
-
+            SoundEffectMgr.Instance.PlaySound("player/jump");
         }
         //SwitchCurrentPlayerStateInUpdate();
         else if (isGrounded && Input.GetAxisRaw("Horizontal") != 0 && rb.velocity.y <= 0.1f)
@@ -567,7 +567,6 @@ public class PlayerControllerWasted : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, maxJumpSpeed);
             }
         }
-
     }
     void EnableGravityContraction()
     {

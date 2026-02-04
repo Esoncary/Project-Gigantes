@@ -105,12 +105,13 @@ namespace GamePlay.Pickups
 
             // 记录存档（同步到持久化数据）
             GameDataMgr.Instance.RecordItem(itemID);
-            if (!GameDataMgr.Instance.currentSave.suspendData.interactedItems.Contains(itemID))
-            {
-                GameDataMgr.Instance.currentSave.suspendData.interactedItems.Add(itemID);
-                GameDataMgr.Instance.SavePlayerSaveData();
-            }
+            // if (!GameDataMgr.Instance.currentSave.suspendData.interactedItems.Contains(itemID))
+            // {
+            //     GameDataMgr.Instance.currentSave.suspendData.interactedItems.Add(itemID);
+            //     GameDataMgr.Instance.SavePlayerSaveData();
+            // }
             UIManager.Instance.GetPanel<GamePanel>().RefreshKeyUI();
+            SoundEffectMgr.Instance.PlaySound("item/getkey");
         }
 
         // 触发拾取的逻辑（保持不变）

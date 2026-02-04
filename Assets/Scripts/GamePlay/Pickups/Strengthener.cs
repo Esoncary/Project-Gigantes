@@ -38,7 +38,7 @@ public class Strengthener : MonoBehaviour, IPickUp
             // 3. 重新赋值：方向 * (旧模长 + 增加值)
             player.rb.velocity = direction * (currentSpeed + 20f);//15是提升的速度值
         }
-
+        SoundEffectMgr.Instance.PlaySound("item/getsomething");
         player.playerVFXController.PlayStrengthened();//播放增强剂特效
         Destroy(this.gameObject);//销毁自身
     }

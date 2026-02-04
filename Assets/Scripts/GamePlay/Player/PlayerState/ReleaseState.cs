@@ -32,6 +32,7 @@ public class ReleaseState : PlayerState
             // 初始默认方向：如果没有输入过，默认指向上
             if (player.releaseDir == Vector2.zero) player.releaseDir = Vector2.up;
         }
+
     }
 
     public override void HandleInput()
@@ -188,5 +189,6 @@ public class ReleaseState : PlayerState
             player.arrowInstance.SetActive(false);
 
         stateMachine.ChangeState(player.LaunchedState);
+        UIManager.Instance.GetPanel<GamePanel>()?.ChangeStorageUI(false);
     }
 }
