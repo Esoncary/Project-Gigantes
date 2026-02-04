@@ -57,12 +57,7 @@ public class Cooler : MonoBehaviour, IPickUp
         player.coolerTimer = coolTime;//启动冷冻计时器
         player.playerVFXController.PlayCooled();//启动冷冻特效。这种启动方式有问题，但是先这样吧
         player.playerVFXController.StopOverload();//关闭过载特效。如果角色处于过载状态吃到，关闭过载特效
-<<<<<<< HEAD
-        SoundEffectMgr.Instance.PlaySound("item/getsomething");
-        Destroy(this.gameObject);//销毁自身
-=======
         Instantiate(VFXPickup, transform.position, Quaternion.identity);//播放拾取特效
->>>>>>> db9a8fc2fb35d7207d9abd36666a3a93023ae794
 
         //启动刷新协程
         StartCoroutine(RespawnSequence());
