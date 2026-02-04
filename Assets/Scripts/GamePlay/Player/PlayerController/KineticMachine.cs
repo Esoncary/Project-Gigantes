@@ -99,6 +99,7 @@ public class KineticMachine : MonoBehaviour
                 player.isOverloaded = true;//将过载状态设为真
                 player.explosionTimer = player.explosionTime;//启动过载计时器
                 player.playerVFXController.PlayeOverload();//启动过载特效
+                SoundEffectMgr.Instance.PlaySound("overload/overload_enter", true);
             }
             Overloaded();//过载行为函数
         }
@@ -107,6 +108,7 @@ public class KineticMachine : MonoBehaviour
             player.isOverloaded = false;//将过载状态设为假
             player.explosionTimer = -1;//关闭过载计时器
             player.playerVFXController.StopOverload();//关闭过载特效
+            SoundEffectMgr.Instance.StopSound("overload/overload_enter");
         }
     }
 

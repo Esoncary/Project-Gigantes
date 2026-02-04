@@ -37,7 +37,7 @@ public class BeginPanel : BasePanel
         // 开始按钮
         startBtn.onClick.AddListener(() =>
         {
-            Debug.Log("kaishiyouxi ");
+            // Debug.Log("kaishiyouxi ");
             // UI处理
             UIManager.Instance.HidePanel<BeginPanel>();
             UIManager.Instance.ShowPanel<ScenePanel>();

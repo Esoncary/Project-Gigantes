@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class ScenePanel : BasePanel
 {
+    // UI控件引用
     public Button leftBtn;
     public Button rightBtn;
     public Button beginBtn;
@@ -17,50 +18,63 @@ public class ScenePanel : BasePanel
     public Button level2;
     public Button level3;
     public Button level4;
-    public ScrollRect levelScrollRect;
-    private Transform contentTrans;
-    private int pageIndex = 0;          // 当前页码（替代原nowIndex的分页作用）
-    private const int PageSize = 4;     // 每页显示4个关卡
+
+    // 分页配置
+    private int pageIndex = 0;
+    private const int PageSize = 4;
+
+    // 关卡按钮管理
     private List<Button> levelButtons = new List<Button>();
-    private Button selectedLevelBtn;    // 当前选中的关卡按钮
-    private int selectedLevelIndex = 0; // 当前选中的关卡索引
-    private bool canStart = true;
-    // 选中效果参数（可在Inspector面板调整）
-    public float selectedScale = 1.1f;  // 选中时缩放比例
-    public Color selectedBgColor = new Color(1f, 0.8f, 0f); // 选中背景色（浅金）
-    public Color normalBgColor = Color.white; // 正常背景色
-    public Color borderColor = new Color(1f, 0.9f, 0.2f); // 选中边框色（亮金）
-    public float breathScaleRange = 0.01f;   // 呼吸缩放的波动范围（变大0.1倍）
-    public float breathDuration = 1f;       // 一次呼吸周期（变大+变小）的时长
+    private Button selectedLevelBtn;
+    // public int GameDataMgr.Instance.selectedLevelIndex = 0;
+    private Vector3[] levelButtonOriginalScales;
 
-    // 新增：存储呼吸协程，用于停止未选中按钮的缩放
+    // 选中样式配置
+    public float selectedScale = 1.1f;
+    public Color selectedBgColor = new Color(1f, 0.8f, 0f);
+    public Color normalBgColor = Color.white;
+    public Color borderColor = new Color(1f, 0.9f, 0.2f);
+    public float breathScaleRange = 0.01f;
+    public float breathDuration = 1f;
+
+    // 动画协程管理
     private Coroutine currentBreathCoroutine;
-    public bool loopSelect = true;
+    private Dictionary<Transform, Coroutine> buttonHoverCoroutines = new Dictionary<Transform, Coroutine>();
 
+    // 悬停动画配置
     [Header("关卡按钮悬停动画")]
     [Tooltip("鼠标悬停放大倍数")]
     public float hoverScaleMultiplier = 1.15f;
     [Tooltip("动画过渡时长(秒)")]
     public float hoverAnimationDuration = 0.2f;
 
-    // 独立管理每个按钮的悬停协程，防止冲突
-    private Dictionary<Transform, Coroutine> buttonHoverCoroutines = new Dictionary<Transform, Coroutine>();
-    // 存储关卡按钮原始缩放值
-    private Vector3[] levelButtonOriginalScales;
 
     public override void Init()
     {
         CheckSuspendedRecord();
+
         // 初始化关卡按钮列表
         levelButtons.Add(level1);
         levelButtons.Add(level2);
         levelButtons.Add(level3);
         levelButtons.Add(level4);
+
         //初始化原始缩放 & 轴心设置
         levelButtonOriginalScales = new Vector3[levelButtons.Count];
         InitLevelButtonScaleAndPivot();
 
-        // 绑定关卡按钮点击事件
+        // 绑定所有交互事件
+        BindAllButtonEvents();
+
+        // 初始化默认选中关卡与分页
+        InitDefaultSelectedLevel();
+
+        // 刷新界面显示
+        RefreshLevelButtons();
+    }
+    private void BindAllButtonEvents()
+    {
+        // 绑定关卡按钮点击+悬停事件
         for (int i = 0; i < levelButtons.Count; i++)
         {
             int btnIndex = i;
@@ -69,9 +83,7 @@ public class ScenePanel : BasePanel
                 OnLevelButtonClick(btnIndex);
                 SoundEffectMgr.Instance.PlaySound("UI/button_click");
             });
-            // 为关卡按钮绑定悬停动画事件
             AddLevelButtonHoverEffect(levelButtons[i], levelButtonOriginalScales[i], i);
-
         }
 
         // 左按钮
@@ -89,15 +101,16 @@ public class ScenePanel : BasePanel
         // 开始按钮
         beginBtn.onClick.AddListener(() =>
         {
-            if (selectedLevelIndex < 0 || selectedLevelIndex >= GameDataMgr.Instance.list_LevelData.Count)
+            if (GameDataMgr.Instance.selectedLevelIndex < 0 || GameDataMgr.Instance.selectedLevelIndex >= GameDataMgr.Instance.list_LevelData.Count)
             {
                 Debug.Log("选中的关卡索引错误");
                 return;
             }
+            Debug.Log("开始游戏：" + GameDataMgr.Instance.selectedLevelIndex);
             // UI处理
             UIManager.Instance.HidePanel<ScenePanel>();
             // 逻辑处理
-            SceneMgr.Instance.LoadGameScene(selectedLevelIndex);
+            SceneMgr.Instance.LoadGameScene(GameDataMgr.Instance.selectedLevelIndex);
             SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
         // 返回按钮
@@ -121,18 +134,38 @@ public class ScenePanel : BasePanel
             UIManager.Instance.ShowPanel<QuestionPanel>();
             SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
+    }
+
+    private void InitDefaultSelectedLevel()
+    {
 
         int maxUnlockedId = GameDataMgr.Instance.currentSave.maxUnlockedLevelId;
         int totalLevels = GameDataMgr.Instance.list_LevelData.Count;
-        // 边界防护：确保索引合法
+        Debug.Log("totalLevels:" + totalLevels);
+        Debug.Log("maxUnlockedId:" + maxUnlockedId);
         if (maxUnlockedId >= 0 && maxUnlockedId < totalLevels)
         {
-            selectedLevelIndex = maxUnlockedId;
-            // 计算该关卡所在分页
-            pageIndex = selectedLevelIndex / PageSize;
+            GameDataMgr.Instance.selectedLevelIndex = maxUnlockedId;
+            Debug.Log($"已解锁关卡: {GameDataMgr.Instance.selectedLevelIndex}");
+            pageIndex = GameDataMgr.Instance.selectedLevelIndex / PageSize;
         }
-        // 初始化显示第一页
-        RefreshLevelButtons();
+    }
+
+    private void OnDestroy()
+    {
+        // 停止所有运行中协程，防止内存泄漏
+        if (currentBreathCoroutine != null)
+        {
+            StopCoroutine(currentBreathCoroutine);
+        }
+        foreach (var coroutine in buttonHoverCoroutines.Values)
+        {
+            if (coroutine != null) StopCoroutine(coroutine);
+        }
+        buttonHoverCoroutines.Clear();
+
+        // 移除所有按钮事件监听，防止内存泄漏
+        RemoveAllButtonListeners();
     }
 
     // 切换到下一页
@@ -140,9 +173,8 @@ public class ScenePanel : BasePanel
     {
         int totalPages = Mathf.CeilToInt(GameDataMgr.Instance.list_LevelData.Count / (float)PageSize);
         pageIndex++;
-        if (pageIndex >= totalPages)
-            pageIndex = 0; // 循环切换，不需要循环可改为 pageIndex = totalPages - 1
-        selectedLevelIndex = -1; // 重置选中索引
+        pageIndex = pageIndex >= totalPages ? 0 : pageIndex;
+        GameDataMgr.Instance.selectedLevelIndex = -1;
         RefreshLevelButtons();
     }
 
@@ -151,9 +183,8 @@ public class ScenePanel : BasePanel
     {
         int totalPages = Mathf.CeilToInt(GameDataMgr.Instance.list_LevelData.Count / (float)PageSize);
         pageIndex--;
-        if (pageIndex < 0)
-            pageIndex = totalPages - 1; // 循环切换，不需要循环可改为 pageIndex = 0
-        selectedLevelIndex = -1; // 重置选中索引
+        pageIndex = pageIndex < 0 ? totalPages - 1 : pageIndex;
+        GameDataMgr.Instance.selectedLevelIndex = -1;
         RefreshLevelButtons();
     }
 
@@ -162,6 +193,7 @@ public class ScenePanel : BasePanel
     {
         if (selectedLevelBtn != null)
         {
+
             ResetLevelButtonStyle(selectedLevelBtn);
             selectedLevelBtn = null; // 清空选中按钮引用
         }
@@ -211,7 +243,7 @@ public class ScenePanel : BasePanel
                     SetButtonGray(btnImage, false);
 
                     // 同步选中状态
-                    if (levelIndex == selectedLevelIndex)
+                    if (levelIndex == GameDataMgr.Instance.selectedLevelIndex)
                     {
                         SetLevelButtonSelected(btn);
                     }
@@ -228,11 +260,11 @@ public class ScenePanel : BasePanel
         // 自动选中当前页第一个可交互关卡
         if (selectedLevelBtn == null)
         {
-            // 遍历当前页按钮，匹配我们预设的 selectedLevelIndex
+            // 遍历当前页按钮，匹配我们预设的 GameDataMgr.Instance.selectedLevelIndex
             for (int i = 0; i < levelButtons.Count; i++)
             {
                 int levelIndex = startIndex + i;
-                if (levelIndex == selectedLevelIndex)
+                if (levelIndex == GameDataMgr.Instance.selectedLevelIndex)
                 {
                     OnLevelButtonClick(i);
                     break;
@@ -254,13 +286,14 @@ public class ScenePanel : BasePanel
         }
 
         // 更新选中关卡索引
-        selectedLevelIndex = levelIndex;
+        GameDataMgr.Instance.selectedLevelIndex = levelIndex;
         // 更新按钮选中样式
         SetLevelButtonSelected(levelButtons[btnIndex]);
         // 更新开始按钮可交互状态
         beginBtn.interactable = true;
         // 刷新关卡详情
         GetCurrentSceneData();
+        Debug.Log("索引为：" + GameDataMgr.Instance.selectedLevelIndex);
     }
 
     // 设置关卡按钮选中样式
@@ -363,10 +396,10 @@ public class ScenePanel : BasePanel
     // 获取当前选中关卡数据
     public void GetCurrentSceneData()
     {
-        if (selectedLevelIndex < 0 || selectedLevelIndex >= GameDataMgr.Instance.list_LevelData.Count)
+        if (GameDataMgr.Instance.selectedLevelIndex < 0 || GameDataMgr.Instance.selectedLevelIndex >= GameDataMgr.Instance.list_LevelData.Count)
             return;
 
-        LevelData sceneInfo = SceneMgr.Instance.GetSceneData(selectedLevelIndex);
+        LevelData sceneInfo = SceneMgr.Instance.GetSceneData(GameDataMgr.Instance.selectedLevelIndex);
         // 这里可以扩展显示关卡详情（如收集物数量等）
     }
 
@@ -382,25 +415,25 @@ public class ScenePanel : BasePanel
     {
         int totalLevels = GameDataMgr.Instance.list_LevelData.Count;
         // 核心逻辑：当前索引 + 1 = 目标下一关
-        int nextLevelIndex = selectedLevelIndex + 1;
-
+        int nextLevelIndex = GameDataMgr.Instance.selectedLevelIndex + 1;
+        Debug.Log("000:" + GameDataMgr.Instance.selectedLevelIndex);
         // 边界处理（二选一，根据你的游戏需求）
         // 方案1：循环模式（最后一关的下一关回到第一关）
         if (nextLevelIndex >= totalLevels)
         {
             nextLevelIndex = 0;
         }
-        // 方案2：固定模式（最后一关无法向后选，停在自身）
-        // if (nextLevelIndex >= totalLevels)
-        // {
-        //     nextLevelIndex = totalLevels - 1;
-        // }
-
+        if (nextLevelIndex > GameDataMgr.Instance.currentSave.maxUnlockedLevelId)
+        {
+            GameDataMgr.Instance.currentSave.maxUnlockedLevelId = nextLevelIndex;
+            GameDataMgr.Instance.SavePlayerSaveData();
+        }
         // 计算目标关卡所在分页
         pageIndex = nextLevelIndex / PageSize;
         // 设置目标选中索引，刷新界面（自动处理样式、分页、呼吸效果）
-        selectedLevelIndex = nextLevelIndex;
+        GameDataMgr.Instance.selectedLevelIndex = nextLevelIndex;
         RefreshLevelButtons();
+
     }
     private void InitLevelButtonScaleAndPivot()
     {
@@ -484,8 +517,18 @@ public class ScenePanel : BasePanel
         // 保证最终缩放精度
         targetTrans.localScale = targetScale;
     }
-    private void OnDestroy()
+    private void RemoveAllButtonListeners()
     {
-        buttonHoverCoroutines.Clear();
+        leftBtn.onClick.RemoveAllListeners();
+        rightBtn.onClick.RemoveAllListeners();
+        beginBtn.onClick.RemoveAllListeners();
+        bakcBtn.onClick.RemoveAllListeners();
+        settingBtn.onClick.RemoveAllListeners();
+        questionBtn.onClick.RemoveAllListeners();
+
+        foreach (var btn in levelButtons)
+        {
+            btn.onClick.RemoveAllListeners();
+        }
     }
 }

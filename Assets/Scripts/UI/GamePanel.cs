@@ -15,11 +15,13 @@ public class GamePanel : BasePanel
     public Image targetStorage;
     public Image bkgStorage;
     public Image gas;
+    public Animator anim;
     public override void Init()
     {
         ChangeStorageUI(true);
         totalScoreText.text = "/" + GameDataMgr.Instance.list_LevelData[GameDataMgr.Instance.currentLevelId].TotalCollectibles.ToString();
         scoreText.text = GameDataMgr.Instance.currentLevelCollectedIds.Count.ToString();
+        // anim = gas.GetComponent<Animator>();
         // 设置按钮
         settingBtn.onClick.AddListener(() =>
         {
@@ -55,17 +57,19 @@ public class GamePanel : BasePanel
         {
             bkgSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Sprites/UI/进度条裂开底框.png");
             progressSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Sprites/UI/灰色进度条.png");
-            gas.gameObject.SetActive(false);
+            // gas.gameObject.SetActive(false);
             targetStorage.type = Image.Type.Sliced;
             currentStorage.type = Image.Type.Sliced;
+            anim.SetBool("overload", true);
         }
         else
         {
             bkgSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Sprites/UI/红色阀门进度条_槽.png");
             progressSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Sprites/UI/颜色进度条.png");
-            gas.gameObject.SetActive(true);
+            // gas.gameObject.SetActive(true);
             targetStorage.type = Image.Type.Filled;
             currentStorage.type = Image.Type.Filled;
+            anim.SetBool("overload", false);
         }
         bkgStorage.sprite = bkgSprite;
         targetStorage.sprite = progressSprite;

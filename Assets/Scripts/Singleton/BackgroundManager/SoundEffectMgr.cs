@@ -19,6 +19,8 @@ public class SoundEffectMgr : MonoBehaviour
     private string lastMaterial = "";
     public List<FootstepGroup> footstepGroups;
     private Dictionary<string, List<AudioClip>> footstepDict = new Dictionary<string, List<AudioClip>>();
+
+    private string currentStopableSoundName;
     void Awake()
     {
         instance = this;
@@ -34,16 +36,30 @@ public class SoundEffectMgr : MonoBehaviour
         MusicData musicData = GameDataMgr.Instance.musicDatas;
         SetIsOpen(musicData.effectOpen);
         SetVolume(musicData.effectValue);
+
+        currentStopableSoundName = string.Empty;
     }
 
     // 播放音效的方法
-    public void PlaySound(string name, bool isAsync = false)
+    public void PlaySound(string name, bool isStopable = false)
     {
         // 路径根据你的资源存放位置修改，这里假设在 Resources/Sounds/ 下
         AudioClip clip = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/" + name + ".wav");
         if (clip != null)
         {
-            audioSource.PlayOneShot(clip);
+            if (isStopable)
+            {
+                // 逻辑：可停止音效 - 赋值clip+播放，记录名称
+                currentStopableSoundName = name;
+                audioSource.clip = clip;
+                audioSource.Play();
+                audioSource.loop = true;
+            }
+            else
+            {
+                // 保留原有逻辑：不可停止的一次性短音效
+                audioSource.PlayOneShot(clip);
+            }
         }
         else
         {
@@ -86,5 +102,14 @@ public class SoundEffectMgr : MonoBehaviour
     public void ResetFootsteps()
     {
         currentStepIndex = 0;
+    }
+    public void StopSound(string soundName)
+    {
+        // 仅当目标音效是当前正在播放的可停止音效时，执行停止
+        if (currentStopableSoundName == soundName && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+            currentStopableSoundName = string.Empty;
+        }
     }
 }

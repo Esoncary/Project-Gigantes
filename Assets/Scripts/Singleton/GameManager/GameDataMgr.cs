@@ -35,7 +35,7 @@ public class GameDataMgr
 
     // 关卡中已经收集的物品
     public HashSet<string> currentLevelCollectedIds = new HashSet<string>();
-
+    public int selectedLevelIndex;
     // 单例
     private static GameDataMgr instance = new GameDataMgr();
     public static GameDataMgr Instance => instance;
@@ -198,6 +198,6 @@ public class GameDataMgr
         {
             str += id + "\n";
         }
-        Debug.Log(str);
+        // Debug.Log(str);
     }
 }

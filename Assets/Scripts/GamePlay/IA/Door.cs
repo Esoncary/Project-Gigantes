@@ -109,9 +109,11 @@ namespace GamePlay.IA
             await SceneMgr.Instance.SceneTransitionAsync(async () =>
             {
                 GameDataMgr.Instance.ClearSuspendData();
-                UIManager.Instance.ShowPanel<ScenePanel>();
                 UIManager.Instance.HidePanel<GamePanel>();
-                UIManager.Instance.GetPanel<ScenePanel>().SelectNextLevel();
+                UIManager.Instance.ShowPanel<ScenePanel>();
+                // Debug.Log("游戏结束" + UIManager.Instance.GetPanel<ScenePanel>().selectedLevelIndex);
+                ScenePanel a = UIManager.Instance.GetPanel<ScenePanel>();
+                a.SelectNextLevel();
             });
 
         }

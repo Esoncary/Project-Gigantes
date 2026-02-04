@@ -96,6 +96,7 @@ public class ReleaseState : PlayerState
 
         Debug.Log("释放中...");
         float currentRatio = player.currentStorage / player.maxStorage;
+        SoundEffectMgr.Instance.StopSound("overload/overload_enter");
         if (currentRatio <= 0.3)
             SoundEffectMgr.Instance.PlaySound("release/penqi1");
         else if (currentRatio <= 0.8)

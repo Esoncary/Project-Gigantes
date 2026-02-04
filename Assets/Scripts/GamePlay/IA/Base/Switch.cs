@@ -58,7 +58,7 @@ public class Switch : LevelItem
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 1. 排除Key子类（Key有自己的触发逻辑）
-        if (GetComponent<GamePlay.Pickups.Key>()) return;
+        if (this is GamePlay.Pickups.Key) return;
 
         // 2. 仅响应Player碰撞
         if (!collision.CompareTag("Player")) return;
