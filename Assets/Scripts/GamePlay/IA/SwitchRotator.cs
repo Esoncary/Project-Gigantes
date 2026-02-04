@@ -209,6 +209,9 @@ public class SwitchRotator2D : MonoBehaviour
 
         targetObject.position = endPos;
         if (debugMode) Debug.Log("[SwitchRotator2D] 移动完成");
+
+
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
