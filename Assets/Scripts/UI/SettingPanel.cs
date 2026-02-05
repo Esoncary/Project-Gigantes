@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class SettingPanel : BasePanel
 {
+    // 设置面板需要锁定玩家输入
+    protected override bool LockPlayerInputOnShow => true;
+
     public Toggle musicToggle;
     public Toggle effectToggle;
     public Slider musicSlider;

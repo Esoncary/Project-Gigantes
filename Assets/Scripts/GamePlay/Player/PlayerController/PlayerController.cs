@@ -1,6 +1,7 @@
 using Cinemachine;
 using GamePlay.Player.Interface;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -170,11 +171,25 @@ public class PlayerController : MonoBehaviour
     {
         StateMachine.Initialize(IdleState);
     }
+
+    /// <summary>
+    /// 检测鼠标是否悬停在UI元素上
+    /// 用于防止游戏内UI按钮点击穿透触发游戏输入
+    /// </summary>
+    private bool IsPointerOverUI()
+    {
+        return EventSystem.current != null &&
+               EventSystem.current.IsPointerOverGameObject();
+    }
+
     float lastDir;
     private void Update()
     {
         // 输入锁定检查：如果被锁定，跳过所有输入处理
         if (IsInputLocked) return;
+
+        // UI悬停检测 - 游戏进行中防止点击穿透
+        if (IsPointerOverUI()) return;
 
         //交互物函数，暂时不知道放在哪里先放这儿
         if (currentInteractable != null & Input.GetKeyDown(KeyCode.E))
