@@ -119,6 +119,8 @@ public class GameDataMgr
         suspendData.suspendPosX = 0;
         suspendData.suspendPosY = 0;
         suspendData.interactedItems.Clear();
+        // ===================== 新增：清空机器数据 =====================
+        suspendData.savedMachines.Clear();
         currentSave.suspendData = suspendData;
         ClearSessionData();
         SavePlayerSaveData();

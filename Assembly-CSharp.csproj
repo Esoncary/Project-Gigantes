@@ -109,6 +109,7 @@
     <Compile Include="Assets\Scripts\UI\BasePanel.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\JsonMgr.cs" />
     <Compile Include="Assets\Scripts\Singleton\SceneManager\SceneMgr.cs" />
+    <Compile Include="Assets\Scripts\DataClass\MachineSaveData.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\RebornLandmark.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\CanClimbLeftCheckerManager.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\SwitchRotator.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\Netstandard15Polyfill.cs" />
     <Compile Include="Assets\Scripts\DataClass\PlayerSaveData.cs" />
     <Compile Include="Assets\Scripts\UI\SettingPanel.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\IA\MachineIdentity.cs" />
     <Compile Include="Assets\Scripts\Singleton\GameManager\GameDataMgr.cs" />
     <Compile Include="Assets\Resources\Art\Sprites\VFX\OneShotVFXElement.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\CanClimbRightCheckerManager1.cs" />

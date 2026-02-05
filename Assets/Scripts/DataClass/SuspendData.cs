@@ -11,6 +11,7 @@ public class SuspendData // 中断信息
     public int suspendLevelId;      // 中断时的关卡ID
     public float suspendPosX;       // 玩家位置 X
     public float suspendPosY;       // 玩家位置 Y
+    public List<MachineSaveData> savedMachines;
     public SuspendData()
     {
         hasSuspendedRecord = false;
@@ -18,7 +19,8 @@ public class SuspendData // 中断信息
         suspendLevelId = -1;
         suspendPosX = 0f;
         suspendPosY = 0f;
-
+        // ===================== 新增：机器存档列表 =====================
+        savedMachines = new List<MachineSaveData>();
     }
     public void ToString()
     {

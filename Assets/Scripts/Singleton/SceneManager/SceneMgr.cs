@@ -225,6 +225,8 @@ public class SceneMgr
                 {
                     GameDataMgr.Instance.currentLevelCollectedIds.Add(id);
                 }
+                // ===================== 新增：加载完成后还原机器 =====================
+                RestoreMachinesState();
             }
             await InitScene(currentRebornPos);
         });
@@ -304,6 +306,8 @@ public class SceneMgr
                 {
                     GameDataMgr.Instance.currentLevelCollectedIds.Add(id);
                 }
+                // ===================== 新增：加载完成后还原机器 =====================
+                RestoreMachinesState();
             }
             GameDataMgr.Instance.currentSave.suspendData = suspendData;
             currentRebornPos = finalPos;
@@ -339,9 +343,26 @@ public class SceneMgr
         suspendData.suspendPosY = pos.y;
         suspendData.suspendLevelId = GameDataMgr.Instance.currentLevelId;
         suspendData.hasSuspendedRecord = true; // 标记现在有存档记录了
+        // ===================== 新增：保存所有可存档机器的状态 =====================
+        suspendData.savedMachines.Clear();
+        GameObject[] allMachines = GameObject.FindGameObjectsWithTag("SaveableMachine");
+        foreach (GameObject machine in allMachines)
+        {
+            // 获取唯一标识组件
+            MachineIdentity identity = machine.GetComponent<MachineIdentity>();
+            if (identity == null)
+            {
+                Debug.LogError($"机器 {machine.name} 缺少 MachineIdentity 组件，无法保存！");
+                continue;
+            }
+            // 构建存档数据并加入列表
+            MachineSaveData data = new MachineSaveData(identity);
+            suspendData.savedMachines.Add(data);
+        }
+
+
         GameDataMgr.Instance.currentSave.suspendData = suspendData;
-        Debug.Log("存档数据" + GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord);
-        // 3. 记录当前关卡收集到的物品（防止死后重置，取决于你的设计）
+        // Debug.Log("存档数据" + GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord);
         foreach (var id in GameDataMgr.Instance.currentLevelCollectedIds)
         {
             if (!suspendData.interactedItems.Contains(id))
@@ -353,5 +374,59 @@ public class SceneMgr
         // 4. 立即保存到本地文件
         GameDataMgr.Instance.SavePlayerSaveData();
     }
+    /// <summary>
+    /// 根据存档数据还原场景内所有机器的状态
+    /// </summary>
 
+    private void RestoreMachinesState()
+    {
+        var suspendData = GameDataMgr.Instance.currentSave.suspendData;
+        if (!suspendData.hasSuspendedRecord || suspendData.savedMachines.Count == 0)
+            return;
+
+        // 1. 先还原所有根物体（父物体）
+        foreach (var machineData in suspendData.savedMachines)
+        {
+            if (string.IsNullOrEmpty(machineData.parentMachineId))
+            {
+                RestoreSingleMachine(machineData, isRoot: true);
+            }
+        }
+
+        // 2. 再还原所有子物体
+        foreach (var machineData in suspendData.savedMachines)
+        {
+            if (!string.IsNullOrEmpty(machineData.parentMachineId))
+            {
+                RestoreSingleMachine(machineData, isRoot: false);
+            }
+        }
+    }
+
+    // 单独还原一个物体的辅助方法
+    private void RestoreSingleMachine(MachineSaveData data, bool isRoot)
+    {
+        GameObject[] allMachines = GameObject.FindGameObjectsWithTag("SaveableMachine");
+        foreach (GameObject machine in allMachines)
+        {
+            MachineIdentity identity = machine.GetComponent<MachineIdentity>();
+            if (identity != null && identity.machineUniqueId == data.machineId)
+            {
+                Transform transform = machine.transform;
+                if (isRoot)
+                {
+                    // 根物体用世界坐标还原
+                    transform.position = new Vector3(data.worldPosX, data.worldPosY, data.worldPosZ);
+                    transform.rotation = Quaternion.Euler(data.worldRotX, data.worldRotY, data.worldRotZ);
+                }
+                else
+                {
+                    // 子物体用局部坐标还原
+                    transform.localPosition = new Vector3(data.localPosX, data.localPosY, data.localPosZ);
+                    transform.localRotation = Quaternion.Euler(data.localRotX, data.localRotY, data.localRotZ);
+                }
+                break;
+            }
+        }
+    }
 }

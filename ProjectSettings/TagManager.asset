@@ -6,6 +6,7 @@ TagManager:
   tags:
   - sand
   - metal
+  - SaveableMachine
   layers:
   - Default
   - TransparentFX
