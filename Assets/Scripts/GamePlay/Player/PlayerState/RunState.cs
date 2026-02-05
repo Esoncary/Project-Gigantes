@@ -107,8 +107,8 @@ public class RunState : PlayerState
             // 核心：使用你 GroundedCheckerManager 里的 Ground LayerMask
             // 射线从脚下位置稍微往上一点发射，向下探测
             RaycastHit2D hit = Physics2D.Raycast(player.transform.position, Vector2.down, 1.2f, player.groundedCheckerManager.Ground);
-            Debug.Log("hit:" + hit);
-            Debug.Log("hit:" + hit.collider.tag);
+            // Debug.Log("hit:" + hit);
+            // Debug.Log("hit:" + hit.collider.tag);
             if (hit.collider != null)
             {
                 SoundEffectMgr.Instance.PlayFootstep(hit.collider.tag);

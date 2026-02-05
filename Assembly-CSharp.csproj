@@ -82,7 +82,6 @@
     <Compile Include="Assets\Scripts\UI\SuspendedPanel.cs" />
     <Compile Include="Assets\Scripts\test1.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\IdleState.cs" />
-    <Compile Include="Assets\Art\Sprites\VFX\VFXSelfDestory.cs" />
     <Compile Include="Assets\Scripts\UI\Parallax.cs" />
     <Compile Include="Assets\Scripts\Singleton\UIManager\UIManager.cs" />
     <Compile Include="Assets\Scripts\DataClass\LevelProgressData.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="Assets\Scripts\UI\BasePanel.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\JsonMgr.cs" />
     <Compile Include="Assets\Scripts\Singleton\SceneManager\SceneMgr.cs" />
-    <Compile Include="Assets\Art\Sprites\VFX\OneShotVFXElement.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\RebornLandmark.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\CanClimbLeftCheckerManager.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\SwitchRotator.cs" />
@@ -118,6 +116,7 @@
     <Compile Include="Assets\Scripts\DataClass\PlayerSaveData.cs" />
     <Compile Include="Assets\Scripts\UI\SettingPanel.cs" />
     <Compile Include="Assets\Scripts\Singleton\GameManager\GameDataMgr.cs" />
+    <Compile Include="Assets\Resources\Art\Sprites\VFX\OneShotVFXElement.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\CanClimbRightCheckerManager1.cs" />
     <Compile Include="Assets\Scripts\UI\DeathMakse.cs" />
     <Compile Include="Assets\Scripts\UI\GameOverPanel.cs" />
@@ -130,8 +129,10 @@
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\RunState.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\JsonWriter.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Key.cs" />
+    <Compile Include="Assets\Resources\Art\Sprites\VFX\VFXSelfDestory.cs" />
     <Compile Include="Assets\Scripts\GamePlay\wasted\PlayerController.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\GroundedCheckerManager.cs" />
+    <Compile Include="Assets\Resources\Art\Sprites\VFX\Player\Release\StopRelease.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\Door.cs" />
     <Compile Include="Assets\Scripts\DataClass\LevelData.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\IJsonWrapper.cs" />
@@ -153,7 +154,6 @@
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Fresher.cs" />
     <Compile Include="Assets\Scripts\GamePlay\IA\Trampoline.cs" />
     <Compile Include="Assets\Scripts\UI\BeginPanel.cs" />
-    <Compile Include="Assets\Art\Sprites\VFX\Player\Release\StopRelease.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\PlayerStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
