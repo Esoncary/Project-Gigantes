@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\GamePlay\Level\Checkpoint.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Strengthener.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interface\IPlayerForce.cs" />
+    <Compile Include="Assets\Scripts\UI\SceneNamePanel.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Cooler.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\PlayerSFXController.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\PlayerVFXController.cs" />
@@ -119,7 +120,6 @@
     <Compile Include="Assets\Resources\Art\Sprites\VFX\OneShotVFXElement.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\CanClimbRightCheckerManager1.cs" />
     <Compile Include="Assets\Scripts\UI\DeathMakse.cs" />
-    <Compile Include="Assets\Scripts\UI\GameOverPanel.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\LaunchedState.cs" />
     <Compile Include="Assets\Scripts\UI\Main.cs" />
     <Compile Include="Assets\Scripts\UI\QuestionPanel.cs" />

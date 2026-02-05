@@ -9,6 +9,7 @@ public class LevelData
 {
     public int LevelId;
     public string SceneName;
+    public string LevelName;
     public string imgRes;
     public int WorldId;// 章节编号
     public int OrderInWorld;// 关卡编号

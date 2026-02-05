@@ -3,6 +3,7 @@
         "LevelId": 0,
         "imgRes": "Art/Sprites/UI/关卡卡片1",
         "SceneName": "Level01",
+        "LevelName": "荒漠\n(The Desert)",
         "WorldId": 1,
         "OrderInWorld": 1,
         "TotalCollectibles": 3
@@ -11,6 +12,7 @@
         "LevelId": 1,
         "imgRes": "Art/Sprites/UI/关卡卡片2",
         "SceneName": "Level02",
+        "LevelName": "悬崖\n(The CLIFF)",
         "WorldId": 1,
         "OrderInWorld": 2,
         "TotalCollectibles": 2
@@ -19,6 +21,7 @@
         "LevelId": 2,
         "imgRes": "Art/Sprites/UI/关卡卡片3",
         "SceneName": "Level03",
+        "LevelName": "风车\n(The WINDMILL)",
         "WorldId": 1,
         "OrderInWorld": 3,
         "TotalCollectibles": 3
@@ -27,6 +30,7 @@
         "LevelId": 3,
         "imgRes": "Art/Sprites/UI/关卡卡片4",
         "SceneName": "Level04",
+        "LevelName": "石塔\n(STONE TOWER)",
         "WorldId": 1,
         "OrderInWorld": 3,
         "TotalCollectibles": 3
@@ -35,6 +39,7 @@
         "LevelId": 4,
         "imgRes": "Art/Sprites/UI/关卡卡片5",
         "SceneName": "关卡3",
+        "LevelName": "荒漠\n(The Desert)",
         "WorldId": 1,
         "OrderInWorld": 3,
         "TotalCollectibles": 3
@@ -43,6 +48,7 @@
         "LevelId": 5,
         "imgRes": "Art/Sprites/UI/关卡卡片6",
         "SceneName": "关卡3",
+        "LevelName": "荒漠\n(The Desert)",
         "WorldId": 1,
         "OrderInWorld": 3,
         "TotalCollectibles": 3
@@ -51,6 +57,7 @@
         "LevelId": 7,
         "imgRes": "Art/Sprites/UI/关卡卡片7",
         "SceneName": "关卡3",
+        "LevelName": "荒漠\n(The Desert)",
         "WorldId": 1,
         "OrderInWorld": 3,
         "TotalCollectibles": 5
@@ -59,6 +66,7 @@
         "LevelId": 8,
         "imgRes": "Art/Sprites/UI/关卡卡片8",
         "SceneName": "关卡3",
+        "LevelName": "荒漠\n(The Desert)",
         "WorldId": 1,
         "OrderInWorld": 3,
         "TotalCollectibles": 5
