@@ -111,6 +111,7 @@ public class ScenePanel : BasePanel
             // await UIManager.Instance.GetPanel<SceneNamePanel>().ShowAsync();
             UIManager.Instance.HidePanel<ScenePanel>();
             // 逻辑处理
+            Debug.Log("GameDataMgr.Instance.selectedLevelIndex:" + GameDataMgr.Instance.selectedLevelIndex);
             SceneMgr.Instance.LoadGameScene(GameDataMgr.Instance.selectedLevelIndex);
             SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });

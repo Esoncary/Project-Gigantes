@@ -7495,6 +7495,10 @@ PrefabInstance:
       propertyPath: boundSwitches.Array.data[2]
       value: 
       objectReference: {fileID: 592850784}
+    - target: {fileID: 6685842317781545973, guid: 9e6c7d16ea4b1c044972299edbd951bc, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 407ad3b71d1f9294585c21987e275454, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

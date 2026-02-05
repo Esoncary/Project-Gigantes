@@ -274,6 +274,8 @@ public class SceneMgr
     {
         GameDataMgr.Instance.ShowData();
         LevelData data = sceneInfos[sceneId];
+        Debug.Log("data.LevelId" + data.LevelId);
+        Debug.Log("data.SceneName" + data.SceneName);
         GameDataMgr.Instance.SetCurrentLevelId(data.LevelId);
         // Debug.Log("123");
         AsyncOperation ao = SceneManager.LoadSceneAsync(data.SceneName);

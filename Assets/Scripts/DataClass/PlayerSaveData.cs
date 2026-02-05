@@ -14,7 +14,7 @@ public class PlayerSaveData //存档
     public SuspendData suspendData;
     public PlayerSaveData()
     {
-        maxUnlockedLevelId = 0;
+        maxUnlockedLevelId = 3;
         totalPlayTime = 0f;
         listlevelProgress = new List<LevelProgressData>();
         suspendData = new SuspendData();
