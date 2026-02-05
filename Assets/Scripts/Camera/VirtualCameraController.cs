@@ -9,6 +9,7 @@ public class VirtualCameraController : MonoBehaviour
     public static VirtualCameraController Instance { get; private set; }
 
     private CinemachineConfiner2D confiner;
+    private CinemachineFramingTransposer framingTransposer;
     private void Awake()
     {
         if (Instance == null)
@@ -31,11 +32,13 @@ public class VirtualCameraController : MonoBehaviour
     // 过场动画相关字段
     private float originalOrthoSize;
     private Coroutine cinematicCoroutine;
+    private GameObject cinematicFollowTarget;  // 临时跟随目标对象
 
     // Start is called before the first frame update
     void Start()
     {
         confiner = GetComponent<CinemachineConfiner2D>();
+        framingTransposer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
     }
 
     // Update is called once per frame
@@ -46,6 +49,15 @@ public class VirtualCameraController : MonoBehaviour
             ResetCameraBound();//绑定相机边界
         }
 
+    }
+
+    private void OnDestroy()
+    {
+        // 确保临时对象被销毁
+        if (cinematicFollowTarget != null)
+        {
+            Destroy(cinematicFollowTarget);
+        }
     }
 
     public void ResetCameraTarget(Transform playerTransform)
@@ -101,86 +113,82 @@ public class VirtualCameraController : MonoBehaviour
 
     private IEnumerator CinematicCoroutine(Vector3 targetPosition, float orthoSize, float duration, float startDuration, float endDuration)
     {
-        // 1. 保存原始状态
+        // 保存原始状态
         originalOrthoSize = vcam.m_Lens.OrthographicSize;
 
-        // 2. 停止跟随玩家
-        vcam.Follow = null;
+        // 获取玩家
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj == null)
+        {
+            Debug.LogWarning("[VirtualCameraController] 未找到Player，无法执行过场动画");
+            cinematicCoroutine = null;
+            yield break;
+        }
+        Transform player = playerObj.transform;
 
-        // 3. 平滑移动到目标位置和缩放
+        // cinematic 的 follow 从 none 变为具体对象时会闪烁
+        // 创建临时跟随目标对象（从玩家位置开始）
+        cinematicFollowTarget = new GameObject("CinematicFollowTarget");
+        cinematicFollowTarget.transform.position = new Vector3(player.position.x, player.position.y, player.position.z);
+
+        // 设置Follow为临时对象
+        vcam.Follow = cinematicFollowTarget.transform;
+
+        // 阶段1：移动临时目标到目标位置
         float elapsed = 0f;
-        Vector3 startPos = transform.position;
-        float startSize = originalOrthoSize;
+        Vector3 startPos = cinematicFollowTarget.transform.position;
+        Vector3 targetPos = new Vector3(targetPosition.x, targetPosition.y, player.position.z);
 
         while (elapsed < startDuration)
         {
             float t = elapsed / startDuration;
             t = Mathf.SmoothStep(0, 1, t);
-            transform.position = Vector3.Lerp(startPos, targetPosition, t);
-            vcam.m_Lens.OrthographicSize = Mathf.Lerp(startSize, orthoSize, t);
+            cinematicFollowTarget.transform.position = Vector3.Lerp(startPos, targetPos, t);
+            vcam.m_Lens.OrthographicSize = Mathf.Lerp(originalOrthoSize, orthoSize, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         // 确保到达目标状态
-        transform.position = targetPosition;
+        cinematicFollowTarget.transform.position = targetPos;
         vcam.m_Lens.OrthographicSize = orthoSize;
 
-        // 4. 持续显示
+        // 阶段2：持续显示
         if (duration > 0)
         {
             yield return new WaitForSeconds(duration);
         }
 
-        // 5. 平滑恢复
-        yield return StartCoroutine(EndCinematicCoroutine(endDuration));
-
-        cinematicCoroutine = null;
-    }
-
-    private IEnumerator EndCinematicCoroutine(float endDuration)
-    {
-        // 获取玩家Transform
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj == null)
-        {
-            Debug.LogWarning("[VirtualCameraController] 未找到Player标签的对象，无法恢复跟随");
-            cinematicCoroutine = null;
-            yield break;
-        }
-
-        Transform player = playerObj.transform;
-
-        // 停止跟随，手动控制位置进行平滑过渡
-        vcam.Follow = null;
-
-        // 平滑过渡：位置和缩放
-        float elapsed = 0f;
-        Vector3 startPos = transform.position;
-        float startSize = vcam.m_Lens.OrthographicSize;
-        // 目标位置是玩家位置，但保持当前的 Z 值
-        Vector3 targetPos = new Vector3(player.position.x, player.position.y, transform.position.z);
+        // 阶段3：平滑恢复（移动临时目标回玩家位置）
+        elapsed = 0f;
+        startPos = cinematicFollowTarget.transform.position;
+        targetPos = new Vector3(player.position.x, player.position.y, player.position.z);
 
         while (elapsed < endDuration)
         {
             float t = elapsed / endDuration;
             t = Mathf.SmoothStep(0, 1, t);
-
-            // 平滑移动位置
-            transform.position = Vector3.Lerp(startPos, targetPos, t);
-            // 平滑恢复缩放
-            vcam.m_Lens.OrthographicSize = Mathf.Lerp(startSize, originalOrthoSize, t);
-
+            cinematicFollowTarget.transform.position = Vector3.Lerp(startPos, targetPos, t);
+            vcam.m_Lens.OrthographicSize = Mathf.Lerp(orthoSize, originalOrthoSize, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        // 确保到达目标状态
-        transform.position = targetPos;
+        // 确保到达玩家位置
+        cinematicFollowTarget.transform.position = targetPos;
         vcam.m_Lens.OrthographicSize = originalOrthoSize;
 
         // 恢复跟随玩家
         vcam.Follow = player;
+
+        // 销毁临时对象
+        if (cinematicFollowTarget != null)
+        {
+            Destroy(cinematicFollowTarget);
+            cinematicFollowTarget = null;
+        }
+
+        cinematicCoroutine = null;
     }
 
     #endregion

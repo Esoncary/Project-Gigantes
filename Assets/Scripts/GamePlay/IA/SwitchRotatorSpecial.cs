@@ -169,11 +169,11 @@ public class SwitchRotator2DSpecial : MonoBehaviour
         if (debugMode) Debug.Log("[SwitchRotator2D] 物体操作完成");
 
         // 4. 等待相机过场完成（如果启用了相机移动）
-        //if (enableCameraMovement)
-        //{
-        //    yield return new WaitForSeconds(cinematicDuration);
-        //    if (debugMode) Debug.Log("[SwitchRotator2D] 相机过场完成");
-        //}
+        if (enableCameraMovement)
+        {
+            yield return new WaitForSeconds(cinematicDuration);
+            if (debugMode) Debug.Log("[SwitchRotator2D] 相机过场完成");
+        }
 
         // 5. 解锁玩家输入（如果之前锁定了）
         if (lockPlayerInput && playerController != null)
