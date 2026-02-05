@@ -2256,6 +2256,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: test1
       objectReference: {fileID: 0}
+    - target: {fileID: 8082528036643542195, guid: 55f8d564a4386324d8a6e0db0325ee1c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5509,6 +5513,10 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enableRotation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraOrthoSize
       value: 20
       objectReference: {fileID: 0}
@@ -5529,8 +5537,12 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enablePositionMove
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: enableCameraMovement
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraTargetPosition.x
@@ -6873,6 +6885,10 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enableRotation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraOrthoSize
       value: 20
       objectReference: {fileID: 0}
@@ -6893,8 +6909,12 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enablePositionMove
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: enableCameraMovement
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraTargetPosition.x
@@ -12342,6 +12362,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7427496363342343602, guid: ad168a4490518c441a2f8a00641945ef, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: aeb091bcd7ec51447b66b2791b33557b, type: 3}
     - target: {fileID: 8000073727566460197, guid: ad168a4490518c441a2f8a00641945ef, type: 3}
       propertyPath: m_Name
       value: Sound
@@ -13274,6 +13298,10 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enableRotation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraOrthoSize
       value: 20
       objectReference: {fileID: 0}
@@ -13294,8 +13322,12 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enablePositionMove
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: enableCameraMovement
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraTargetPosition.x
@@ -13400,6 +13432,10 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enableRotation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraOrthoSize
       value: 20
       objectReference: {fileID: 0}
@@ -13418,6 +13454,10 @@ PrefabInstance:
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cinematicDuration
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enablePositionMove
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: enableCameraMovement
@@ -14020,6 +14060,10 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enableRotation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraOrthoSize
       value: 20
       objectReference: {fileID: 0}
@@ -14036,8 +14080,12 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enablePositionMove
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: enableCameraMovement
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraTargetPosition.x
@@ -14996,6 +15044,10 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enableRotation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraOrthoSize
       value: 20
       objectReference: {fileID: 0}
@@ -15016,8 +15068,12 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
+      propertyPath: enablePositionMove
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: enableCameraMovement
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6527000418970643341, guid: c87f5de0c9f4ced4f8c1f36f787fd263, type: 3}
       propertyPath: cameraTargetPosition.x
@@ -16435,6 +16491,10 @@ PrefabInstance:
     - target: {fileID: 120009414950697115, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
       propertyPath: m_Name
       value: player_hmp
+      objectReference: {fileID: 0}
+    - target: {fileID: 120009414950697115, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3141424749767237886, guid: aadaa88b961324a45a041c2735efef1a, type: 3}
       propertyPath: m_LocalPosition.x

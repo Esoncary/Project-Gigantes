@@ -6,24 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Levels/Level04.unity
-    guid: a339146b3bdbd4548a0843779910583c
-  - enabled: 1
-    path: Assets/Scenes/Levels/Level03.unity
-    guid: fc4341a3c05f5b547b09d0076110dbbc
+    path: Assets/Scenes/Levels/Level01.unity
+    guid: c800f6041d98eb740ac4656dd8d1f055
   - enabled: 1
     path: Assets/Scenes/Levels/Level02.unity
     guid: 5ba36f0b0a382fa4687ea00791ae59e9
   - enabled: 1
-    path: Assets/Scenes/Levels/Level01.unity
-    guid: c800f6041d98eb740ac4656dd8d1f055
+    path: Assets/Scenes/Levels/Level03.unity
+    guid: fc4341a3c05f5b547b09d0076110dbbc
   - enabled: 1
-    path: Assets/Scenes/GameScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
-    path: Assets/Scenes/Levels/Level0.unity
-    guid: ffec13e7b43e531479ae373a5d58e5ef
+    path: Assets/Scenes/Levels/Level04.unity
+    guid: 155d4e1135da00743a1f85b3d9164508
+  - enabled: 0
+    path: Assets/Scenes/Levels/Level05.unity
+    guid: a339146b3bdbd4548a0843779910583c
   - enabled: 1
     path: Assets/Scenes/UIScene.unity
     guid: f8d2467804507e448998e498f7cb0c7b
+  - enabled: 0
+    path: Assets/Scenes/Levels/Level0.unity
+    guid: ffec13e7b43e531479ae373a5d58e5ef
   m_configObjects: {}

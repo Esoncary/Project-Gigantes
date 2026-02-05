@@ -46,8 +46,8 @@ public class SceneMgr
     private void OnPlayerDie()
     {
         GameDataMgr.Instance.ClearSessionData();
-        UIManager.Instance.GetPanel<GamePanel>().RefreshKeyUI();
         TriggerReload();
+
     }
     // 加载场景数据
     public LevelData GetSceneData(int index) => sceneInfos[index];
@@ -59,6 +59,7 @@ public class SceneMgr
         // UI显示
         UIManager.Instance.ShowPanel<GamePanel>();
         UIManager.Instance.ShowPanel<DeathMask>();
+        UIManager.Instance.GetPanel<GamePanel>().RefreshKeyUI();
         await Task.CompletedTask;
     }
 
@@ -162,7 +163,16 @@ public class SceneMgr
 
             }
             else
+            {
                 currentRebornPos = new Vector2(GameDataMgr.Instance.currentSave.suspendData.suspendPosX, GameDataMgr.Instance.currentSave.suspendData.suspendPosY);
+                GameDataMgr.Instance.currentLevelCollectedIds.Clear();
+                foreach (var id in GameDataMgr.Instance.currentSave.suspendData.interactedItems)
+                {
+                    GameDataMgr.Instance.currentLevelCollectedIds.Add(id);
+                }
+                Debug.Log(GameDataMgr.Instance.currentLevelCollectedIds.Count);
+            }
+
             Debug.Log("位置" + currentRebornPos);
             await InitScene(currentRebornPos);
         });
