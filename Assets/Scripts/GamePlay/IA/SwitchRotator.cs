@@ -128,9 +128,14 @@ public class SwitchRotator2D : MonoBehaviour
         // 1. 锁定玩家输入（如果启用）
         if (lockPlayerInput && playerController != null)
         {
+            // 先切换到 Idle 状态（IdleState 会自动清空 X 轴速度）
+            playerController.StateMachine.ChangeState(playerController.IdleState);
+
+            // 再锁定输入和清空速度
             playerController.IsInputLocked = true;
             playerController.rb.velocity = Vector2.zero;
-            if (debugMode) Debug.Log("[SwitchRotator2D] 玩家输入已锁定");
+            playerController.rb.angularVelocity = 0f;
+            if (debugMode) Debug.Log("[SwitchRotator2D] 玩家输入已锁定，状态切换至 Idle");
         }
 
         // 2. 启动相机移动（如果启用）
@@ -210,6 +215,8 @@ public class SwitchRotator2D : MonoBehaviour
 
         targetObject.rotation = endRotation;
         playerController.transform.SetParent(null);//将玩家从物体上解绑
+        playerController.rb.velocity = Vector2.zero;  // 解绑后清空速度
+        playerController.rb.angularVelocity = 0f;
         if (debugMode) Debug.Log("[SwitchRotator2D] 旋转完成");
     }
 
@@ -245,6 +252,8 @@ public class SwitchRotator2D : MonoBehaviour
 
         targetObject.position = endPos;
         playerController.transform.SetParent(null);//将玩家从物体上解绑
+        playerController.rb.velocity = Vector2.zero;  // 解绑后清空速度
+        playerController.rb.angularVelocity = 0f;
         if (debugMode) Debug.Log("[SwitchRotator2D] 移动完成");
 
 
