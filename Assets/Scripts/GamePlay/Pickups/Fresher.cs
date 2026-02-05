@@ -22,7 +22,7 @@ public class Fresher : MonoBehaviour, IPickUp
 
     private void Awake()
     {
-        startPos = transform.position;
+        startPos = transform.localPosition;
         sr = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
     }
@@ -40,7 +40,7 @@ public class Fresher : MonoBehaviour, IPickUp
         if (!isCollected)
         {
             float newY = startPos.y + Mathf.Sin(Time.time * floatSpeed) * floatRange;
-            transform.position = new Vector3(startPos.x, newY, startPos.z);
+            transform.localPosition = new Vector3(startPos.x, newY, startPos.z);
         }
     }
 

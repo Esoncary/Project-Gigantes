@@ -23,7 +23,7 @@ public class Strengthener : MonoBehaviour, IPickUp
 
     private void Awake()
     {
-        startPos = transform.position;
+        startPos = transform.localPosition;
         sr = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
     }
@@ -41,7 +41,7 @@ public class Strengthener : MonoBehaviour, IPickUp
         if (!isCollected)
         {
             float newY = startPos.y + Mathf.Sin(Time.time * floatSpeed) * floatRange;
-            transform.position = new Vector3(startPos.x, newY, startPos.z);
+            transform.localPosition = new Vector3(startPos.x, newY, startPos.z);
         }
     }
 
@@ -52,8 +52,8 @@ public class Strengthener : MonoBehaviour, IPickUp
 
         //如果玩家刚捡起来
         player.strengthenerTimer = strenthenerTime;//启动强化计时器
-        player.maxStorage += 35;//提高最大储量
-        player.explosionStorageThrehold += 35;//提高爆炸储量阈值
+        player.maxStorage += 15;//提高最大储量
+        player.explosionStorageThrehold += 10;//提高爆炸储量阈值
 
         if (player.rb.velocity.magnitude > 0.001f) //拾取增强剂时瞬间提高速度
         {

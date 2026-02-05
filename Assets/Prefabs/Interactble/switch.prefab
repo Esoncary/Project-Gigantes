@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1182041218213462338}
   - component: {fileID: 6383897566571521270}
   - component: {fileID: 6527000418970643341}
+  - component: {fileID: 2392224422162555839}
   m_Layer: 0
   m_Name: switch
   m_TagString: Untagged
@@ -134,20 +135,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetObject: {fileID: 0}
-  enableRotation: 1
+  enableRotation: 0
   rotationDuration: 2
   rotationAngles: {x: 0, y: 0, z: -120}
-  enablePositionMove: 0
+  enablePositionMove: 1
   positionOffset: {x: 0, y: 0, z: 0}
-  useWorldPosition: 0
-  targetWorldPosition: {x: 0, y: 0, z: 0}
+  useWorldPosition: 1
+  targetWorldPosition: {x: 10, y: -121.5, z: 0}
   moveDuration: 2
-  enableCameraMovement: 0
-  cameraTargetPosition: {x: 0, y: 0, z: 0}
-  cameraOrthoSize: 8
-  cinematicDuration: 3
-  startDuration: 1
-  endDuration: 1
-  lockPlayerInput: 0
-  oneTimeOnly: 0
+  enableCameraMovement: 1
+  cameraTargetPosition: {x: 85, y: -118.1, z: -10}
+  cameraOrthoSize: 15
+  cinematicDuration: 2
+  startDuration: 0.5
+  endDuration: 0.5
+  lockPlayerInput: 1
+  oneTimeOnly: 1
   debugMode: 0
+--- !u!95 &2392224422162555839
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8179336447177927413}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f8706bde0f3ea4e7e9216e9b8eb748c8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
