@@ -138,6 +138,9 @@ public class LevelMgr : MonoBehaviour
 
         // 2. 更新 LevelMgr 内部的 player 引用
         player = newPlayerObj.GetComponent<PlayerController>();
+
+        // 3. 启动初始化保护计时器（确保能量归零）
+        player.energyResetProtectionTimer = player.energyResetProtectionTime;
     }
 
     #endregion

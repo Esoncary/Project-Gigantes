@@ -111,7 +111,12 @@ public class PlayerController : MonoBehaviour
     public float forceLimitTimer;
 
     public bool IsInputLocked { get; set; } = false;
-    
+
+    [Header("初始化保护")]
+    [Tooltip("初始化后能量归零保护时间（秒）")]
+    public float energyResetProtectionTime = 0.5f;
+    public float energyResetProtectionTimer;
+
     [Header("实时变量")]
     public float InputX;
     public bool JumpInputDown;
@@ -219,6 +224,17 @@ public class PlayerController : MonoBehaviour
         if (currentStorageFreezeTimer > 0) currentStorageFreezeTimer -= Time.deltaTime;
         if (targetStorageFreezeTimer > 0) targetStorageFreezeTimer -= Time.deltaTime;
         if (jumpCoyoteTimer > 0) jumpCoyoteTimer -= Time.deltaTime;
+
+        // 初始化保护：保护期内强制能量归零
+        if (energyResetProtectionTimer > 0)
+        {
+            Debug.Log("保护触发");
+            energyResetProtectionTimer -= Time.deltaTime;
+            currentStorage = 0;
+            targetStorage = 0;
+            currentVelocityMag = 0;
+        }
+
         if (coolerTimer > 0) coolerTimer -= Time.deltaTime;
         if (coolerTimer > 0)//当玩家吃了冷冻剂之后，重置爆炸的冷却时间
         {
