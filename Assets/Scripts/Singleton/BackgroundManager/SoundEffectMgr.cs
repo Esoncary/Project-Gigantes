@@ -44,7 +44,7 @@ public class SoundEffectMgr : MonoBehaviour
     public void PlaySound(string name, bool isStopable = false)
     {
         // 路径根据你的资源存放位置修改，这里假设在 Resources/Sounds/ 下
-        AudioClip clip = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/" + name + ".wav");
+        AudioClip clip = Resources.Load<AudioClip>("Audio/SFX/" + name);
         if (clip != null)
         {
             if (isStopable)

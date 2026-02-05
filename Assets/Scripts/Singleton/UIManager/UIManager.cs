@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
+
 
 public class UIManager
 {
@@ -20,7 +20,7 @@ public class UIManager
     public static UIManager Instance => instance;
     public UIManager()
     {
-        GameObject canvas = GameObject.Instantiate(UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI/Canvas.prefab"));
+        GameObject canvas = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Canvas"));
         canvasTrans = canvas.transform;
         //保证只有一个Canvas
         GameObject.DontDestroyOnLoad(canvas);
@@ -33,7 +33,7 @@ public class UIManager
         {
             return panelDic[name] as T;
         }
-        GameObject panelObj = GameObject.Instantiate(UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI/" + name + ".prefab"), canvasTrans);
+        GameObject panelObj = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/" + name), canvasTrans);
         T panel = panelObj.GetComponent<T>();
         panelDic.Add(name, panel);
         panel.ShowMe();

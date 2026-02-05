@@ -99,7 +99,7 @@ public class ScenePanel : BasePanel
             SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
         // 开始按钮
-        beginBtn.onClick.AddListener(() =>
+        beginBtn.onClick.AddListener(async () =>
         {
             if (GameDataMgr.Instance.selectedLevelIndex < 0 || GameDataMgr.Instance.selectedLevelIndex >= GameDataMgr.Instance.list_LevelData.Count)
             {
@@ -108,6 +108,7 @@ public class ScenePanel : BasePanel
             }
             Debug.Log("开始游戏：" + GameDataMgr.Instance.selectedLevelIndex);
             // UI处理
+            // await UIManager.Instance.GetPanel<SceneNamePanel>().ShowAsync();
             UIManager.Instance.HidePanel<ScenePanel>();
             // 逻辑处理
             SceneMgr.Instance.LoadGameScene(GameDataMgr.Instance.selectedLevelIndex);
@@ -218,12 +219,12 @@ public class ScenePanel : BasePanel
                 // 设置关卡图片
                 if (btnImage != null)
                 {
-                    btnImage.sprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(levelData.imgRes);
+                    btnImage.sprite = Resources.Load<Sprite>(levelData.imgRes);
 
                 }
                 btn.transition = Selectable.Transition.SpriteSwap;
-                Sprite normalSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(levelData.imgRes);
-                Sprite highlightedSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(levelData.imgRes.Replace("关卡", "发光关卡"));
+                Sprite normalSprite = Resources.Load<Sprite>(levelData.imgRes);
+                Sprite highlightedSprite = Resources.Load<Sprite>(levelData.imgRes.Replace("关卡", "发光关卡"));
 
                 SpriteState ss = new SpriteState();
                 ss.highlightedSprite = highlightedSprite;

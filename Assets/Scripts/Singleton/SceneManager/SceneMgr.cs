@@ -72,7 +72,7 @@ public class SceneMgr
         }
         if (playerObj == null)
         {
-            GameObject playerPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player/player_hmp.prefab");
+            GameObject playerPrefab = Resources.Load<GameObject>("Prefabs/Player/player_hmp");
             if (playerPrefab == null)
             {
                 Debug.LogError($"[SceneMgr] 找不到玩家预制体");
@@ -123,12 +123,34 @@ public class SceneMgr
     }
 
     // 加载场景
-    public async void LoadSceneAsync(int sceneId, Action callback = null)
+    // public async void LoadSceneAsync(int sceneId, Action callback = null)
+    // {
+    //     await SceneTransitionAsync(async () =>
+    //     {
+    //         GameDataMgr.Instance.SetCurrentLevelId(sceneId);
+    //         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneId);
+    //         asyncLoad.allowSceneActivation = false;
+    //         while (asyncLoad.progress < 0.9f)
+    //         {
+    //             await Task.Yield();
+    //         }
+
+    //         asyncLoad.allowSceneActivation = true;
+
+    //         while (!asyncLoad.isDone)
+    //         {
+    //             await Task.Yield();
+    //         }
+    //         // 执行事件
+    //         callback?.Invoke();
+    //     });
+    // }
+    public async void LoadSceneAsync(string sceneName, Action callback = null)
     {
         await SceneTransitionAsync(async () =>
         {
-            GameDataMgr.Instance.SetCurrentLevelId(sceneId);
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneId);
+            // 注意：这里不再在 LoadSceneAsync 内部设置 ID，因为调用者应该已经设置好了
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName); // 改为按名称加载
             asyncLoad.allowSceneActivation = false;
             while (asyncLoad.progress < 0.9f)
             {
@@ -141,26 +163,59 @@ public class SceneMgr
             {
                 await Task.Yield();
             }
-            // 执行事件
             callback?.Invoke();
         });
     }
-
     // 重新加载场景
+    // public async void TriggerReload()
+    // {
+    //     if (isReloading) return; // 防止连续触发
+    //     isReloading = true;
+
+    //     // await SceneTransitionAsync(() => InitScene(currentRebornPos));
+    //     await Task.Delay(500);
+    //     LoadSceneAsync(GameDataMgr.Instance.currentLevelId, async () =>
+    //     {
+    //         // Debug.Log("GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord" + GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord);
+    //         if (!GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord)
+    //         {
+    //             currentRebornPos = GameObject.Find("RebornPos").transform.position;
+
+    //         }
+    //         else
+    //         {
+    //             currentRebornPos = new Vector2(GameDataMgr.Instance.currentSave.suspendData.suspendPosX, GameDataMgr.Instance.currentSave.suspendData.suspendPosY);
+    //             GameDataMgr.Instance.currentLevelCollectedIds.Clear();
+    //             foreach (var id in GameDataMgr.Instance.currentSave.suspendData.interactedItems)
+    //             {
+    //                 GameDataMgr.Instance.currentLevelCollectedIds.Add(id);
+    //             }
+    //             Debug.Log(GameDataMgr.Instance.currentLevelCollectedIds.Count);
+    //         }
+
+    //         Debug.Log("位置" + currentRebornPos);
+    //         await InitScene(currentRebornPos);
+    //     });
+
+
+    //     isReloading = false;
+    // }
     public async void TriggerReload()
     {
-        if (isReloading) return; // 防止连续触发
+        if (isReloading) return;
         isReloading = true;
 
-        // await SceneTransitionAsync(() => InitScene(currentRebornPos));
         await Task.Delay(500);
-        LoadSceneAsync(GameDataMgr.Instance.currentLevelId, async () =>
+
+        // 获取当前关卡的配置信息
+        int currentId = GameDataMgr.Instance.currentLevelId;
+        string sceneName = sceneInfos.Find(x => x.LevelId == currentId).SceneName;
+
+        LoadSceneAsync(sceneName, async () => // 传入名称
         {
-            // Debug.Log("GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord" + GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord);
             if (!GameDataMgr.Instance.currentSave.suspendData.hasSuspendedRecord)
             {
                 currentRebornPos = GameObject.Find("RebornPos").transform.position;
-
             }
             else
             {
@@ -170,25 +225,58 @@ public class SceneMgr
                 {
                     GameDataMgr.Instance.currentLevelCollectedIds.Add(id);
                 }
-                Debug.Log(GameDataMgr.Instance.currentLevelCollectedIds.Count);
             }
-
-            Debug.Log("位置" + currentRebornPos);
             await InitScene(currentRebornPos);
         });
 
-
         isReloading = false;
     }
-
     // 加载场景并且player复活在指定地点
+    // public void LoadGameScene(int sceneId)
+    // {
+    //     GameDataMgr.Instance.ShowData();
+    //     int currentLevelId = sceneInfos[sceneId].LevelId;
+    //     GameDataMgr.Instance.SetCurrentLevelId(currentLevelId);
+    //     // Debug.Log("123");
+    //     AsyncOperation ao = SceneManager.LoadSceneAsync(currentLevelId);
+    //     ao.completed += async (obj) =>
+    //     {
+
+    //         Vector2 finalPos;
+
+    //         SuspendData suspendData = GameDataMgr.Instance.currentSave.suspendData;
+    //         // 无中断
+    //         if (!suspendData.hasSuspendedRecord)
+    //         {
+    //             // 重生点
+    //             var rebornObj = GameObject.Find("RebornPos");
+    //             finalPos = rebornObj != null ? rebornObj.transform.position : Vector2.zero;
+
+    //             suspendData.interactedItems.Clear();
+    //             GameDataMgr.Instance.currentLevelCollectedIds.Clear();
+    //         }
+    //         else
+    //         {
+    //             finalPos = new Vector2(suspendData.suspendPosX, suspendData.suspendPosY);
+
+    //             GameDataMgr.Instance.currentLevelCollectedIds.Clear();
+    //             foreach (var id in suspendData.interactedItems)
+    //             {
+    //                 GameDataMgr.Instance.currentLevelCollectedIds.Add(id);
+    //             }
+    //         }
+    //         GameDataMgr.Instance.currentSave.suspendData = suspendData;
+    //         currentRebornPos = finalPos;
+    //         await InitScene(finalPos);
+    //     };
+    // }
     public void LoadGameScene(int sceneId)
     {
         GameDataMgr.Instance.ShowData();
-        int currentLevelId = sceneInfos[sceneId].LevelId;
-        GameDataMgr.Instance.SetCurrentLevelId(currentLevelId);
+        LevelData data = sceneInfos[sceneId];
+        GameDataMgr.Instance.SetCurrentLevelId(data.LevelId);
         // Debug.Log("123");
-        AsyncOperation ao = SceneManager.LoadSceneAsync(currentLevelId);
+        AsyncOperation ao = SceneManager.LoadSceneAsync(data.SceneName);
         ao.completed += async (obj) =>
         {
 
