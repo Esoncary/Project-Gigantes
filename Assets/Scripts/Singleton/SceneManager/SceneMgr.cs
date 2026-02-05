@@ -80,6 +80,9 @@ public class SceneMgr
             }
             playerObj = GameObject.Instantiate(playerPrefab, playerPos, Quaternion.identity);
             playerController = playerObj.GetComponent<PlayerController>();
+
+            // 启动初始化保护计时器（确保能量归零）
+            playerController.energyResetProtectionTimer = playerController.energyResetProtectionTime;
         }
         else
         {
@@ -87,8 +90,9 @@ public class SceneMgr
             if (playerController == null) playerController = playerObj.GetComponent<PlayerController>();
 
             playerController.StateMachine.Initialize(playerController.IdleState);
-            playerController.currentStorage = 0;
-            playerController.targetStorage = 0;
+
+            // 启动初始化保护计时器（确保能量归零）
+            playerController.energyResetProtectionTimer = playerController.energyResetProtectionTime;
         }
 
         // 绑定新角色实例到相机上

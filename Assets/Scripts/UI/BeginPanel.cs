@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class BeginPanel : BasePanel
 {
+    // 主菜单面板需要锁定玩家输入
+    protected override bool LockPlayerInputOnShow => true;
+
     public Button startBtn;
     public Button settingBtn;
     public Button quitBtn;

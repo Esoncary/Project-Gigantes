@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class ScenePanel : BasePanel
 {
+    // 关卡选择面板需要锁定玩家输入
+    protected override bool LockPlayerInputOnShow => true;
+
     // UI控件引用
     public Button leftBtn;
     public Button rightBtn;

@@ -13,6 +13,18 @@ public abstract class BasePanel : MonoBehaviour
     //是否显示
     bool isShow = false;
     UnityAction hideCallBack = null;
+
+    /// <summary>
+    /// 此面板显示时是否需要锁定玩家输入（移动、跳跃、技能等）
+    /// 子面板可重写此属性来控制输入锁定行为
+    /// </summary>
+    protected virtual bool LockPlayerInputOnShow => false;
+
+    /// <summary>
+    /// 是否锁定玩家输入（供UIManager使用）
+    /// </summary>
+    public bool ShouldLockPlayerInput => LockPlayerInputOnShow;
+
     /// <summary>
     /// 注册控件事件
     /// </summary>

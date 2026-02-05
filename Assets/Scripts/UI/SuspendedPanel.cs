@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class SuspendedPanel : BasePanel
 {
+    // 中断记录面板需要锁定玩家输入
+    protected override bool LockPlayerInputOnShow => true;
 
     public Button confirmBtn;
     public Button cancelBtn;
