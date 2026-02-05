@@ -157,6 +157,7 @@ public class SwitchRotator2D : MonoBehaviour
         Coroutine rotationCoroutine = null;
         Coroutine moveCoroutine = null;
 
+        SoundEffectMgr.Instance.PlaySound("Interactable/MachineOperating",true);
         if (enableRotation)
         {
             rotationCoroutine = StartCoroutine(RotateObject());
@@ -167,9 +168,11 @@ public class SwitchRotator2D : MonoBehaviour
             moveCoroutine = StartCoroutine(MoveObject());
         }
 
+        
         // 等待所有操作完成
         if (rotationCoroutine != null) yield return rotationCoroutine;
         if (moveCoroutine != null) yield return moveCoroutine;
+        SoundEffectMgr.Instance.StopSound("Interactable/MachineOperating");
 
         if (debugMode) Debug.Log("[SwitchRotator2D] 物体操作完成");
 
@@ -202,6 +205,7 @@ public class SwitchRotator2D : MonoBehaviour
         Quaternion endRotation = startRotation * Quaternion.Euler(rotationAngles);
         float elapsedTime = 0f;
         playerController.transform.SetParent(targetObject);//将玩家绑定到物体上，不然旋转时可能会被转飞
+        SoundEffectMgr.Instance.PlaySound("Interactable/MachineOperating");
 
         while (elapsedTime < rotationDuration)
         {
@@ -240,6 +244,8 @@ public class SwitchRotator2D : MonoBehaviour
         }
 
         float elapsedTime = 0f;
+
+       
 
         while (elapsedTime < moveDuration)
         {
