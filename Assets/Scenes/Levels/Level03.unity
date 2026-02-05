@@ -8533,9 +8533,10 @@ GameObject:
   - component: {fileID: 941547414}
   - component: {fileID: 941547413}
   - component: {fileID: 941547415}
+  - component: {fileID: 941547416}
   m_Layer: 6
   m_Name: "\u673A\u68B0\u5706\u8F74\u5FC3"
-  m_TagString: metal
+  m_TagString: SaveableMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8648,6 +8649,19 @@ CircleCollider2D:
   m_Offset: {x: -0.2, y: -0.23}
   serializedVersion: 2
   m_Radius: 4.2
+--- !u!114 &941547416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941547412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef393b1570ec5df43a24c72da802d2a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  machineUniqueId: 23124124
 --- !u!1 &948311986
 GameObject:
   m_ObjectHideFlags: 0
@@ -14492,11 +14506,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7175237108376093442, guid: f71229797a5cc11438db116895a48dbc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -61.5
+      value: -75.65
       objectReference: {fileID: 0}
     - target: {fileID: 7175237108376093442, guid: f71229797a5cc11438db116895a48dbc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -31.6
+      value: -27.91
       objectReference: {fileID: 0}
     - target: {fileID: 7175237108376093442, guid: f71229797a5cc11438db116895a48dbc, type: 3}
       propertyPath: m_LocalPosition.z
