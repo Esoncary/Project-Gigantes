@@ -5,7 +5,7 @@
         "SceneName": "关卡1",
         "WorldId": 1,
         "OrderInWorld": 1,
-        "TotalCollectibles": 5
+        "TotalCollectibles": 3
     },
     {
         "LevelId": 1,
@@ -13,7 +13,7 @@
         "SceneName": "关卡2",
         "WorldId": 1,
         "OrderInWorld": 2,
-        "TotalCollectibles": 5
+        "TotalCollectibles": 2
     },
     {
         "LevelId": 2,
@@ -21,7 +21,7 @@
         "SceneName": "关卡3",
         "WorldId": 1,
         "OrderInWorld": 3,
-        "TotalCollectibles": 5
+        "TotalCollectibles": 3
     },
     {
         "LevelId": 3,
@@ -29,7 +29,7 @@
         "SceneName": "关卡3",
         "WorldId": 1,
         "OrderInWorld": 3,
-        "TotalCollectibles": 5
+        "TotalCollectibles": 3
     },
     {
         "LevelId": 4,
@@ -37,7 +37,7 @@
         "SceneName": "关卡3",
         "WorldId": 1,
         "OrderInWorld": 3,
-        "TotalCollectibles": 5
+        "TotalCollectibles": 3
     },
     {
         "LevelId": 5,
@@ -45,10 +45,10 @@
         "SceneName": "关卡3",
         "WorldId": 1,
         "OrderInWorld": 3,
-        "TotalCollectibles": 5
+        "TotalCollectibles": 3
     },
     {
-        "LevelId": 6,
+        "LevelId": 7,
         "imgRes": "Assets/Art/Sprites/UI/关卡卡片7.png",
         "SceneName": "关卡3",
         "WorldId": 1,
@@ -56,7 +56,7 @@
         "TotalCollectibles": 5
     },
     {
-        "LevelId": 7,
+        "LevelId": 8,
         "imgRes": "Assets/Art/Sprites/UI/关卡卡片8.png",
         "SceneName": "关卡3",
         "WorldId": 1,

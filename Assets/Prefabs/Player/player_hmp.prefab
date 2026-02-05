@@ -147,7 +147,10 @@ MonoBehaviour:
   baseSpeed: 20
   maxSpeed: 40
   launchedStagnationTime: 0.18
+  releaseKey: 323
+  dieKey: 114
   releaseCoolingLimit: 1
+  releaseBufferTime: 0.5
   kineticMachineRecoverFromReleaseTime: 1
   explosionStorageThrehold: 40
   maxStorage: 60
@@ -172,10 +175,12 @@ MonoBehaviour:
   InputX: 0
   JumpInputDown: 0
   ReleaseInputDown: 0
+  DieInputDown: 0
   MouseWorldPos: {x: 0, y: 0}
   MouseDir: {x: 0, y: 0}
   varJumpTimer: -1
   jumpBufferTimer: -1
+  releaseBufferTimer: 0
   climbTimer: 0
   targetStorageFreezeTimer: 0
   currentStorageFreezeTimer: 0
@@ -569,7 +574,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5453466718448522601
 Transform:
   m_ObjectHideFlags: 0
@@ -612,8 +617,8 @@ Transform:
   m_GameObject: {fileID: 3425209972393688479}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.03, y: 0.08, z: 0.113250725}
-  m_LocalScale: {x: 0.22748789, y: 0.22748789, z: 0.22748789}
+  m_LocalPosition: {x: -0.05, y: -0.08, z: 0.113250725}
+  m_LocalScale: {x: 0.4028128, y: 0.4028128, z: 0.4028128}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5453466718448522601}
@@ -659,7 +664,7 @@ SpriteRenderer:
   m_SortingLayerID: 1210811031
   m_SortingLayer: 3
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: fbeb448b5baebfe418799333cc984adf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e448c5ae8e9227e45b86b7773aca2be7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -697,8 +702,8 @@ Transform:
   m_GameObject: {fileID: 8615217278733548665}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.02, y: -1.11, z: 0}
-  m_LocalScale: {x: 0.74, y: -0.0369, z: 1}
+  m_LocalPosition: {x: -0.02, y: -1.132, z: 0}
+  m_LocalScale: {x: 1.2062, y: -0.046494, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3141424749767237886}
@@ -715,7 +720,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08aafd3ebdebab444817e11478ef0f98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGrounded: 0
   Ground:
     serializedVersion: 2
     m_Bits: 64
@@ -1119,7 +1123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432417681798325833, guid: 91c01d829d6fb9c45a45c1bb494f9958, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.16
+      value: -0.07
       objectReference: {fileID: 0}
     - target: {fileID: 7432417681798325833, guid: 91c01d829d6fb9c45a45c1bb494f9958, type: 3}
       propertyPath: m_LocalPosition.y

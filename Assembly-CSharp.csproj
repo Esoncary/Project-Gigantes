@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerController\PlayerController.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interface\IPickUps.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Interface\IInteractable.cs" />
+    <Compile Include="Assets\Scripts\Camera\Background.cs" />
     <Compile Include="Assets\Scripts\UI\SuspendedPanel.cs" />
     <Compile Include="Assets\Scripts\test1.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\IdleState.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Assets\Scripts\GamePlay\Player\PlayerState\PlayerState.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\LitJson\JsonMockWrapper.cs" />
     <Compile Include="Assets\Scripts\Singleton\1\GameMgr.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\IA\SwitchRotatorSpecial.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Pickups\Coin.cs" />
     <Compile Include="Assets\Scripts\UI\BasePanel.cs" />
     <Compile Include="Assets\Scripts\Singleton\Json\JsonMgr.cs" />

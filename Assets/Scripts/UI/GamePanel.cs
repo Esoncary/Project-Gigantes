@@ -19,6 +19,8 @@ public class GamePanel : BasePanel
     public override void Init()
     {
         ChangeStorageUI(true);
+        Debug.Log("游戏开始" + GameDataMgr.Instance.currentLevelCollectedIds);
+        RefreshKeyUI();
         totalScoreText.text = "/" + GameDataMgr.Instance.list_LevelData[GameDataMgr.Instance.currentLevelId].TotalCollectibles.ToString();
         scoreText.text = GameDataMgr.Instance.currentLevelCollectedIds.Count.ToString();
         // anim = gas.GetComponent<Animator>();

@@ -6,7 +6,7 @@ using UnityEngine;
 /// 拉杆开关：支持物体旋转/移动、可选的过场动画和玩家输入锁定
 /// 玩家靠近 + 按E键触发
 /// </summary>
-public class SwitchRotator2D : MonoBehaviour
+public class SwitchRotator2DSpecial : MonoBehaviour
 {
     [Header("目标物体设置")]
     [Tooltip("要操作的目标物体")]
@@ -196,7 +196,6 @@ public class SwitchRotator2D : MonoBehaviour
         Quaternion startRotation = targetObject.rotation;
         Quaternion endRotation = startRotation * Quaternion.Euler(rotationAngles);
         float elapsedTime = 0f;
-        playerController.transform.SetParent(targetObject);//将玩家绑定到物体上，不然旋转时可能会被转飞
 
         while (elapsedTime < rotationDuration)
         {
@@ -209,7 +208,6 @@ public class SwitchRotator2D : MonoBehaviour
         }
 
         targetObject.rotation = endRotation;
-        playerController.transform.SetParent(null);//将玩家从物体上解绑
         if (debugMode) Debug.Log("[SwitchRotator2D] 旋转完成");
     }
 
@@ -219,7 +217,6 @@ public class SwitchRotator2D : MonoBehaviour
     private IEnumerator MoveObject()
     {
         if (debugMode) Debug.Log("[SwitchRotator2D] 开始移动");
-        playerController.transform.SetParent(targetObject);//将玩家绑定到物体上，不然旋转时可能会被转飞
         Vector3 startPos = targetObject.position;
         Vector3 endPos;
 
@@ -244,11 +241,10 @@ public class SwitchRotator2D : MonoBehaviour
         }
 
         targetObject.position = endPos;
-        playerController.transform.SetParent(null);//将玩家从物体上解绑
         if (debugMode) Debug.Log("[SwitchRotator2D] 移动完成");
 
 
-        
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)

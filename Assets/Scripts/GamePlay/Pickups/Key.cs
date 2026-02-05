@@ -21,7 +21,7 @@ namespace GamePlay.Pickups
         {
             base.Awake(); // 调用LevelItem的Awake生成唯一itemID
             StartCoroutine(WaitForPlayerThenBindKey()); // 协程等待Player加载
-            startPos = transform.position;
+            startPos = transform.localPosition;
         }
 
         protected override void Start()
@@ -39,7 +39,7 @@ namespace GamePlay.Pickups
         {
             //钥匙浮动逻辑
             float newY = startPos.y + Mathf.Sin(Time.time * floatSpeed) * floatRange;
-            transform.position = new Vector3(startPos.x, newY, startPos.z);
+            transform.localPosition = new Vector3(startPos.x, newY, startPos.z);
         }
 
         // 核心逻辑：协程等待Player加载完成，再处理存档钥匙的挂载
