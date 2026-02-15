@@ -112,10 +112,14 @@ public class ScenePanel : BasePanel
             Debug.Log("开始游戏：" + GameDataMgr.Instance.selectedLevelIndex);
             // UI处理
             // await UIManager.Instance.GetPanel<SceneNamePanel>().ShowAsync();
-            UIManager.Instance.HidePanel<ScenePanel>();
+            
             // 逻辑处理
             Debug.Log("GameDataMgr.Instance.selectedLevelIndex:" + GameDataMgr.Instance.selectedLevelIndex);
-            SceneMgr.Instance.LoadGameScene(GameDataMgr.Instance.selectedLevelIndex);
+            await SceneMgr.Instance.SceneTransitionAsync(async () =>
+            {
+                UIManager.Instance.HidePanel<ScenePanel>();
+                await SceneMgr.Instance.LoadGameScene(GameDataMgr.Instance.selectedLevelIndex);
+            });//260215:新添过渡
             SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
         // 返回按钮

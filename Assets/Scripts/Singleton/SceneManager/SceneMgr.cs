@@ -106,6 +106,10 @@ public class SceneMgr
     {
         // 淡入
         UIManager.Instance.ShowPanel<DeathMask>();
+
+        //260215:强制等待一帧，这能确保 DeathMask 的 Awake/Start 跑完，且 Canvas 已经把物体认领进去。不然的话，每次进游戏第一次使用此功能会空背景
+        await Task.Yield();
+
         var deathMask = UIManager.Instance.GetPanel<DeathMask>();
         if (deathMask != null)
         {
@@ -275,7 +279,7 @@ public class SceneMgr
     //         await InitScene(finalPos);
     //     };
     // }
-    public void LoadGameScene(int sceneId)
+    public async Task LoadGameScene(int sceneId)
     {
         GameDataMgr.Instance.ShowData();
         LevelData data = sceneInfos[sceneId];
@@ -284,8 +288,15 @@ public class SceneMgr
         GameDataMgr.Instance.SetCurrentLevelId(data.LevelId);
         // Debug.Log("123");
         AsyncOperation ao = SceneManager.LoadSceneAsync(data.SceneName);
-        ao.completed += async (obj) =>
-        {
+        //ao.completed += async (obj) =>
+        //{
+            // 2. 【核心修复】：真正地等待加载进度
+            while (!ao.isDone)
+            {
+                // 只有进度达到 0.9 且你用了 allowSceneActivation=false 时才特殊处理
+                // 这里我们简单处理，直接等它加载完
+                await Task.Yield();
+            }
 
             Vector2 finalPos;
 
@@ -315,7 +326,7 @@ public class SceneMgr
             GameDataMgr.Instance.currentSave.suspendData = suspendData;
             currentRebornPos = finalPos;
             await InitScene(finalPos);
-        };
+        //};
     }
 
     // 根据场景名得到场景的id

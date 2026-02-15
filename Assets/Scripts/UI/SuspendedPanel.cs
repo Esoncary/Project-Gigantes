@@ -13,14 +13,22 @@ public class SuspendedPanel : BasePanel
     public override void Init()
     {
         // 继续中断按钮
-        confirmBtn.onClick.AddListener(() =>
+        confirmBtn.onClick.AddListener(async () =>
         {
             // Ui处理
             UIManager.Instance.HidePanel<SuspendedPanel>();
-            UIManager.Instance.HidePanel<ScenePanel>();
-            // 逻辑处理
-            int levelId = GameDataMgr.Instance.currentSave.suspendData.suspendLevelId;
-            SceneMgr.Instance.LoadGameScene(levelId);
+            
+
+            //260215:增加场景过渡
+            await SceneMgr.Instance.SceneTransitionAsync(async () =>
+            {
+                UIManager.Instance.HidePanel<ScenePanel>();
+
+                int levelId = GameDataMgr.Instance.currentSave.suspendData.suspendLevelId;
+                await SceneMgr.Instance.LoadGameScene(levelId);
+                
+            });
+
             SoundEffectMgr.Instance.PlaySound("UI/button_click");
         });
         // 取消中断按钮
