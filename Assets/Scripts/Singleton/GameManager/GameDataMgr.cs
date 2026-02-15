@@ -134,8 +134,9 @@ public class GameDataMgr
 
         // TotalPlayTime todo
 
+        //暂时取消maxunlockedLevelId++这个逻辑，始终保持最大关卡解锁数量为3（4个）
         // 解锁下一关
-        data.maxUnlockedLevelId = Math.Max(data.maxUnlockedLevelId, currentLevelId + 1);
+        //data.maxUnlockedLevelId = Math.Max(data.maxUnlockedLevelId, currentLevelId + 1);
 
         // 更新本关卡的数据
         List<LevelProgressData> listlevelProgress = data.listlevelProgress;

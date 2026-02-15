@@ -148,12 +148,15 @@ public class ScenePanel : BasePanel
         int totalLevels = GameDataMgr.Instance.list_LevelData.Count;
         Debug.Log("totalLevels:" + totalLevels);
         Debug.Log("maxUnlockedId:" + maxUnlockedId);
-        if (maxUnlockedId >= 0 && maxUnlockedId < totalLevels)
-        {
-            GameDataMgr.Instance.selectedLevelIndex = -1;//取消默认选中
-            Debug.Log($"已解锁关卡: {GameDataMgr.Instance.selectedLevelIndex}");
-            pageIndex = maxUnlockedId / PageSize;//自动进入已选关卡页面
-        }
+        //if (maxUnlockedId >= 0 && maxUnlockedId < totalLevels)
+        //{
+        //    GameDataMgr.Instance.selectedLevelIndex = -1;//取消默认选中
+        //    Debug.Log($"已解锁关卡: {GameDataMgr.Instance.selectedLevelIndex}");
+        //    pageIndex = maxUnlockedId / PageSize;//自动进入已选关卡页面
+        //}
+        GameDataMgr.Instance.selectedLevelIndex = -1;//取消默认选中
+        pageIndex = maxUnlockedId / PageSize;//260215：自动进入已选关卡页面;若之后添加新关卡，此处逻辑需完善
+
     }
 
     private void OnDestroy()
@@ -196,6 +199,7 @@ public class ScenePanel : BasePanel
     // 刷新当前页的关卡按钮显示
     private void RefreshLevelButtons()
     {
+
         if (selectedLevelBtn != null)
         {
             ResetLevelButtonStyle(selectedLevelBtn);
