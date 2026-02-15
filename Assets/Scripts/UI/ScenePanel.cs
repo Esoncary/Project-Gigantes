@@ -178,8 +178,8 @@ public class ScenePanel : BasePanel
     {
         int totalPages = Mathf.CeilToInt(GameDataMgr.Instance.list_LevelData.Count / (float)PageSize);
         pageIndex++;
-        pageIndex = pageIndex >= totalPages ? 0 : pageIndex;
-        GameDataMgr.Instance.selectedLevelIndex = -1;
+        pageIndex = pageIndex >= totalPages ? 0 : pageIndex;//如果只有一页，则不增加/为0
+        GameDataMgr.Instance.selectedLevelIndex = -1;//取消选中的关卡
         RefreshLevelButtons();
     }
 
@@ -198,7 +198,6 @@ public class ScenePanel : BasePanel
     {
         if (selectedLevelBtn != null)
         {
-
             ResetLevelButtonStyle(selectedLevelBtn);
             selectedLevelBtn = null; // 清空选中按钮引用
         }
@@ -262,20 +261,21 @@ public class ScenePanel : BasePanel
             }
         }
 
-        // 自动选中当前页第一个可交互关卡
-        if (selectedLevelBtn == null)
-        {
-            // 遍历当前页按钮，匹配我们预设的 GameDataMgr.Instance.selectedLevelIndex
-            for (int i = 0; i < levelButtons.Count; i++)
-            {
-                int levelIndex = startIndex + i;
-                if (levelIndex == GameDataMgr.Instance.selectedLevelIndex)
-                {
-                    OnLevelButtonClick(i);
-                    break;
-                }
-            }
-        }
+        //260215：取消自动选中功能
+        //// 自动选中当前页第一个可交互关卡
+        //if (selectedLevelBtn == null)
+        //{
+        //    // 遍历当前页按钮，匹配我们预设的 GameDataMgr.Instance.selectedLevelIndex
+        //    for (int i = 0; i < levelButtons.Count; i++)
+        //    {
+        //        int levelIndex = startIndex + i;
+        //        if (levelIndex == GameDataMgr.Instance.selectedLevelIndex)
+        //        {
+        //            OnLevelButtonClick(i);
+        //            break;
+        //        }
+        //    }
+        //}
     }
     // 关卡按钮点击事件
     private void OnLevelButtonClick(int btnIndex)
