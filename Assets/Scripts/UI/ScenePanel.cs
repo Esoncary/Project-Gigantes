@@ -150,9 +150,9 @@ public class ScenePanel : BasePanel
         Debug.Log("maxUnlockedId:" + maxUnlockedId);
         if (maxUnlockedId >= 0 && maxUnlockedId < totalLevels)
         {
-            GameDataMgr.Instance.selectedLevelIndex = maxUnlockedId;
+            GameDataMgr.Instance.selectedLevelIndex = -1;//取消默认选中
             Debug.Log($"已解锁关卡: {GameDataMgr.Instance.selectedLevelIndex}");
-            pageIndex = GameDataMgr.Instance.selectedLevelIndex / PageSize;
+            pageIndex = maxUnlockedId / PageSize;//自动进入已选关卡页面
         }
     }
 

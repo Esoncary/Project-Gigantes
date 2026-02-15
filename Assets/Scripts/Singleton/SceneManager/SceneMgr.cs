@@ -47,7 +47,6 @@ public class SceneMgr
     {
         GameDataMgr.Instance.ClearSessionData();
         TriggerReload();
-
     }
     // 加载场景数据
     public LevelData GetSceneData(int index) => sceneInfos[index];
