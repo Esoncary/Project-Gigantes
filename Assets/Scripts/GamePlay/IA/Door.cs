@@ -110,6 +110,11 @@ namespace GamePlay.IA
             {
                 GameDataMgr.Instance.ClearSuspendData();
                 UIManager.Instance.HidePanel<GamePanel>();
+                //260215：进入scenepanel后销毁玩家
+                if (SceneMgr.Instance.playerObj != null)
+                {
+                    GameObject.Destroy(SceneMgr.Instance.playerObj);
+                }
                 UIManager.Instance.ShowPanel<ScenePanel>();
                 // Debug.Log("游戏结束" + UIManager.Instance.GetPanel<ScenePanel>().selectedLevelIndex);
                 ScenePanel a = UIManager.Instance.GetPanel<ScenePanel>();
