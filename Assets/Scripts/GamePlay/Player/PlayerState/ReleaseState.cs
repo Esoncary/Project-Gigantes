@@ -196,6 +196,12 @@ public class ReleaseState : PlayerState
             player.impulseSource.GenerateImpulseWithVelocity(new Vector3(shakeDir.x, shakeDir.y, 0f));
         }
 
+        // 相机滞后效果：朝向释放方向的反方向偏移
+        if (VirtualCameraController.Instance != null)
+        {
+            VirtualCameraController.Instance.ApplyReleaseLag(player.releaseDir);
+        }
+
         // 隐藏箭头
         if (player.arrowInstance != null)
             player.arrowInstance.SetActive(false);

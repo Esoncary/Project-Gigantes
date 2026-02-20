@@ -26,6 +26,17 @@ public class VirtualCameraController : MonoBehaviour
         vcam = GetComponent<CinemachineVirtualCamera>();
     }
     #endregion
+    
+    #region 相机滞后效果
+
+    [Header("释放滞后效果")]
+    [SerializeField] private float releaseOffsetIntensity = 2f;  // 滞后强度（偏移量）
+    [SerializeField] private float recoverSpeed = 5f;            // 恢复速度
+
+    private Vector3 currentOffset;                              // 当前偏移量
+
+    #endregion
+
 
     CinemachineVirtualCamera vcam;
 
@@ -49,6 +60,22 @@ public class VirtualCameraController : MonoBehaviour
             ResetCameraBound();//绑定相机边界
         }
 
+        // 相机偏移平滑恢复
+        // 将摄像机从释放时的偏移位置平滑过渡回正常跟随位置，避免突兀的跳回
+        if (framingTransposer != null && framingTransposer.m_TrackedObjectOffset != Vector3.zero)
+        {
+            framingTransposer.m_TrackedObjectOffset = Vector3.Lerp(
+                framingTransposer.m_TrackedObjectOffset,
+                Vector3.zero,
+                Time.deltaTime * recoverSpeed
+            );
+
+            // 当偏移量足够小时直接归零，避免无限逼近
+            if (framingTransposer.m_TrackedObjectOffset.magnitude < 0.01f)
+            {
+                framingTransposer.m_TrackedObjectOffset = Vector3.zero;
+            }
+        }
     }
 
     private void OnDestroy()
@@ -91,6 +118,25 @@ public class VirtualCameraController : MonoBehaviour
         }
 
     }
+
+    #region 相机滞后效果
+
+    /// <summary>
+    /// 应用释放时的相机滞后效果
+    /// </summary>
+    /// <param name="releaseDirection">释放方向（归一化的向量）</param>
+    /// 释放时摄像机相较于玩家运动方向滞后，增强运动感
+    public void ApplyReleaseLag(Vector2 releaseDirection)
+    {
+        if (framingTransposer == null) return;
+
+        // 核心逻辑：设置反向偏移
+        // 例如：向右喷射(1, 0)，偏移量变为(-2, 0)
+        currentOffset = -releaseDirection.normalized * releaseOffsetIntensity;
+        framingTransposer.m_TrackedObjectOffset = currentOffset;
+    }
+
+    #endregion
 
     #region 过场动画功能
 
